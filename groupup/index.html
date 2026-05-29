@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Peggy's GroupUp</title>
+    <link rel="stylesheet" href="styles.css?v=6" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="tool-panel" aria-labelledby="app-title">
+        <div class="masthead">
+          <div>
+            <p class="eyebrow">Classroom Game</p>
+            <h1 id="app-title">Peggy's GroupUp</h1>
+          </div>
+          <div class="status-pill" id="game-count">Loading games...</div>
+        </div>
+
+        <div class="chooser-row">
+          <label for="game-select">Choose a game</label>
+          <select id="game-select">
+            <option value="">Select a GroupUp game</option>
+          </select>
+          <button id="copy-link" type="button" disabled title="Copy student link">
+            <span aria-hidden="true">&#128279;</span>
+            Copy link
+          </button>
+        </div>
+
+        <div id="message" class="message" role="status" aria-live="polite"></div>
+      </section>
+
+      <section id="game-area" class="game-area" aria-live="polite"></section>
+    </main>
+
+    <template id="empty-template">
+      <div class="empty-state">
+        <h2>Pick a game to begin.</h2>
+        <p>Teachers can choose a GroupUp from the list, copy the link, and send that link to students.</p>
+      </div>
+    </template>
+
+    <script src="app.js?v=6"></script>
+  </body>
+</html>
