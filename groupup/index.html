@@ -4,17 +4,25 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Peggy's GroupUp</title>
-    <link rel="stylesheet" href="styles.css?v=6" />
+    <link rel="stylesheet" href="styles.css?v=14" />
+    <script src="teacher-auth.js?v=1"></script>
   </head>
   <body>
     <main class="app-shell">
+      <header class="student-brand" aria-label="Teaching Innovations">
+        <img src="assets/teaching-innovations-logo.png" alt="Teaching Innovations" />
+      </header>
+
       <section class="tool-panel" aria-labelledby="app-title">
         <div class="masthead">
           <div>
             <p class="eyebrow">Classroom Game</p>
             <h1 id="app-title">Peggy's GroupUp</h1>
           </div>
-          <div class="status-pill" id="game-count">Loading games...</div>
+          <div class="masthead-actions">
+            <img class="header-logo" src="assets/teaching-innovations-logo.png" alt="Teaching Innovations" />
+            <div class="status-pill" id="game-count">Loading games...</div>
+          </div>
         </div>
 
         <div class="chooser-row">
@@ -41,6 +49,6 @@
       </div>
     </template>
 
-    <script src="app.js?v=6"></script>
+    <script src="app.js?v=14"></script>
   </body>
 </html>

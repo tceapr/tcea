@@ -63,6 +63,27 @@ select {
   margin-bottom: 22px;
 }
 
+.masthead-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 14px;
+}
+
+.header-logo,
+.student-brand img {
+  display: block;
+  width: 150px;
+  max-width: 34vw;
+  height: auto;
+}
+
+.student-brand {
+  display: none;
+  justify-content: center;
+  margin-bottom: 18px;
+}
+
 .eyebrow {
   margin: 0 0 3px;
   color: var(--berry);
@@ -209,6 +230,7 @@ button:disabled {
   align-items: start;
   margin-bottom: 18px;
 }
+
 
 .game-title h2 {
   margin-bottom: 7px;
@@ -441,9 +463,20 @@ button:disabled {
     display: grid;
   }
 
+  .masthead-actions {
+    justify-items: start;
+    justify-content: start;
+  }
+
   .status-pill,
   .mistakes {
     justify-self: start;
+  }
+
+  .header-logo,
+  .student-brand img {
+    width: min(170px, 54vw);
+    max-width: none;
   }
 
   .chooser-row {
@@ -470,4 +503,89 @@ button:disabled {
     min-height: 62px;
     font-size: 0.6rem;
   }
+}
+
+
+html.teacher-auth-pending body > :not(#teacherGate) {
+  display: none !important;
+}
+
+#teacherGate {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.teacher-gate-card {
+  width: min(420px, 100%);
+  display: grid;
+  gap: 14px;
+  padding: 28px;
+  border: 1px solid var(--line);
+  border-top: 7px solid var(--berry);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  background: var(--panel);
+}
+
+.teacher-gate-eyebrow {
+  margin: 0;
+  color: var(--berry);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.teacher-gate-card h1 {
+  margin: 0;
+  color: var(--brand-deep);
+  font-size: 2.2rem;
+  line-height: 1.05;
+  letter-spacing: 0;
+}
+
+.teacher-gate-card label {
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.teacher-gate-card input {
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid #b9bcc4;
+  border-left: 5px solid var(--sun);
+  border-radius: 6px;
+  padding: 0 12px;
+  font: inherit;
+}
+
+.teacher-gate-card input:focus {
+  outline: 3px solid rgba(31, 111, 120, 0.2);
+  border-color: var(--brand);
+}
+
+.teacher-gate-error {
+  min-height: 1.2em;
+  margin: 0;
+  color: #9b3328;
+  font-weight: 800;
+}
+
+.teacher-gate-card button {
+  min-height: 48px;
+}
+
+
+body.student-mode .student-brand {
+  display: flex;
+}
+
+body.student-mode .tool-panel {
+  display: none;
 }

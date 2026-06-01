@@ -5,6 +5,14 @@ const message = document.querySelector("#message");
 const gameCount = document.querySelector("#game-count");
 const emptyTemplate = document.querySelector("#empty-template");
 
+const urlParams = new URLSearchParams(window.location.search);
+const requestedSlug = urlParams.get("game");
+const isStudentMode = Boolean(requestedSlug);
+
+if (isStudentMode) {
+  document.body.classList.add("student-mode");
+}
+
 let games = [];
 let currentGame = null;
 let selectedTileIds = new Set();
@@ -149,11 +157,10 @@ function hydrateChooser() {
   gameSelect.append(fragment);
   gameCount.textContent = `${games.length} games ready`;
 
-  const slug = new URLSearchParams(window.location.search).get("game");
-  const requestedGame = games.find((game) => game.slug === slug);
+  const requestedGame = games.find((game) => game.slug === requestedSlug);
 
   if (requestedGame) {
-    gameSelect.value = requestedGame.slug;
+    gameSelect.value = "";
     startGame(requestedGame);
   } else {
     renderEmptyState();
@@ -168,7 +175,7 @@ function startGame(game) {
   remainingTiles = game.board.map((word, index) => ({ id: `${word}-${index}`, word }));
   mistakes = 0;
   isGameOver = false;
-  copyLinkButton.disabled = false;
+  copyLinkButton.disabled = isStudentMode;
   updateUrl(game.slug);
   setMessage(game.issues.length ? game.issues[0] : "");
   renderGame();
@@ -231,7 +238,7 @@ function renderGame() {
       <button type="button" id="clear-selection" class="secondary" ${!selectedTileIds.size || isGameOver ? "disabled" : ""}>Clear</button>
       <button type="button" id="shuffle-board" class="secondary" ${isGameOver ? "disabled" : ""}>Shuffle</button>
       <button type="button" id="restart-game" class="secondary">Restart</button>
-      <button type="button" id="reveal-answers" class="secondary">Answers</button>
+      ${isStudentMode ? "" : '<button type="button" id="reveal-answers" class="secondary">Answers</button>'}
     </div>
   `;
 
@@ -256,7 +263,7 @@ function renderGame() {
   wrap.querySelector("#clear-selection").addEventListener("click", clearSelection);
   wrap.querySelector("#shuffle-board").addEventListener("click", shuffleRemainingTiles);
   wrap.querySelector("#restart-game").addEventListener("click", restartGame);
-  wrap.querySelector("#reveal-answers").addEventListener("click", revealAnswers);
+  wrap.querySelector("#reveal-answers")?.addEventListener("click", revealAnswers);
 
   if (isGameOver) {
     wrap.append(createAnswerPanel());
