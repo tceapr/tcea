@@ -193,8 +193,21 @@ function buildShareUrl() {
   return shareUrl.toString();
 }
 
+function isLocalShareUrl() {
+  return (
+    window.location.protocol === "file:" ||
+    window.location.hostname === "localhost" ||
+    window.location.hostname === "127.0.0.1"
+  );
+}
+
 async function copyShareLink() {
   if (!currentGame) {
+    return;
+  }
+
+  if (isLocalShareUrl()) {
+    setMessage("Open the published GitHub Pages site before copying student links. File and localhost links only work on your computer.", "error");
     return;
   }
 
@@ -452,7 +465,7 @@ gameSelect.addEventListener("change", () => {
 copyLinkButton.addEventListener("click", copyShareLink);
 
 function loadGameList() {
-  return fetch("groupuplist")
+  return fetch("groupuplist", { cache: "no-store" })
     .then((response) => {
       if (!response.ok) {
         throw new Error("Could not load the GroupUp list.");
