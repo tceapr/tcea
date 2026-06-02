@@ -451,20 +451,31 @@ gameSelect.addEventListener("change", () => {
 
 copyLinkButton.addEventListener("click", copyShareLink);
 
-fetch("groupuplist")
-  .then((response) => {
-    if (!response.ok) {
-      throw new Error("Could not load the GroupUp list.");
-    }
+function loadGameList() {
+  return fetch("groupuplist")
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Could not load the GroupUp list.");
+      }
 
-    return response.text();
-  })
+      return response.text();
+    })
+    .catch(() => {
+      if (window.GROUPUP_LIST_TEXT) {
+        return window.GROUPUP_LIST_TEXT;
+      }
+
+      throw new Error("No GroupUp list is available.");
+    });
+}
+
+loadGameList()
   .then((markdown) => {
     games = parseGames(markdown);
     hydrateChooser();
   })
   .catch(() => {
     gameCount.textContent = "Games unavailable";
-    setMessage("The GroupUp list could not be loaded. Start this from a local web server or publish the folder online.", "error");
+    setMessage("The GroupUp list could not be loaded. Please use the published site or the local preview link.", "error");
     renderEmptyState();
   });
