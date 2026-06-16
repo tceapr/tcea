@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Fruit Idiom Sentence Pick</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="activity-shell">
+      <section id="splashScreen" class="splash-screen" aria-labelledby="splash-title">
+        <div class="splash-copy">
+          <p class="eyebrow">Fruit Idiom Sentence Pick</p>
+          <h1 id="splash-title">A Fruit Salad of Idioms</h1>
+          <p class="splash-text">Read each idiom, choose the sentence that uses it correctly, and make fruit fall from the sky.</p>
+          <button id="startButton" class="primary-button start-button" type="button">Start Quiz</button>
+        </div>
+        <img class="splash-image" src="fruitsaladimage.png" alt="A colorful fruit salad themed idiom activity">
+      </section>
+
+      <section id="quizPanel" class="activity-panel is-hidden" aria-labelledby="activity-title">
+        <div class="top-bar">
+          <div>
+            <p class="eyebrow">Fruit Idiom Sentence Pick</p>
+            <h1 id="activity-title">Choose the sentence that uses the idiom correctly.</h1>
+          </div>
+          <div class="score-board" aria-live="polite" aria-label="Quiz score">
+            <div class="score-counter correct-counter">
+              <span>Correct</span>
+              <strong id="correctText">00</strong>
+            </div>
+            <div class="score-counter wrong-counter">
+              <span>Wrong</span>
+              <strong id="wrongText">00</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="progress-wrap" aria-hidden="true">
+          <div id="progressBar" class="progress-bar"></div>
+        </div>
+
+        <div class="fruit-strip" aria-hidden="true">
+          <img src="assets/peach.png" alt="">
+          <img src="assets/banana.png" alt="">
+          <img src="assets/cherry.png" alt="">
+          <img src="assets/pear.png" alt="">
+          <img src="assets/lemon.png" alt="">
+          <img src="assets/orange.png" alt="">
+          <img src="assets/grape.png" alt="">
+          <img src="assets/apple.png" alt="">
+          <img src="assets/pickle.png" alt="">
+          <img src="assets/pineapple.png" alt="">
+          <img src="assets/strawberry.png" alt="">
+          <img src="assets/plum.png" alt="">
+          <img src="assets/watermelon.png" alt="">
+        </div>
+
+        <div class="question-area">
+          <p id="questionCount" class="question-count">Idiom 1 of 15</p>
+          <h2 id="idiomText">In a pickle</h2>
+
+          <div class="choices" role="group" aria-label="Sentence choices">
+            <button id="choiceA" class="choice-button" type="button">
+              <span class="choice-label">A</span>
+              <span class="choice-text"></span>
+            </button>
+            <button id="choiceB" class="choice-button" type="button">
+              <span class="choice-label">B</span>
+              <span class="choice-text"></span>
+            </button>
+          </div>
+
+          <p id="feedback" class="feedback" aria-live="assertive"></p>
+          <img id="thankYouGraphic" class="thank-you-graphic is-hidden" src="assets/thankyougraphic.png" alt="Thank you for playing">
+        </div>
+
+        <div class="controls">
+          <button id="restartButton" class="secondary-button" type="button">Start Over</button>
+          <button id="nextButton" class="primary-button" type="button" disabled>Next</button>
+        </div>
+      </section>
+
+      <div id="fruitLayer" class="fruit-layer" aria-hidden="true"></div>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
