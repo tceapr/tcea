@@ -107,19 +107,19 @@ const questions = [
 ];
 
 const fruitImages = [
-  "assets/apple.png",
-  "assets/banana.png",
-  "assets/cherry.png",
-  "assets/grape.png",
-  "assets/lemon.png",
-  "assets/orange.png",
-  "assets/peach.png",
-  "assets/pear.png",
-  "assets/pickle.png",
-  "assets/pineapple.png",
-  "assets/plum.png",
-  "assets/strawberry.png",
-  "assets/watermelon.png"
+  "assets/apple.jpg",
+  "assets/banana.jpg",
+  "assets/cherry.jpg",
+  "assets/grape.jpg",
+  "assets/lemon.jpg",
+  "assets/orange.jpg",
+  "assets/peach.jpg",
+  "assets/pear.jpg",
+  "assets/pickle.jpg",
+  "assets/pineapple.jpg",
+  "assets/plum.jpg",
+  "assets/strawberry.jpg",
+  "assets/watermelon.jpg"
 ];
 const idiomText = document.querySelector("#idiomText");
 const questionCount = document.querySelector("#questionCount");
