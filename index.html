@@ -78,7 +78,7 @@
 
       .activity-card {
         display: grid;
-        grid-template-rows: 210px 1fr;
+        grid-template-rows: 260px 1fr;
         min-height: 430px;
         overflow: hidden;
         color: inherit;
@@ -97,6 +97,7 @@
       .activity-media {
         display: grid;
         place-items: center;
+        overflow: hidden;
         padding: 24px;
         background: #e9f7ef;
       }
@@ -108,7 +109,7 @@
       }
 
       .fruit-media {
-        padding: 0;
+        padding: 14px;
         background: #fff7ec;
       }
 
@@ -116,7 +117,7 @@
         width: 100%;
         height: 100%;
         max-height: none;
-        object-fit: cover;
+        object-fit: contain;
       }
 
       .activity-copy {
@@ -124,6 +125,7 @@
         align-content: space-between;
         gap: 18px;
         padding: 26px;
+        background: var(--panel);
       }
 
       .activity-copy h2 {
@@ -183,7 +185,7 @@
         }
 
         .activity-card {
-          grid-template-rows: 180px 1fr;
+          grid-template-rows: 220px 1fr;
           min-height: 0;
         }
       }
