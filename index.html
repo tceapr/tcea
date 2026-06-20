@@ -72,7 +72,7 @@
 
       .menu {
         display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 22px;
       }
 
@@ -118,7 +118,13 @@
         background: #fff6df;
       }
 
+      .slurpee-media {
+        padding: 14px;
+        background: #eaf7ff;
+      }
+
       .groupup-media img,
+      .slurpee-media img,
       .fruit-media img {
         width: 100%;
         height: 100%;
@@ -174,10 +180,25 @@
         background: #b8473d;
       }
 
+      .slurpee-card .open-link {
+        background: #287bd8;
+      }
+
+      .slurpee-card:hover .open-link,
+      .slurpee-card:focus-visible .open-link {
+        background: #1f5fa5;
+      }
+
       footer {
         margin-top: 34px;
         color: var(--muted);
         font-size: 0.92rem;
+      }
+
+      @media (max-width: 980px) {
+        .menu {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
       }
 
       @media (max-width: 760px) {
@@ -229,6 +250,19 @@
               <p>Read each idiom, choose the sentence that uses it correctly, and watch fruit fall.</p>
             </span>
             <span class="open-link">Open Fruit Idioms</span>
+          </span>
+        </a>
+
+        <a class="activity-card slurpee-card" href="slurpee/">
+          <span class="activity-media slurpee-media">
+            <img src="slurpee/assets/slurpee-splash.jpg" alt="Frozen Favorite Match-Up frozen drink matching game graphic">
+          </span>
+          <span class="activity-copy">
+            <span>
+              <h2>Frozen Favorite Match-Up</h2>
+              <p>Match each business with its frozen treat and fill the frosty progress bar.</p>
+            </span>
+            <span class="open-link">Open Slurpee Activity</span>
           </span>
         </a>
       </nav>
