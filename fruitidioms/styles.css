@@ -256,6 +256,11 @@ h2 {
   gap: 22px;
 }
 
+.question-area.results-mode {
+  align-content: start;
+  gap: 16px;
+}
+
 .choices {
   display: grid;
   gap: 14px;
@@ -339,11 +344,14 @@ h2 {
 
 .thank-you-graphic {
   display: block;
-  width: min(100%, 620px);
-  max-height: 300px;
+  width: min(100%, 720px);
   justify-self: center;
   border-radius: 8px;
   object-fit: contain;
+}
+
+.results-mode .thank-you-graphic {
+  margin-top: 4px;
 }
 
 .controls {

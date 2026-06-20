@@ -189,6 +189,8 @@ function renderQuestion() {
   feedback.textContent = "";
   feedback.className = "feedback";
   thankYouGraphic?.classList.add("is-hidden");
+  document.querySelector(".question-area")?.classList.remove("results-mode");
+  document.querySelector(".choices")?.classList.remove("is-hidden");
   nextButton.disabled = true;
   nextButton.textContent = "Choose a sentence";
 
@@ -262,17 +264,12 @@ function showResults() {
   idiomText.textContent = "Final Results";
   feedback.className = correctCount >= wrongCount ? "feedback final-feedback good" : "feedback final-feedback bad";
   feedback.textContent = `${correctCount} correct, ${wrongCount} wrong. Final score: ${percent}%.`;
+  document.querySelector(".question-area")?.classList.add("results-mode");
+  document.querySelector(".choices")?.classList.add("is-hidden");
   thankYouGraphic?.classList.remove("is-hidden");
   nextButton.disabled = true;
   nextButton.textContent = "Done";
   updateScoreboard();
-
-  choiceButtons.forEach((button, index) => {
-    button.disabled = true;
-    button.className = "choice-button";
-    button.querySelector(".choice-text").textContent =
-      index === 0 ? `Correct answers: ${correctCount}` : `Wrong answers: ${wrongCount}`;
-  });
 }
 
 function advanceQuestion() {
