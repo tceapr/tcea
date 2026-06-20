@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TCEA Activities</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #17352d;
+        --muted: #526b62;
+        --page: #f4fbf6;
+        --panel: #ffffff;
+        --line: #d8ebe1;
+        --green: #2f8f5b;
+        --green-dark: #1f6c45;
+        --coral: #dd5f50;
+        --shadow: 0 18px 42px rgba(31, 108, 69, 0.14);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at top left, rgba(47, 143, 91, 0.18), transparent 34rem),
+          linear-gradient(135deg, var(--page), #ffffff 62%);
+      }
+
+      main {
+        width: min(1100px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 48px 0;
+      }
+
+      .hero {
+        display: grid;
+        gap: 18px;
+        margin-bottom: 30px;
+      }
+
+      .eyebrow {
+        margin: 0;
+        color: var(--green-dark);
+        font-size: 0.78rem;
+        font-weight: 800;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        max-width: 760px;
+        margin: 0;
+        font-size: clamp(2.25rem, 5vw, 4.8rem);
+        line-height: 0.96;
+      }
+
+      .intro {
+        max-width: 680px;
+        margin: 0;
+        color: var(--muted);
+        font-size: 1.08rem;
+        line-height: 1.65;
+      }
+
+      .menu {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 22px;
+      }
+
+      .activity-card {
+        display: grid;
+        grid-template-rows: 210px 1fr;
+        min-height: 430px;
+        overflow: hidden;
+        color: inherit;
+        text-decoration: none;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        box-shadow: var(--shadow);
+      }
+
+      .activity-card:focus-visible {
+        outline: 4px solid rgba(47, 143, 91, 0.32);
+        outline-offset: 4px;
+      }
+
+      .activity-media {
+        display: grid;
+        place-items: center;
+        padding: 24px;
+        background: #e9f7ef;
+      }
+
+      .activity-media img {
+        max-width: 100%;
+        max-height: 168px;
+        object-fit: contain;
+      }
+
+      .fruit-media {
+        padding: 0;
+        background: #fff7ec;
+      }
+
+      .fruit-media img {
+        width: 100%;
+        height: 100%;
+        max-height: none;
+        object-fit: cover;
+      }
+
+      .activity-copy {
+        display: grid;
+        align-content: space-between;
+        gap: 18px;
+        padding: 26px;
+      }
+
+      .activity-copy h2 {
+        margin: 0 0 10px;
+        font-size: 1.85rem;
+        line-height: 1.05;
+      }
+
+      .activity-copy p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 1rem;
+        line-height: 1.55;
+      }
+
+      .open-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        justify-self: start;
+        min-height: 44px;
+        padding: 0 18px;
+        color: #ffffff;
+        background: var(--green);
+        border-radius: 999px;
+        font-weight: 800;
+      }
+
+      .activity-card:hover .open-link,
+      .activity-card:focus-visible .open-link {
+        background: var(--green-dark);
+      }
+
+      .fruit-card .open-link {
+        background: var(--coral);
+      }
+
+      .fruit-card:hover .open-link,
+      .fruit-card:focus-visible .open-link {
+        background: #b8473d;
+      }
+
+      footer {
+        margin-top: 34px;
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+
+      @media (max-width: 760px) {
+        main {
+          width: min(100% - 24px, 520px);
+          padding: 32px 0;
+        }
+
+        .menu {
+          grid-template-columns: 1fr;
+        }
+
+        .activity-card {
+          grid-template-rows: 180px 1fr;
+          min-height: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section class="hero" aria-labelledby="page-title">
+        <p class="eyebrow">Classroom Activities</p>
+        <h1 id="page-title">Choose an activity to launch.</h1>
+        <p class="intro">A quick menu for the interactive projects in this collection.</p>
+      </section>
+
+      <nav class="menu" aria-label="Activity menu">
+        <a class="activity-card" href="groupup/">
+          <span class="activity-media">
+            <img src="groupup/assets/teaching-innovations-logo.png" alt="Teaching Innovations logo">
+          </span>
+          <span class="activity-copy">
+            <span>
+              <h2>Peggy's GroupUp</h2>
+              <p>Pick a GroupUp game, share a student link, or play the four-item grouping challenge.</p>
+            </span>
+            <span class="open-link">Open GroupUp</span>
+          </span>
+        </a>
+
+        <a class="activity-card fruit-card" href="fruitidioms/">
+          <span class="activity-media fruit-media">
+            <img src="fruitidioms/fruitsaladimage.png" alt="Colorful fruit salad activity graphic">
+          </span>
+          <span class="activity-copy">
+            <span>
+              <h2>Fruit Idiom Sentence Pick</h2>
+              <p>Read each idiom, choose the sentence that uses it correctly, and watch fruit fall.</p>
+            </span>
+            <span class="open-link">Open Fruit Idioms</span>
+          </span>
+        </a>
+      </nav>
+
+      <footer>Created by Peggy Reimers.</footer>
+    </main>
+  </body>
+</html>
