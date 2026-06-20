@@ -148,19 +148,19 @@
     }
 
     .flavor-strip {
-      display: flex;
-      flex-wrap: wrap;
+      display: grid;
+      grid-template-columns: repeat(7, max-content);
       gap: 8px;
       margin-top: 16px;
     }
 
     .flavor-strip span {
-      padding: 7px 10px;
+      padding: 7px 9px;
       border: 2px solid rgba(255, 255, 255, 0.72);
       border-radius: 999px;
       color: #ffffff;
       background: var(--flavor);
-      font-size: 0.8rem;
+      font-size: clamp(0.68rem, 1.1vw, 0.8rem);
       font-weight: 900;
       box-shadow: 0 8px 16px rgba(36, 48, 71, 0.12);
     }
@@ -457,6 +457,10 @@
         width: 118px;
       }
 
+      .flavor-strip {
+        grid-template-columns: repeat(2, max-content);
+      }
+
       .play-area {
         grid-template-columns: 1fr;
         padding: 16px;
@@ -500,6 +504,10 @@
             <span style="--flavor: #f15bb5;">Cotton Candy</span>
             <span style="--flavor: #00b4d8;">Bubble Gum</span>
             <span style="--flavor: #ffb703;">Mango</span>
+            <span style="--flavor: #7ac943;">MTN Dew</span>
+            <span style="--flavor: #2ec4b6;">Pina Colada</span>
+            <span style="--flavor: #d62828;">Cherry Lime</span>
+            <span style="--flavor: #f77f00;">Orange Cream</span>
           </div>
         </div>
 
