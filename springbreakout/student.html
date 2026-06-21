@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Spring Sprout Breakout</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="hero" aria-labelledby="page-title">
+        <div>
+          <p class="eyebrow">Digital Breakout</p>
+          <h1 id="page-title">Spring Sprout Breakout</h1>
+          <p class="brief">Use the two Spring clue snapshots to open all five locks. The lock labels tell you what kind of answer to enter.</p>
+        </div>
+        <div class="progress-panel" aria-live="polite">
+          <span id="progressText">0 of 5 locks open</span>
+          <div class="progress-track" aria-hidden="true"><span id="progressFill"></span></div>
+        </div>
+      </section>
+
+      <section class="workspace" aria-label="Breakout workspace">
+        <div class="clue-area">
+          <div class="clue-toolbar">
+            <h2>Clue Graphics</h2>
+            <button class="ghost-button" type="button" id="resetButton">Reset</button>
+          </div>
+
+          <div class="clue-grid">
+            <figure class="clue-card">
+              <img class="clue-image" src="assets/spring-poem.png" alt="Spring poem clue graphic" data-image="assets/spring-poem.png" data-title="Spring Poem" role="button" tabindex="0">
+              <figcaption>Clue Snapshot 1</figcaption>
+            </figure>
+
+            <figure class="clue-card">
+              <img class="clue-image" src="assets/spring-scene.png" alt="Spring scene clue graphic" data-image="assets/spring-scene.png" data-title="Spring Scene" role="button" tabindex="0">
+              <figcaption>Clue Snapshot 2</figcaption>
+            </figure>
+          </div>
+        </div>
+
+        <aside class="locks-panel" aria-label="Breakout locks">
+          <div class="locks-header">
+            <h2>Locks</h2>
+            <p>Solve each lock using the two graphics.</p>
+          </div>
+          <div id="locksList" class="locks-list"></div>
+        </aside>
+      </section>
+    </main>
+
+    <div id="leafCelebration" class="leaf-celebration" aria-hidden="true"></div>
+
+    <dialog id="imageDialog" class="image-dialog">
+      <div class="dialog-header">
+        <h2 id="dialogTitle"></h2>
+        <button class="icon-button" type="button" id="closeDialog" aria-label="Close image">x</button>
+      </div>
+      <img id="dialogImage" alt="">
+    </dialog>
+
+    <dialog id="winDialog" class="win-dialog">
+      <div class="win-card">
+        <p class="eyebrow">Breakout Complete</p>
+        <h2>You opened every Spring lock.</h2>
+        <p>Great detective work. You solved every clue and opened the full breakout.</p>
+        <button type="button" id="playAgainButton">Play Again</button>
+      </div>
+    </dialog>
+
+    <script src="script.js"></script>
+  </body>
+</html>
