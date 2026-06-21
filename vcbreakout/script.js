@@ -3,41 +3,36 @@ const locks = [
     id: 'word',
     title: 'Word Lock',
     badge: 'Word',
-    label: 'Enter the word from the highlighted letters in the poem.',
-    answerHash: '5d47ef53',
-    hint: 'Look closely at the yellow letters in the poem graphic.'
+    label: 'Enter the word answer.',
+    answerHash: '5d47ef53'
   },
   {
     id: 'color',
     title: '3 Color Lock',
     badge: 'Color',
-    label: 'Enter the first letters of the three bird colors.',
-    answerHash: 'e1f80c32',
-    hint: 'Use the birds in the garden graphic from left to right.'
+    label: 'Enter the three-letter color answer.',
+    answerHash: 'e1f80c32'
   },
   {
-    id: 'gourds',
+    id: 'numberFour',
     title: '4 Number Lock',
     badge: 'Number',
-    label: 'Enter the numbers from the groups of gourds and pumpkins.',
-    answerHash: '5bf9e145',
-    hint: 'Count the groups along the bottom of the garden graphic.'
+    label: 'Enter the four-number answer.',
+    answerHash: '5bf9e145'
   },
   {
-    id: 'acorns',
+    id: 'directionFive',
     title: '5 Direction Lock',
     badge: 'Direction',
-    label: 'Enter the acorn directions using U, D, L, and R.',
-    answerHash: 'bbcf58e8',
-    hint: 'Read the five acorns across the top of the garden graphic.'
+    label: 'Enter the five-direction answer using U, D, L, and R.',
+    answerHash: 'bbcf58e8'
   },
   {
-    id: 'flowers',
+    id: 'numberFive',
     title: '5 Number Lock',
     badge: 'Number',
-    label: 'Enter the numbers from the groups of flower pots.',
-    answerHash: '40b172fe',
-    hint: 'Count the flower pot groups across the garden graphic.'
+    label: 'Enter the five-number answer.',
+    answerHash: '40b172fe'
   }
 ];
 
@@ -101,7 +96,7 @@ function checkLock(lockId) {
     return;
   }
 
-  feedback.textContent = `Not yet. ${lock.hint}`;
+  feedback.textContent = 'Not yet. Keep searching the graphics.';
   input.select();
 }
 
