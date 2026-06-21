@@ -960,3 +960,43 @@
 * ZEBRA
 * SKUNK
 * CHIPMUNK
+## Mexican Food Game
+
+### Mixed-Up Board
+
+|  |  |  |  |
+| :---- | :---- | :---- | :---- |
+| MILD | CORN | TACO | LETTUCE |
+| CHEESE | HOT | ENCHILADA | FLOUR |
+| BURRITO | HARD | TOMATO | MEDIUM |
+| SOFT | SALSA | SPICY | QUESADILLA |
+
+### Answers
+
+#### Heat Levels
+
+* MILD
+* HOT
+* MEDIUM
+* SPICY
+
+#### Tortilla Types
+
+* CORN
+* FLOUR
+* HARD
+* SOFT
+
+#### Mexican Classics
+
+* TACO
+* ENCHILADA
+* BURRITO
+* QUESADILLA
+
+#### Taco Toppings
+
+* LETTUCE
+* CHEESE
+* TOMATO
+* SALSA
