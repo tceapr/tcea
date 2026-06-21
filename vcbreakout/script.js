@@ -3,35 +3,35 @@ const locks = [
     id: 'word',
     title: 'Word Lock',
     badge: 'Word',
-    label: 'Enter the word answer.',
+    label: 'No spaces or commas. Example: FALL',
     answerHash: '5d47ef53'
   },
   {
     id: 'color',
     title: '3 Color Lock',
     badge: 'Color',
-    label: 'Enter the three-letter color answer.',
+    label: 'First initial of each color. Use all capital letters. Example: RGB',
     answerHash: 'e1f80c32'
   },
   {
     id: 'numberFour',
     title: '4 Number Lock',
     badge: 'Number',
-    label: 'Enter the four-number answer.',
+    label: 'No spaces or commas. Example: 1234',
     answerHash: '5bf9e145'
   },
   {
     id: 'directionFive',
     title: '5 Direction Lock',
     badge: 'Direction',
-    label: 'Enter the five-direction answer using U, D, L, and R.',
+    label: 'No spaces or commas. Example: DLRUD',
     answerHash: 'bbcf58e8'
   },
   {
     id: 'numberFive',
     title: '5 Number Lock',
     badge: 'Number',
-    label: 'Enter the five-number answer.',
+    label: 'No spaces or commas. Example: 12345',
     answerHash: '40b172fe'
   }
 ];
