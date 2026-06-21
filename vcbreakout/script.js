@@ -109,10 +109,10 @@ function checkLock(lockId) {
   input.select();
 }
 
-function openImage(button) {
-  dialogTitle.textContent = button.dataset.title;
-  dialogImage.src = button.dataset.image;
-  dialogImage.alt = button.querySelector('img').alt;
+function openImage(trigger) {
+  dialogTitle.textContent = trigger.dataset.title;
+  dialogImage.src = trigger.dataset.image;
+  dialogImage.alt = trigger.alt;
   imageDialog.showModal();
 }
 
@@ -158,6 +158,13 @@ document.addEventListener('click', event => {
 });
 
 document.addEventListener('keydown', event => {
+  const imageTrigger = event.target.closest('[data-image]');
+  if (imageTrigger && (event.key === 'Enter' || event.key === ' ')) {
+    event.preventDefault();
+    openImage(imageTrigger);
+    return;
+  }
+
   if (event.key !== 'Enter') return;
   const input = event.target.closest('.lock-card input');
   if (input) checkLock(input.id.replace('Input', ''));

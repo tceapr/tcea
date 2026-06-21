@@ -259,20 +259,20 @@ p {
   background: #fff;
 }
 
-.image-button {
-  display: block;
-  width: 100%;
-  border: 0;
-  padding: 0;
-  background: #f4ead3;
-  cursor: zoom-in;
-}
-
-.image-button img {
+.clue-image {
   display: block;
   width: 100%;
   max-height: 620px;
   object-fit: contain;
+  background: #f4ead3;
+  cursor: zoom-in;
+  touch-action: pan-y;
+  user-select: none;
+}
+
+.clue-image:focus-visible {
+  outline: 4px solid rgba(47, 119, 116, 0.34);
+  outline-offset: 4px;
 }
 
 figcaption {
