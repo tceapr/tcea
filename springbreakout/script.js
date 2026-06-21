@@ -148,15 +148,15 @@ function startLeafCelebration() {
   clearLeafCelebration();
 
   for (let i = 0; i < 44; i += 1) {
-    const leaf = document.createElement('span');
-    leaf.className = 'spring-petal';
-    leaf.style.setProperty('--x', `${Math.random() * 100}vw`);
-    leaf.style.setProperty('--drift', `${Math.random() * 220 - 110}px`);
-    leaf.style.setProperty('--duration', `${4.8 + Math.random() * 2.8}s`);
-    leaf.style.setProperty('--delay', `${Math.random() * 1.4}s`);
-    leaf.style.setProperty('--spin', `${Math.random() * 680 + 240}deg`);
-    leaf.style.setProperty('--leaf-color', colors[i % colors.length]);
-    leafCelebration.appendChild(leaf);
+    const flower = document.createElement('span');
+    flower.className = 'spring-flower';
+    flower.style.setProperty('--x', `${Math.random() * 100}vw`);
+    flower.style.setProperty('--drift', `${Math.random() * 220 - 110}px`);
+    flower.style.setProperty('--duration', `${4.8 + Math.random() * 2.8}s`);
+    flower.style.setProperty('--delay', `${Math.random() * 1.4}s`);
+    flower.style.setProperty('--spin', `${Math.random() * 680 + 240}deg`);
+    flower.style.setProperty('--flower-color', colors[i % colors.length]);
+    leafCelebration.appendChild(flower);
   }
 
   celebrationTimer = setTimeout(clearLeafCelebration, 8200);
