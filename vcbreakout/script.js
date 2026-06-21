@@ -44,6 +44,10 @@ const imageDialog = document.getElementById('imageDialog');
 const dialogTitle = document.getElementById('dialogTitle');
 const dialogImage = document.getElementById('dialogImage');
 const winDialog = document.getElementById('winDialog');
+const leafCelebration = document.getElementById('leafCelebration');
+let celebrationTimer;
+let winTimer;
+let winQueued = false;
 
 function normalize(value) {
   return value.toUpperCase().replace(/[^A-Z0-9]/g, '');
@@ -83,8 +87,10 @@ function updateProgress() {
   const solved = [...state.values()].filter(Boolean).length;
   progressText.textContent = `${solved} of ${locks.length} locks open`;
   progressFill.style.width = `${(solved / locks.length) * 100}%`;
-  if (solved === locks.length && !winDialog.open) {
-    setTimeout(() => winDialog.showModal(), 250);
+  if (solved === locks.length && !winDialog.open && !winQueued) {
+    winQueued = true;
+    startLeafCelebration();
+    winTimer = setTimeout(() => winDialog.showModal(), 1300);
   }
 }
 
@@ -112,8 +118,35 @@ function openImage(button) {
 
 function resetGame() {
   locks.forEach(lock => state.set(lock.id, false));
+  winQueued = false;
+  clearTimeout(winTimer);
+  clearLeafCelebration();
   if (winDialog.open) winDialog.close();
   renderLocks();
+}
+
+function startLeafCelebration() {
+  const colors = ['#c25f1f', '#e5a629', '#9b3f25', '#d9822b', '#6f8f3c'];
+  clearLeafCelebration();
+
+  for (let i = 0; i < 44; i += 1) {
+    const leaf = document.createElement('span');
+    leaf.className = 'fall-leaf';
+    leaf.style.setProperty('--x', `${Math.random() * 100}vw`);
+    leaf.style.setProperty('--drift', `${Math.random() * 220 - 110}px`);
+    leaf.style.setProperty('--duration', `${4.8 + Math.random() * 2.8}s`);
+    leaf.style.setProperty('--delay', `${Math.random() * 1.4}s`);
+    leaf.style.setProperty('--spin', `${Math.random() * 680 + 240}deg`);
+    leaf.style.setProperty('--leaf-color', colors[i % colors.length]);
+    leafCelebration.appendChild(leaf);
+  }
+
+  celebrationTimer = setTimeout(clearLeafCelebration, 8200);
+}
+
+function clearLeafCelebration() {
+  clearTimeout(celebrationTimer);
+  leafCelebration.replaceChildren();
 }
 
 document.addEventListener('click', event => {

@@ -321,6 +321,8 @@ figcaption {
   border-radius: 4px;
   background: var(--gold);
   box-shadow: inset 0 -3px 0 rgba(36, 49, 38, 0.16);
+  transform-origin: center bottom;
+  transition: background 180ms ease, transform 220ms ease;
 }
 
 .lock-icon::before {
@@ -333,6 +335,8 @@ figcaption {
   border: 3px solid var(--rust);
   border-bottom: 0;
   border-radius: 10px 10px 0 0;
+  transform-origin: 2px 14px;
+  transition: border-color 180ms ease, transform 280ms cubic-bezier(0.2, 1.5, 0.38, 1);
 }
 
 .lock-icon::after {
@@ -348,10 +352,12 @@ figcaption {
 
 .lock-card.solved .lock-icon {
   background: var(--leaf);
+  animation: lockPop 320ms ease both;
 }
 
 .lock-card.solved .lock-icon::before {
   border-color: var(--teal);
+  transform: translate(-5px, 1px) rotate(-38deg);
 }
 
 .lock-top h3 {
@@ -481,6 +487,59 @@ figcaption {
   min-height: 42px;
   border: 0;
   padding: 0 18px;
+}
+
+.leaf-celebration {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 20;
+}
+
+.fall-leaf {
+  position: absolute;
+  top: -34px;
+  left: var(--x);
+  width: 16px;
+  height: 24px;
+  border-radius: 80% 0 80% 0;
+  background: var(--leaf-color);
+  opacity: 0;
+  box-shadow: inset -3px -4px 0 rgba(36, 49, 38, 0.12);
+  animation: leafFall var(--duration) linear var(--delay) forwards;
+}
+
+.fall-leaf::after {
+  content: "";
+  position: absolute;
+  left: 7px;
+  top: 3px;
+  width: 2px;
+  height: 18px;
+  border-radius: 999px;
+  background: rgba(255, 250, 240, 0.42);
+  transform: rotate(36deg);
+}
+
+@keyframes lockPop {
+  0% { transform: scale(1); }
+  45% { transform: scale(1.18) rotate(-4deg); }
+  100% { transform: scale(1); }
+}
+
+@keyframes leafFall {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -40px, 0) rotate(0deg);
+  }
+  10% {
+    opacity: 0.95;
+  }
+  100% {
+    opacity: 0.9;
+    transform: translate3d(var(--drift), 110vh, 0) rotate(var(--spin));
+  }
 }
 
 @media (max-width: 980px) {
