@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Fall Breakout</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="hero" aria-labelledby="page-title">
+        <div>
+          <p class="eyebrow">Digital Breakout</p>
+          <h1 id="page-title">Fall Breakout</h1>
+          <p class="brief">Use the two Fall graphics to open all five locks. The lock labels tell you what kind of answer to enter.</p>
+        </div>
+        <div class="progress-panel" aria-live="polite">
+          <span id="progressText">0 of 5 locks open</span>
+          <div class="progress-track" aria-hidden="true"><span id="progressFill"></span></div>
+        </div>
+      </section>
+
+      <section class="workspace" aria-label="Breakout workspace">
+        <div class="clue-area">
+          <div class="clue-toolbar">
+            <h2>Clue Graphics</h2>
+            <button class="ghost-button" type="button" id="resetButton">Reset</button>
+          </div>
+
+          <div class="clue-grid">
+            <figure class="clue-card">
+              <button class="image-button" type="button" data-image="assets/fall-poem.png" data-title="Fall Poem">
+                <img src="assets/fall-poem.png" alt="Fall poem with highlighted yellow letters">
+              </button>
+              <figcaption>Graphic 1: Fall poem</figcaption>
+            </figure>
+
+            <figure class="clue-card">
+              <button class="image-button" type="button" data-image="assets/fall-garden.png" data-title="Fall Garden">
+                <img src="assets/fall-garden.png" alt="Fall garden scene with birds, pumpkins, gourds, acorns, and flower pots">
+              </button>
+              <figcaption>Graphic 2: Fall garden</figcaption>
+            </figure>
+          </div>
+        </div>
+
+        <aside class="locks-panel" aria-label="Breakout locks">
+          <div class="locks-header">
+            <h2>Locks</h2>
+            <p>Solve each lock using the two graphics.</p>
+          </div>
+          <div id="locksList" class="locks-list"></div>
+        </aside>
+      </section>
+    </main>
+
+    <dialog id="imageDialog" class="image-dialog">
+      <div class="dialog-header">
+        <h2 id="dialogTitle"></h2>
+        <button class="icon-button" type="button" id="closeDialog" aria-label="Close image">x</button>
+      </div>
+      <img id="dialogImage" alt="">
+    </dialog>
+
+    <dialog id="winDialog" class="win-dialog">
+      <div class="win-card">
+        <p class="eyebrow">Breakout Complete</p>
+        <h2>You opened every Fall lock.</h2>
+        <p>Great detective work. The poem, birds, acorns, gourds, pumpkins, and flower pots all gave up their secrets.</p>
+        <button type="button" id="playAgainButton">Play Again</button>
+      </div>
+    </dialog>
+
+    <script src="script.js"></script>
+  </body>
+</html>

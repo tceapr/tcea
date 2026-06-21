@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Fall Breakout Teacher Launch</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body class="teacher-page">
+    <main class="teacher-shell">
+      <section class="teacher-card" aria-labelledby="teacher-title">
+        <p class="eyebrow">Teacher Launch</p>
+        <h1 id="teacher-title">Fall Breakout</h1>
+        <p class="brief">Open the student breakout built from the two Fall graphics. The answer key is not posted here.</p>
+
+        <form class="teacher-form" id="teacherForm">
+          <label for="teacherPassword">Teacher password</label>
+          <div class="teacher-password-row">
+            <input id="teacherPassword" name="teacherPassword" type="password" autocomplete="current-password">
+            <button type="submit">Unlock</button>
+          </div>
+          <p class="teacher-error" id="teacherError" role="alert" aria-live="polite"></p>
+        </form>
+
+        <div class="teacher-links" id="teacherLinks" hidden>
+          <a href="student.html">Open Student Breakout</a>
+          <p>Student activity: <span>vcbreakout/student.html</span></p>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const teacherPasswordHash = '6b7f76d7';
+      const teacherForm = document.getElementById('teacherForm');
+      const teacherPassword = document.getElementById('teacherPassword');
+      const teacherError = document.getElementById('teacherError');
+      const teacherLinks = document.getElementById('teacherLinks');
+
+      function normalize(value) {
+        return value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+      }
+
+      function hashValue(input) {
+        let hash = 0x811c9dc5;
+        for (let i = 0; i < input.length; i += 1) {
+          hash ^= input.charCodeAt(i);
+          hash = Math.imul(hash, 0x01000193);
+        }
+        return (hash >>> 0).toString(16).padStart(8, '0');
+      }
+
+      function unlockTeacherLinks() {
+        teacherForm.hidden = true;
+        teacherLinks.hidden = false;
+        sessionStorage.setItem('fallBreakoutTeacherUnlocked', 'true');
+      }
+
+      if (sessionStorage.getItem('fallBreakoutTeacherUnlocked') === 'true') {
+        unlockTeacherLinks();
+      }
+
+      teacherForm.addEventListener('submit', event => {
+        event.preventDefault();
+        if (hashValue(normalize(teacherPassword.value)) === teacherPasswordHash) {
+          unlockTeacherLinks();
+          return;
+        }
+
+        teacherError.textContent = 'That password did not work. Please try again.';
+        teacherPassword.select();
+      });
+    </script>
+  </body>
+</html>

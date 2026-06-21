@@ -72,7 +72,7 @@
 
       .menu {
         display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-columns: repeat(4, minmax(0, 1fr));
         gap: 22px;
       }
 
@@ -123,9 +123,15 @@
         background: #eaf7ff;
       }
 
+      .breakout-media {
+        padding: 14px;
+        background: #f8efdc;
+      }
+
       .groupup-media img,
       .slurpee-media img,
-      .fruit-media img {
+      .fruit-media img,
+      .breakout-media img {
         width: 100%;
         height: 100%;
         max-height: none;
@@ -187,6 +193,15 @@
       .slurpee-card:hover .open-link,
       .slurpee-card:focus-visible .open-link {
         background: #1f5fa5;
+      }
+
+      .breakout-card .open-link {
+        background: #af4f2a;
+      }
+
+      .breakout-card:hover .open-link,
+      .breakout-card:focus-visible .open-link {
+        background: #7f351c;
       }
 
       footer {
@@ -263,6 +278,19 @@
               <p>Match each business with its frozen treat and fill the frosty progress bar.</p>
             </span>
             <span class="open-link">Open Slurpee Activity</span>
+          </span>
+        </a>
+
+        <a class="activity-card breakout-card" href="vcbreakout/">
+          <span class="activity-media breakout-media">
+            <img src="vcbreakout/assets/fall-garden.png" alt="Fall Breakout garden clue graphic">
+          </span>
+          <span class="activity-copy">
+            <span>
+              <h2>Fall Breakout</h2>
+              <p>Open the teacher launch page for the Fall digital breakout.</p>
+            </span>
+            <span class="open-link">Open Fall Breakout</span>
           </span>
         </a>
       </nav>
