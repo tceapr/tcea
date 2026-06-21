@@ -973,19 +973,12 @@
 
 ### Answers
 
-#### Heat Levels
+#### Taco Toppings
 
-* MILD
-* HOT
-* MEDIUM
-* SPICY
-
-#### Tortilla Types
-
-* CORN
-* FLOUR
-* HARD
-* SOFT
+* LETTUCE
+* CHEESE
+* TOMATO
+* SALSA
 
 #### Mexican Classics
 
@@ -994,9 +987,16 @@
 * BURRITO
 * QUESADILLA
 
-#### Taco Toppings
+#### Tortilla Types
 
-* LETTUCE
-* CHEESE
-* TOMATO
-* SALSA
+* CORN
+* FLOUR
+* HARD
+* SOFT
+
+#### Heat Levels
+
+* MILD
+* HOT
+* MEDIUM
+* SPICY
