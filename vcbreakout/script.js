@@ -62,12 +62,30 @@ function hashValue(input) {
   return (hash >>> 0).toString(16).padStart(8, '0');
 }
 
+function lockIconSvg(isOpen) {
+  if (isOpen) {
+    return `
+      <svg class="lock-icon-svg open-lock" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+        <path class="lock-shackle" d="M24 30V20c0-8 5-14 13-14s13 6 13 14v8" fill="none" stroke="#202123" stroke-width="8" stroke-linecap="round" />
+        <rect x="12" y="29" width="40" height="27" rx="7" fill="#ffd13b" stroke="#202123" stroke-width="5" />
+        <path d="M18 35c8-3 19 3 29-2" fill="none" stroke="#fff8d8" stroke-width="4" stroke-linecap="round" opacity="0.95" />
+      </svg>`;
+  }
+
+  return `
+    <svg class="lock-icon-svg" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+      <path class="lock-shackle" d="M18 30v-8c0-10 6-16 14-16s14 6 14 16v8" fill="none" stroke="#202123" stroke-width="8" stroke-linecap="round" />
+      <rect x="12" y="29" width="40" height="27" rx="7" fill="#ffd13b" stroke="#202123" stroke-width="5" />
+      <path d="M18 35c8-3 19 3 29-2" fill="none" stroke="#fff8d8" stroke-width="4" stroke-linecap="round" opacity="0.95" />
+    </svg>`;
+}
+
 function renderLocks() {
   locksList.innerHTML = locks.map(lock => `
     <article class="lock-card ${state.get(lock.id) ? 'solved' : ''}" data-lock="${lock.id}">
       <div class="lock-top">
         <div class="lock-title">
-          <span class="lock-icon" aria-hidden="true"></span>
+          ${lockIconSvg(state.get(lock.id))}
           <h3>${lock.title}</h3>
         </div>
         <span class="badge">${state.get(lock.id) ? 'Open' : lock.badge}</span>
