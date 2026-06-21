@@ -62,7 +62,10 @@ function renderLocks() {
   locksList.innerHTML = locks.map(lock => `
     <article class="lock-card ${state.get(lock.id) ? 'solved' : ''}" data-lock="${lock.id}">
       <div class="lock-top">
-        <h3>${lock.title}</h3>
+        <div class="lock-title">
+          <span class="lock-icon" aria-hidden="true"></span>
+          <h3>${lock.title}</h3>
+        </div>
         <span class="badge">${state.get(lock.id) ? 'Open' : lock.badge}</span>
       </div>
       <label for="${lock.id}Input">${lock.label}</label>
