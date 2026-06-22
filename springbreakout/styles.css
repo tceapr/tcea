@@ -8,6 +8,8 @@
   --rust: #7a4eb2;
   --leaf: #4a9b45;
   --teal: #287d67;
+  --check: #32c84d;
+  --check-hover: #24983a;
   --line: rgba(36, 49, 38, 0.16);
   --shadow: 0 18px 48px rgba(58, 108, 38, 0.18);
 }
@@ -100,6 +102,14 @@ p {
 .lock-card button:hover,
 .win-card button:hover {
   background: #205755;
+}
+
+.lock-card button {
+  background: var(--check);
+}
+
+.lock-card button:hover {
+  background: var(--check-hover);
 }
 
 .teacher-links {
