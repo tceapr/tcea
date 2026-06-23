@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" role="img" aria-labelledby="title desc">
+  <title id="title">PB&amp;J Breakout cover</title>
+  <desc id="desc">A playful peanut butter and jelly sandwich cover graphic.</desc>
+  <rect width="960" height="540" fill="#fff1d8"/>
+  <circle cx="164" cy="118" r="74" fill="#f5c477" opacity=".48"/>
+  <circle cx="818" cy="432" r="92" fill="#9c5aa4" opacity=".18"/>
+  <path d="M114 430c34-65 96-98 184-98h382c84 0 142 31 174 94 9 18-5 38-25 38H140c-21 0-36-16-26-34Z" fill="#8a4e20"/>
+  <path d="M145 397c29-53 82-80 158-80h352c73 0 124 26 152 78 8 14-4 31-21 31H168c-18 0-31-15-23-29Z" fill="#f4d9ad"/>
+  <path d="M214 323c25-55 77-88 142-88h256c66 0 118 33 143 88H214Z" fill="#f1cf9d"/>
+  <path d="M268 360c37-32 94-39 151-8 50 27 105 23 151-4 58-35 126-25 169 15" fill="none" stroke="#7c2d83" stroke-width="34" stroke-linecap="round"/>
+  <path d="M264 330c44-30 94-34 150-10 55 24 113 25 167 0 52-24 104-21 153 11" fill="none" stroke="#c77a2d" stroke-width="34" stroke-linecap="round"/>
+  <g transform="translate(352 98)">
+    <rect x="0" y="42" width="98" height="142" rx="24" fill="#c77a2d" stroke="#2d2017" stroke-width="10"/>
+    <rect x="13" y="12" width="72" height="42" rx="14" fill="#8a4e20" stroke="#2d2017" stroke-width="8"/>
+    <rect x="20" y="86" width="58" height="50" rx="10" fill="#fff8eb" opacity=".76"/>
+  </g>
+  <g transform="translate(505 98)">
+    <rect x="0" y="42" width="98" height="142" rx="24" fill="#7c2d83" stroke="#2d2017" stroke-width="10"/>
+    <rect x="13" y="12" width="72" height="42" rx="14" fill="#532057" stroke="#2d2017" stroke-width="8"/>
+    <rect x="20" y="86" width="58" height="50" rx="10" fill="#fff8eb" opacity=".76"/>
+  </g>
+  <text x="480" y="112" fill="#2d2017" font-family="Arial, Helvetica, sans-serif" font-size="58" font-weight="900" text-anchor="middle">PB&amp;J</text>
+  <text x="480" y="503" fill="#76327d" font-family="Arial, Helvetica, sans-serif" font-size="42" font-weight="900" text-anchor="middle">Breakout</text>
+</svg>

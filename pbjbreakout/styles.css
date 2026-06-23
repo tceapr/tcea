@@ -75,7 +75,7 @@ p {
   border: 1px solid var(--line);
   background:
     linear-gradient(rgba(255, 248, 235, 0.86), rgba(255, 248, 235, 0.94)),
-    url("assets/whats-in-the-bag.jpg") center / cover;
+    url("assets/pbj-cover.svg") center / cover;
   box-shadow: var(--shadow);
   padding: clamp(28px, 6vw, 72px);
 }
@@ -283,6 +283,59 @@ p {
   height: 3px;
   margin: 28px 0 0;
   background: repeating-linear-gradient(90deg, var(--jelly), var(--jelly) 18px, transparent 18px, transparent 30px);
+}
+
+.hidden-resource-card {
+  display: grid;
+  justify-items: start;
+}
+
+.sandwich-link {
+  display: grid;
+  place-items: center;
+  width: min(360px, 100%);
+  min-height: 190px;
+  border: 2px dashed rgba(118, 50, 125, 0.34);
+  background: linear-gradient(135deg, #fff8eb, #f3d49f);
+  cursor: pointer;
+}
+
+.sandwich-link:hover,
+.sandwich-link:focus-visible {
+  border-color: var(--jelly);
+  outline: 4px solid rgba(118, 50, 125, 0.18);
+  outline-offset: 3px;
+}
+
+.sandwich-picture {
+  position: relative;
+  width: 218px;
+  height: 126px;
+}
+
+.sandwich-picture::before,
+.sandwich-picture::after {
+  content: "";
+  position: absolute;
+  border: 6px solid #8a4e20;
+  border-radius: 28px;
+  background: #f4d9ad;
+}
+
+.sandwich-picture::before {
+  inset: 14px 22px 16px 0;
+  transform: rotate(-7deg);
+  box-shadow: inset 0 -10px 0 rgba(138, 78, 32, 0.14);
+}
+
+.sandwich-picture::after {
+  inset: 8px 0 24px 30px;
+  background:
+    radial-gradient(circle at 35% 56%, #76327d 0 12px, transparent 13px),
+    radial-gradient(circle at 65% 44%, #76327d 0 10px, transparent 11px),
+    linear-gradient(135deg, #f4d9ad, #f0c98e);
+  transform: rotate(8deg);
+  box-shadow: inset 0 -10px 0 rgba(138, 78, 32, 0.14);
 }
 
 .clue-image {

@@ -12,7 +12,7 @@
         <div>
           <p class="eyebrow">Digital Breakout</p>
           <h1 id="page-title">PB&amp;J Breakout</h1>
-          <p class="brief">The Peanut Butter Bandit is on the loose. Search the story, clue snapshots, and pantry clues to open all four locks.</p>
+          <p class="brief">The Peanut Butter Bandit is on the loose. Search the story, pictures, and pantry clues to open all four locks.</p>
         </div>
         <div class="progress-panel" aria-live="polite">
           <span id="progressText">0 of 4 locks open</span>
@@ -42,10 +42,13 @@
               <p>The first reference of peanut butter paired with jelly in the United States was by Julia Davis Chandler in 1901. In the late 1920s, the price of peanut butter declined, and the sandwich became very popular with children.</p>
             </article>
 
-            <figure class="clue-card wide-image">
-              <img class="clue-image" src="assets/whats-in-the-bag.jpg" alt="Sandwich making ingredients with prices" data-image="assets/whats-in-the-bag.jpg" data-title="What's in the Bag?" role="button" tabindex="0">
-              <figcaption>Clue Snapshot 2</figcaption>
-            </figure>
+            <article class="story-card hidden-resource-card">
+              <p class="eyebrow">Sandwich Stop</p>
+              <h2>PB&amp;J Picture</h2>
+              <button class="sandwich-link" type="button" data-image="assets/whats-in-the-bag.jpg" data-title="What's in the Bag?" aria-label="Open hidden sandwich making clue">
+                <span class="sandwich-picture" aria-hidden="true"></span>
+              </button>
+            </article>
 
             <article class="story-card">
               <p class="eyebrow">Growing the Peanuts</p>
