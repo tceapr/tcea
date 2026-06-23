@@ -36,11 +36,55 @@ const progressFill = document.getElementById('progressFill');
 const imageDialog = document.getElementById('imageDialog');
 const dialogTitle = document.getElementById('dialogTitle');
 const dialogImage = document.getElementById('dialogImage');
+const clueDialog = document.getElementById('clueDialog');
+const clueDialogTitle = document.getElementById('clueDialogTitle');
+const clueDialogBody = document.getElementById('clueDialogBody');
 const winDialog = document.getElementById('winDialog');
 const leafCelebration = document.getElementById('leafCelebration');
 let celebrationTimer;
 let winTimer;
 let winQueued = false;
+
+const clueContent = {
+  date: {
+    title: 'PB&J Day',
+    body: `
+      <p>National Peanut Butter and Jelly Day is celebrated every year on April 2nd.</p>
+      <p>The average American will have eaten over 2000 peanut butter and jelly sandwiches by the time they graduate from high school.</p>
+      <p>The first reference of peanut butter paired with jelly in the United States was by Julia Davis Chandler in 1901.</p>`
+  },
+  peanuts: {
+    title: 'Growing the Peanuts',
+    body: `
+      <p>The United States is the world's third largest producer of peanuts.</p>
+      <p>Ten states grow 99% of the U.S. peanut crop. Georgia grows about 42%, followed by Texas, Alabama, Florida, North Carolina, South Carolina, Mississippi, Virginia, Oklahoma, and New Mexico.</p>`
+  },
+  joke: {
+    title: 'PB&J Joke',
+    body: `
+      <p>Where do peanut drivers go to fill their tanks?</p>
+      <p class="blank-line" aria-hidden="true"></p>`
+  },
+  jars: {
+    title: 'Jar Lid Lineup',
+    body: `
+      <div class="jar-shelf" aria-label="Five jars with colored lids in order">
+        <span class="jar blue-lid"><span></span></span>
+        <span class="jar green-lid"><span></span></span>
+        <span class="jar red-lid"><span></span></span>
+        <span class="jar white-lid"><span></span></span>
+        <span class="jar yellow-lid"><span></span></span>
+      </div>`
+  },
+  spreads: {
+    title: 'Spread Notes',
+    body: `
+      <p>Jelly is made from the juice of the fruit.</p>
+      <p>Jam is made from crushed or chopped fruit.</p>
+      <p>Marmalade is usually a jam made from citrus fruit, like oranges, lemons, limes, or grapefruits.</p>
+      <p>In 1968, The J.M. Smucker Co. introduced Goober, a jarred product that combined alternating vertical stripes of peanut butter and jelly.</p>`
+  }
+};
 
 function normalize(value) {
   return value.toUpperCase().replace(/[^A-Z0-9]/g, '');
@@ -123,8 +167,16 @@ function checkLock(lockId) {
 function openImage(trigger) {
   dialogTitle.textContent = trigger.dataset.title;
   dialogImage.src = trigger.dataset.image;
-  dialogImage.alt = trigger.alt;
+  dialogImage.alt = trigger.dataset.alt || trigger.alt || trigger.getAttribute('aria-label') || '';
   imageDialog.showModal();
+}
+
+function openClue(trigger) {
+  const clue = clueContent[trigger.dataset.clue];
+  if (!clue) return;
+  clueDialogTitle.textContent = clue.title;
+  clueDialogBody.innerHTML = clue.body;
+  clueDialog.showModal();
 }
 
 function resetGame() {
@@ -162,6 +214,9 @@ document.addEventListener('click', event => {
   const imageButton = event.target.closest('[data-image]');
   if (imageButton) openImage(imageButton);
 
+  const clueButton = event.target.closest('[data-clue]');
+  if (clueButton) openClue(clueButton);
+
   const checkButton = event.target.closest('[data-check]');
   if (checkButton) checkLock(checkButton.dataset.check);
 });
@@ -180,6 +235,7 @@ document.addEventListener('keydown', event => {
 });
 
 document.getElementById('closeDialog').addEventListener('click', () => imageDialog.close());
+document.getElementById('closeClueDialog').addEventListener('click', () => clueDialog.close());
 document.getElementById('resetButton').addEventListener('click', resetGame);
 document.getElementById('playAgainButton').addEventListener('click', resetGame);
 

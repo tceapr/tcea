@@ -12,7 +12,7 @@
         <div>
           <p class="eyebrow">Digital Breakout</p>
           <h1 id="page-title">PB&amp;J Breakout</h1>
-          <p class="brief">The Peanut Butter Bandit is on the loose. Search the story, pictures, and pantry clues to open all four locks.</p>
+          <p class="brief">The Peanut Butter Bandit is on the loose. Explore the PB&amp;J board, open clues, and solve all four locks.</p>
         </div>
         <div class="progress-panel" aria-live="polite">
           <span id="progressText">0 of 4 locks open</span>
@@ -27,63 +27,42 @@
             <button class="ghost-button" type="button" id="resetButton">Reset</button>
           </div>
 
-          <div class="story-board">
-            <article class="story-card intro-card">
+          <div class="explore-board">
+            <article class="mission-card">
               <p class="eyebrow">Mission Brief</p>
               <h2>Save the Sandwich Spread</h2>
               <p>The PBB, also known as the Peanut Butter Bandit, is threatening to destroy every jar of peanut butter in the whole wide world. You have 30 minutes to solve the breakout and save our supply of the greatest sandwich spread ever created.</p>
             </article>
 
-            <article class="story-card">
-              <p class="eyebrow">Clue Snapshot 1</p>
-              <h2>PB&amp;J Day</h2>
-              <p>National Peanut Butter and Jelly Day is celebrated every year on April 2nd.</p>
-              <p>The average American will have eaten over 2000 peanut butter and jelly sandwiches by the time they graduate from high school.</p>
-              <p>The first reference of peanut butter paired with jelly in the United States was by Julia Davis Chandler in 1901. In the late 1920s, the price of peanut butter declined, and the sandwich became very popular with children.</p>
-            </article>
+            <div class="clue-scene" aria-label="Clickable PB&amp;J clue board">
+              <button class="clue-object calendar-object" type="button" data-clue="date" aria-label="Open calendar clue">
+                <span aria-hidden="true">PB&amp;J<br>Day</span>
+              </button>
 
-            <article class="story-card hidden-resource-card">
-              <p class="eyebrow">Sandwich Stop</p>
-              <h2>PB&amp;J Picture</h2>
-              <button class="sandwich-link" type="button" data-image="assets/whats-in-the-bag.jpg" data-title="What's in the Bag?" aria-label="Open hidden sandwich making clue">
+              <button class="clue-object sandwich-object" type="button" data-image="assets/whats-in-the-bag.jpg" data-title="What's in the Bag?" data-alt="Sandwich making ingredients with prices" aria-label="Open sandwich picture clue">
                 <span class="sandwich-picture" aria-hidden="true"></span>
               </button>
-            </article>
 
-            <article class="story-card">
-              <p class="eyebrow">Growing the Peanuts</p>
-              <h2>Peanut Facts</h2>
-              <p>The United States is the world's third largest producer of peanuts. Ten states grow 99% of the U.S. peanut crop: Georgia grows about 42%, followed by Texas, Alabama, Florida, North Carolina, South Carolina, Mississippi, Virginia, Oklahoma, and New Mexico.</p>
-              <p>It takes many peanuts to make one 12-ounce jar of peanut butter.</p>
-            </article>
+              <button class="clue-object peanut-object" type="button" data-clue="peanuts" aria-label="Open peanut facts clue">
+                <span aria-hidden="true"></span>
+              </button>
 
-            <article class="story-card joke-card">
-              <p class="eyebrow">PB&amp;J Joke</p>
-              <h2>Fill in the Punchline</h2>
-              <p>Where do peanut drivers go to fill their tanks?</p>
-              <p class="blank-line" aria-hidden="true"></p>
-            </article>
+              <button class="clue-object joke-object" type="button" data-clue="joke" aria-label="Open joke clue">
+                <span aria-hidden="true">?</span>
+              </button>
 
-            <article class="story-card">
-              <p class="eyebrow">Pantry Shelf</p>
-              <h2>Jar Lid Lineup</h2>
-              <div class="jar-shelf" aria-label="Five jars with colored lids in order">
-                <span class="jar blue-lid"><span></span></span>
-                <span class="jar green-lid"><span></span></span>
-                <span class="jar red-lid"><span></span></span>
-                <span class="jar white-lid"><span></span></span>
-                <span class="jar yellow-lid"><span></span></span>
-              </div>
-            </article>
+              <button class="clue-object jar-object" type="button" data-clue="jars" aria-label="Open jar lid clue">
+                <span class="mini-jar blue-lid" aria-hidden="true"></span>
+                <span class="mini-jar green-lid" aria-hidden="true"></span>
+                <span class="mini-jar red-lid" aria-hidden="true"></span>
+                <span class="mini-jar white-lid" aria-hidden="true"></span>
+                <span class="mini-jar yellow-lid" aria-hidden="true"></span>
+              </button>
 
-            <article class="story-card">
-              <p class="eyebrow">Spread Notes</p>
-              <h2>Jelly, Jam, and Marmalade</h2>
-              <p>Jelly is made from the juice of the fruit.</p>
-              <p>Jam is made from crushed or chopped fruit.</p>
-              <p>Marmalade is usually a jam made from citrus fruit, like oranges, lemons, limes, or grapefruits.</p>
-              <p>In 1968, The J.M. Smucker Co. introduced Goober, a jarred product that combined alternating vertical stripes of peanut butter and jelly.</p>
-            </article>
+              <button class="clue-object note-object" type="button" data-clue="spreads" aria-label="Open spread notes clue">
+                <span aria-hidden="true">Jam<br>Jelly</span>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -105,6 +84,14 @@
         <button class="icon-button" type="button" id="closeDialog" aria-label="Close image">x</button>
       </div>
       <img id="dialogImage" alt="">
+    </dialog>
+
+    <dialog id="clueDialog" class="clue-dialog">
+      <div class="dialog-header">
+        <h2 id="clueDialogTitle"></h2>
+        <button class="icon-button" type="button" id="closeClueDialog" aria-label="Close clue">x</button>
+      </div>
+      <div id="clueDialogBody" class="clue-dialog-body"></div>
     </dialog>
 
     <dialog id="winDialog" class="win-dialog">
