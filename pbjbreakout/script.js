@@ -2,28 +2,24 @@ const locks = [
   {
     id: 'date',
     title: 'Date Lock',
-    badge: 'Date',
     label: 'Use MM/DD format. Example: 01/31',
     answerHash: '78529dc3'
   },
   {
     id: 'numberThree',
     title: '3 Number Lock',
-    badge: 'Number',
     label: 'No spaces or commas. Example: 123',
     answerHash: 'c7cf2f40'
   },
   {
     id: 'wordThree',
     title: '3 Word Lock',
-    badge: 'Word',
     label: 'No spaces. Example: WORDWORDWORD',
     answerHash: 'ac682f12'
   },
   {
     id: 'colorFive',
     title: '5 Color Lock',
-    badge: 'Color',
     label: 'First initial of each color. Use all capital letters. Example: RGBWY',
     answerHash: '77404318'
   }
@@ -193,7 +189,6 @@ function renderLocks() {
           ${lockIconSvg(state.get(lock.id))}
           <h3>${lock.title}</h3>
         </div>
-        <span class="badge">${state.get(lock.id) ? 'Open' : lock.badge}</span>
       </div>
       <label for="${lock.id}Input">${lock.label}</label>
       <div class="lock-row">
