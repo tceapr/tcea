@@ -17,7 +17,7 @@ const locks = [
     id: 'wordThree',
     title: '3 Word Lock',
     badge: 'Word',
-    label: 'No spaces. Example: THEPEANUTPATCH',
+    label: 'No spaces. Example: WORDWORDWORD',
     answerHash: 'ac682f12'
   },
   {
