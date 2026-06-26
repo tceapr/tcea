@@ -75,7 +75,7 @@ p {
   border: 1px solid var(--line);
   background:
     linear-gradient(rgba(255, 248, 235, 0.86), rgba(255, 248, 235, 0.94)),
-    url("assets/pbj-cover.svg") center / cover;
+    url("assets/pbj-title-graphic.png") center / cover;
   box-shadow: var(--shadow);
   padding: clamp(28px, 6vw, 72px);
 }
