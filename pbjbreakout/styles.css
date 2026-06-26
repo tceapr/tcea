@@ -286,25 +286,109 @@ p {
 
 .clue-scene {
   position: relative;
-  min-height: 620px;
-  overflow: hidden;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  overflow: visible;
   border: 1px solid var(--line);
   background:
     linear-gradient(180deg, rgba(255, 248, 235, 0.64), rgba(255, 248, 235, 0.88)),
     radial-gradient(circle at 18% 18%, rgba(199, 122, 45, 0.26), transparent 9rem),
     radial-gradient(circle at 84% 18%, rgba(118, 50, 125, 0.18), transparent 11rem),
-    linear-gradient(180deg, #fff8eb 0 68%, #d99b5c 68% 100%);
+    #fff8eb;
+  padding: 14px;
 }
 
 .clue-scene::before {
-  content: "";
+  content: none;
+}
+
+.clue-card-button {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  min-width: 0;
+  border: 1px solid rgba(73, 48, 27, 0.16);
+  background: #fff;
+  color: var(--ink);
+  padding: 16px 12px 14px;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(96, 54, 21, 0.08);
+  transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+.clue-card-button:hover,
+.clue-card-button:focus-visible {
+  border-color: rgba(118, 50, 125, 0.52);
+  box-shadow: 0 14px 30px rgba(96, 54, 21, 0.16);
+  transform: translateY(-2px);
+}
+
+.clue-card-button:focus-visible {
+  outline: 4px solid rgba(118, 50, 125, 0.18);
+  outline-offset: 3px;
+}
+
+.clue-thumb-wrap {
+  position: relative;
+  display: block;
+  width: min(100%, 172px);
+  aspect-ratio: 1;
+  overflow: hidden;
+  border: 1px solid rgba(73, 48, 27, 0.12);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.86), rgba(255, 238, 200, 0.9)),
+    repeating-linear-gradient(45deg, rgba(118, 50, 125, 0.08) 0 10px, rgba(199, 122, 45, 0.08) 10px 20px);
+}
+
+.clue-thumb {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 12px;
+  object-fit: contain;
+  background: #fff;
+}
+
+.clue-thumb-fallback {
   position: absolute;
-  left: 6%;
-  right: 6%;
-  bottom: 58px;
-  height: 22px;
-  border-radius: 999px;
-  background: rgba(73, 48, 27, 0.16);
+  inset: 0;
+  display: none;
+  align-content: center;
+  justify-items: center;
+  gap: 9px;
+  padding: 18px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.clue-thumb-fallback span {
+  color: var(--jelly);
+  font-weight: 900;
+  line-height: 1.12;
+}
+
+.clue-thumb-fallback small {
+  font-size: 0.78rem;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.is-missing-image .clue-thumb {
+  display: none;
+}
+
+.is-missing-image .clue-thumb-fallback {
+  display: grid;
+}
+
+.clue-card-title {
+  min-height: 2.5em;
+  color: var(--ink);
+  font-weight: 900;
+  line-height: 1.25;
 }
 
 .clue-object {
@@ -748,6 +832,15 @@ figcaption {
   background: #f4ead3;
 }
 
+.image-fallback {
+  margin: 0;
+  padding: 34px 24px 38px;
+  color: var(--muted);
+  font-weight: 800;
+  line-height: 1.55;
+  text-align: center;
+}
+
 .clue-dialog {
   width: min(760px, calc(100% - 28px));
 }
@@ -863,6 +956,10 @@ figcaption {
     grid-template-columns: 1fr;
   }
 
+  .clue-scene {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .locks-panel {
     order: -1;
     position: static;
@@ -901,36 +998,12 @@ figcaption {
   }
 
   .clue-scene {
-    min-height: 720px;
+    grid-template-columns: 1fr;
+    padding: 10px;
   }
 
-  .calendar-object {
-    left: 24px;
-    top: 28px;
-  }
-
-  .peanut-object {
-    right: 20px;
-    top: 64px;
-  }
-
-  .note-object {
-    top: 232px;
-  }
-
-  .joke-object {
-    left: 24px;
-    bottom: 250px;
-  }
-
-  .jar-object {
-    right: 18px;
-    bottom: 88px;
-    width: 240px;
-  }
-
-  .sandwich-object {
-    bottom: 220px;
+  .clue-card-title {
+    min-height: 0;
   }
 
   .teacher-page {

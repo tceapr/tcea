@@ -33,9 +33,11 @@ const state = new Map(locks.map(lock => [lock.id, false]));
 const locksList = document.getElementById('locksList');
 const progressText = document.getElementById('progressText');
 const progressFill = document.getElementById('progressFill');
+const clueScene = document.getElementById('clueScene');
 const imageDialog = document.getElementById('imageDialog');
 const dialogTitle = document.getElementById('dialogTitle');
 const dialogImage = document.getElementById('dialogImage');
+const imageFallback = document.getElementById('imageFallback');
 const clueDialog = document.getElementById('clueDialog');
 const clueDialogTitle = document.getElementById('clueDialogTitle');
 const clueDialogBody = document.getElementById('clueDialogBody');
@@ -44,6 +46,51 @@ const leafCelebration = document.getElementById('leafCelebration');
 let celebrationTimer;
 let winTimer;
 let winQueued = false;
+
+const clueGraphics = [
+  {
+    id: 'date',
+    title: 'National PB&J Day',
+    icon: 'assets/pbj-icon-sandwich.png',
+    image: 'assets/pbj-national-day.png',
+    alt: 'National Peanut Butter and Jelly Day clue graphic'
+  },
+  {
+    id: 'sandwich',
+    title: 'Sandwich Shopping',
+    icon: 'assets/pbj-icon-bag.png',
+    image: 'assets/pbj-sandwich-shopping.png',
+    alt: 'Peanut butter and jelly sandwich shopping challenge clue graphic'
+  },
+  {
+    id: 'joke',
+    title: 'Joke of the Page',
+    icon: 'assets/pbj-icon-peanut.png',
+    image: 'assets/pbj-joke.png',
+    alt: 'Peanut driver joke clue graphic'
+  },
+  {
+    id: 'pantry',
+    title: 'Pantry Shelf',
+    icon: 'assets/pbj-icon-jelly.png',
+    image: 'assets/pbj-pantry-shelf.png',
+    alt: 'Organized pantry shelf with jars and colored peanut butter lids'
+  },
+  {
+    id: 'states',
+    title: 'Growing the Peanuts',
+    icon: 'assets/pbj-icon-bread.png',
+    image: 'assets/pbj-peanut-states.png',
+    alt: 'Top ten peanut-growing states clue graphic'
+  },
+  {
+    id: 'interesting',
+    title: 'Interesting Peanut Fact',
+    icon: 'assets/pbj-icon-peanut-butter.png',
+    image: 'assets/pbj-interesting.png',
+    alt: 'Interesting fact about how many peanuts make a jar of peanut butter'
+  }
+];
 
 const clueContent = {
   date: {
@@ -85,6 +132,27 @@ const clueContent = {
       <p>In 1968, The J.M. Smucker Co. introduced Goober, a jarred product that combined alternating vertical stripes of peanut butter and jelly.</p>`
   }
 };
+
+function renderClues() {
+  clueScene.innerHTML = clueGraphics.map(clue => `
+    <button class="clue-card-button" type="button" data-image="${clue.image}" data-title="${clue.title}" data-alt="${clue.alt}" aria-label="Open ${clue.title}">
+      <span class="clue-thumb-wrap">
+        <img class="clue-thumb" src="${clue.icon}" alt="" loading="lazy">
+        <span class="clue-thumb-fallback" aria-hidden="true">
+          <span>${clue.title}</span>
+          <small>Add ${clue.icon.replace('assets/', '')}</small>
+        </span>
+      </span>
+      <span class="clue-card-title">${clue.title}</span>
+    </button>
+  `).join('');
+
+  clueScene.querySelectorAll('.clue-thumb').forEach(image => {
+    image.addEventListener('error', () => {
+      image.closest('.clue-card-button').classList.add('is-missing-image');
+    });
+  });
+}
 
 function normalize(value) {
   return value.toUpperCase().replace(/[^A-Z0-9]/g, '');
@@ -168,6 +236,10 @@ function openImage(trigger) {
   dialogTitle.textContent = trigger.dataset.title;
   dialogImage.src = trigger.dataset.image;
   dialogImage.alt = trigger.dataset.alt || trigger.alt || trigger.getAttribute('aria-label') || '';
+  imageDialog.classList.remove('is-missing-image');
+  dialogImage.hidden = false;
+  imageFallback.hidden = true;
+  imageFallback.textContent = '';
   imageDialog.showModal();
 }
 
@@ -212,7 +284,10 @@ function clearLeafCelebration() {
 
 document.addEventListener('click', event => {
   const imageButton = event.target.closest('[data-image]');
-  if (imageButton) openImage(imageButton);
+  if (imageButton) {
+    openImage(imageButton);
+    return;
+  }
 
   const clueButton = event.target.closest('[data-clue]');
   if (clueButton) openClue(clueButton);
@@ -239,4 +314,12 @@ document.getElementById('closeClueDialog').addEventListener('click', () => clueD
 document.getElementById('resetButton').addEventListener('click', resetGame);
 document.getElementById('playAgainButton').addEventListener('click', resetGame);
 
+dialogImage.addEventListener('error', () => {
+  imageDialog.classList.add('is-missing-image');
+  dialogImage.hidden = true;
+  imageFallback.hidden = false;
+  imageFallback.textContent = `This clue is ready for ${dialogImage.getAttribute('src')}. Add the graphic to the assets folder, and it will open here.`;
+});
+
+renderClues();
 renderLocks();

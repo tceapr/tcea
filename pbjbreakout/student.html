@@ -34,35 +34,7 @@
               <p>The PBB, also known as the Peanut Butter Bandit, is threatening to destroy every jar of peanut butter in the whole wide world. You have 30 minutes to solve the breakout and save our supply of the greatest sandwich spread ever created.</p>
             </article>
 
-            <div class="clue-scene" aria-label="Clickable PB&amp;J clue board">
-              <button class="clue-object calendar-object" type="button" data-clue="date" aria-label="Open calendar clue">
-                <span aria-hidden="true">PB&amp;J<br>Day</span>
-              </button>
-
-              <button class="clue-object sandwich-object" type="button" data-image="assets/whats-in-the-bag.jpg" data-title="What's in the Bag?" data-alt="Sandwich making ingredients with prices" aria-label="Open sandwich picture clue">
-                <span class="sandwich-picture" aria-hidden="true"></span>
-              </button>
-
-              <button class="clue-object peanut-object" type="button" data-clue="peanuts" aria-label="Open peanut facts clue">
-                <span aria-hidden="true"></span>
-              </button>
-
-              <button class="clue-object joke-object" type="button" data-clue="joke" aria-label="Open joke clue">
-                <span aria-hidden="true">?</span>
-              </button>
-
-              <button class="clue-object jar-object" type="button" data-clue="jars" aria-label="Open jar lid clue">
-                <span class="mini-jar blue-lid" aria-hidden="true"></span>
-                <span class="mini-jar green-lid" aria-hidden="true"></span>
-                <span class="mini-jar red-lid" aria-hidden="true"></span>
-                <span class="mini-jar white-lid" aria-hidden="true"></span>
-                <span class="mini-jar yellow-lid" aria-hidden="true"></span>
-              </button>
-
-              <button class="clue-object note-object" type="button" data-clue="spreads" aria-label="Open spread notes clue">
-                <span aria-hidden="true">Jam<br>Jelly</span>
-              </button>
-            </div>
+            <div id="clueScene" class="clue-scene" aria-label="Clickable PB&amp;J clue board"></div>
           </div>
         </div>
 
@@ -84,6 +56,7 @@
         <button class="icon-button" type="button" id="closeDialog" aria-label="Close image">x</button>
       </div>
       <img id="dialogImage" alt="">
+      <p id="imageFallback" class="image-fallback" hidden></p>
     </dialog>
 
     <dialog id="clueDialog" class="clue-dialog">
