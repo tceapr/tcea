@@ -56,11 +56,25 @@ const clueGraphics = [
     alt: 'National Peanut Butter and Jelly Day clue graphic'
   },
   {
+    id: 'states',
+    title: 'Growing the Peanuts',
+    icon: 'assets/pbj-icon-bread.png',
+    image: 'assets/pbj-peanut-states.png',
+    alt: 'Top ten peanut-growing states clue graphic'
+  },
+  {
     id: 'sandwich',
     title: 'Sandwich Shopping',
     icon: 'assets/pbj-icon-bag.png',
     image: 'assets/pbj-sandwich-shopping.png',
     alt: 'Peanut butter and jelly sandwich shopping challenge clue graphic'
+  },
+  {
+    id: 'interesting',
+    title: 'Interesting Peanut Fact',
+    icon: 'assets/pbj-icon-peanut-butter.png',
+    image: 'assets/pbj-interesting.png',
+    alt: 'Interesting fact about how many peanuts make a jar of peanut butter'
   },
   {
     id: 'joke',
@@ -75,20 +89,6 @@ const clueGraphics = [
     icon: 'assets/pbj-icon-jelly.png',
     image: 'assets/pbj-pantry-shelf.png',
     alt: 'Organized pantry shelf with jars and colored peanut butter lids'
-  },
-  {
-    id: 'states',
-    title: 'Growing the Peanuts',
-    icon: 'assets/pbj-icon-bread.png',
-    image: 'assets/pbj-peanut-states.png',
-    alt: 'Top ten peanut-growing states clue graphic'
-  },
-  {
-    id: 'interesting',
-    title: 'Interesting Peanut Fact',
-    icon: 'assets/pbj-icon-peanut-butter.png',
-    image: 'assets/pbj-interesting.png',
-    alt: 'Interesting fact about how many peanuts make a jar of peanut butter'
   }
 ];
 
