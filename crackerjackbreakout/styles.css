@@ -385,6 +385,23 @@ p {
   line-height: 1.25;
 }
 
+.audio-clue-button {
+  background:
+    linear-gradient(#fff, #fff),
+    repeating-linear-gradient(90deg, var(--red) 0 14px, #fff9eb 14px 28px);
+}
+
+.audio-status {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  padding: 0 10px;
+  color: #fffdf5;
+  background: var(--blue);
+  font-size: 0.82rem;
+  font-weight: 900;
+}
+
 .locks-list {
   display: grid;
   gap: 14px;

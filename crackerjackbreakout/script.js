@@ -79,17 +79,24 @@ const clueGraphics = [
     alt: 'Cracker Jack began in Chicago clue graphic'
   },
   {
-    id: 'facts',
-    title: 'Fun Facts',
+    id: 'ballgameSong',
+    title: 'Ballgame Song',
     icon: 'assets/icon-jackbox.png',
-    image: 'assets/clue-fun-facts.png',
-    alt: 'Cracker Jack fun facts clue graphic'
+    type: 'audio',
+    alt: 'Play the ballgame song'
   }
 ];
 
 function renderClues() {
   clueScene.innerHTML = clueGraphics.map(clue => `
-    <button class="clue-card-button" type="button" data-image="${clue.image}" data-title="${clue.title}" data-alt="${clue.alt}" aria-label="Open ${clue.title}">
+    <button
+      class="clue-card-button ${clue.type === 'audio' ? 'audio-clue-button' : ''}"
+      type="button"
+      ${clue.type === 'audio' ? 'data-audio="ballgame"' : `data-image="${clue.image}"`}
+      data-title="${clue.title}"
+      data-alt="${clue.alt}"
+      aria-label="${clue.type === 'audio' ? `Play ${clue.title}` : `Open ${clue.title}`}"
+    >
       <span class="clue-thumb-wrap">
         <img class="clue-thumb" src="${clue.icon}" alt="" loading="lazy">
         <span class="clue-thumb-fallback" aria-hidden="true">
@@ -98,6 +105,7 @@ function renderClues() {
         </span>
       </span>
       <span class="clue-card-title">${clue.title}</span>
+      ${clue.type === 'audio' ? '<span class="audio-status" id="audioTileStatus">Click to play</span>' : ''}
     </button>
   `).join('');
 
@@ -234,10 +242,12 @@ function toggleMusic() {
         musicButton.textContent = 'Pause Music';
         musicButton.setAttribute('aria-pressed', 'true');
         musicButton.classList.add('is-playing');
+        setAudioTileStatus('Playing');
       })
       .catch(() => {
         musicButton.textContent = 'Play Music';
         musicButton.setAttribute('aria-pressed', 'false');
+        setAudioTileStatus('Click to play');
       });
     return;
   }
@@ -246,9 +256,21 @@ function toggleMusic() {
   musicButton.textContent = 'Play Music';
   musicButton.setAttribute('aria-pressed', 'false');
   musicButton.classList.remove('is-playing');
+  setAudioTileStatus('Click to play');
+}
+
+function setAudioTileStatus(text) {
+  const status = document.getElementById('audioTileStatus');
+  if (status) status.textContent = text;
 }
 
 document.addEventListener('click', event => {
+  const audioButton = event.target.closest('[data-audio]');
+  if (audioButton) {
+    toggleMusic();
+    return;
+  }
+
   const imageButton = event.target.closest('[data-image]');
   if (imageButton) {
     openImage(imageButton);
