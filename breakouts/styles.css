@@ -162,6 +162,10 @@ h1 {
   background: #fff1d8;
 }
 
+.cjack-media {
+  background: #fff4dd;
+}
+
 .coming-media {
   background:
     radial-gradient(circle at 20% 30%, rgba(40, 123, 216, 0.18), transparent 8rem),
@@ -234,14 +238,17 @@ h1 {
 }
 
 .level-two .open-link,
-.pbj-card .open-link {
+.pbj-card .open-link,
+.cjack-card .open-link {
   background: var(--purple);
 }
 
 .level-two:hover .open-link,
 .level-two:focus-visible .open-link,
 .pbj-card:hover .open-link,
-.pbj-card:focus-visible .open-link {
+.pbj-card:focus-visible .open-link,
+.cjack-card:hover .open-link,
+.cjack-card:focus-visible .open-link {
   background: var(--purple-dark);
 }
 

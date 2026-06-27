@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cracker Jack Breakout</title>
+    <link rel="stylesheet" href="styles.css?v=cj-breakout-1">
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="hero" aria-labelledby="page-title">
+        <div>
+          <p class="eyebrow">Digital Breakout</p>
+          <h1 id="page-title">Cracker Jack Breakout</h1>
+          <p class="brief">Crack the clues before Cracker Jack is forever banned on Planet Earth. Open the clue cards, solve all four locks, and get crackin'!</p>
+        </div>
+        <div class="progress-panel" aria-live="polite">
+          <span id="progressText">0 of 4 locks open</span>
+          <div class="progress-track" aria-hidden="true"><span id="progressFill"></span></div>
+          <button class="music-button" type="button" id="musicButton" aria-pressed="false">Play Music</button>
+        </div>
+      </section>
+
+      <section class="workspace" aria-label="Breakout workspace">
+        <div class="clue-area">
+          <div class="clue-toolbar">
+            <h2>Cracker Jack Clues</h2>
+            <button class="ghost-button" type="button" id="resetButton">Reset</button>
+          </div>
+
+          <div class="explore-board">
+            <article class="mission-card">
+              <p class="eyebrow">Mission Brief</p>
+              <h2>Save the Snack</h2>
+              <p>Planet Earth needs a clue crew. Search the Cracker Jack clue cards, sort the real answers from the extra facts, and open every lock before the crunchy caramel goodness disappears.</p>
+            </article>
+
+            <div id="clueScene" class="clue-scene" aria-label="Clickable Cracker Jack clue board"></div>
+          </div>
+        </div>
+
+        <aside class="locks-panel" aria-label="Breakout locks">
+          <div class="locks-header">
+            <h2>Locks</h2>
+            <p>Solve each lock using the clues on this page.</p>
+          </div>
+          <div id="locksList" class="locks-list"></div>
+        </aside>
+      </section>
+    </main>
+
+    <audio id="bgMusic" src="assets/ballgame.mp3" loop preload="auto"></audio>
+
+    <div id="snackCelebration" class="snack-celebration" aria-hidden="true"></div>
+
+    <dialog id="imageDialog" class="image-dialog">
+      <div class="dialog-header">
+        <h2 id="dialogTitle"></h2>
+        <button class="icon-button" type="button" id="closeDialog" aria-label="Close image">x</button>
+      </div>
+      <img id="dialogImage" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" alt="" hidden>
+      <p id="imageFallback" class="image-fallback" hidden></p>
+    </dialog>
+
+    <dialog id="winDialog" class="win-dialog">
+      <div class="win-card">
+        <p class="eyebrow">Breakout Complete</p>
+        <h2>You saved Cracker Jack.</h2>
+        <p>Excellent clue work. The snack is safe, the song can play, and Planet Earth may crunch happily again.</p>
+        <button type="button" id="playAgainButton">Play Again</button>
+      </div>
+    </dialog>
+
+    <script src="script.js?v=cj-breakout-1"></script>
+  </body>
+</html>
