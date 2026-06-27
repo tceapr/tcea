@@ -166,6 +166,10 @@ h1 {
   background: #fff4dd;
 }
 
+.moon-media {
+  background: #eaf4ff;
+}
+
 .coming-media {
   background:
     radial-gradient(circle at 20% 30%, rgba(40, 123, 216, 0.18), transparent 8rem),
@@ -239,7 +243,8 @@ h1 {
 
 .level-two .open-link,
 .pbj-card .open-link,
-.cjack-card .open-link {
+.cjack-card .open-link,
+.moon-card .open-link {
   background: var(--purple);
 }
 
@@ -248,7 +253,9 @@ h1 {
 .pbj-card:hover .open-link,
 .pbj-card:focus-visible .open-link,
 .cjack-card:hover .open-link,
-.cjack-card:focus-visible .open-link {
+.cjack-card:focus-visible .open-link,
+.moon-card:hover .open-link,
+.moon-card:focus-visible .open-link {
   background: var(--purple-dark);
 }
 
