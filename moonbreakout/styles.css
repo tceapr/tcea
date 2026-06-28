@@ -526,14 +526,15 @@ p {
 
 .footprint-hotspot {
   position: absolute;
-  top: 5%;
-  right: 3%;
-  width: 51%;
-  height: 78%;
+  top: 23%;
+  right: 13%;
+  width: 22%;
+  height: 48%;
   border: 0;
   border-radius: 999px;
   background: transparent;
   cursor: pointer;
+  transform: rotate(-14deg);
 }
 
 .footprint-hotspot::after {
