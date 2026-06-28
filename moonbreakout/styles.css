@@ -511,12 +511,50 @@ p {
   font-weight: 900;
 }
 
-.image-dialog img {
+.dialog-image-stage {
+  position: relative;
+  background: #fff;
+}
+
+.dialog-image-stage img {
   display: block;
   width: 100%;
   max-height: min(78vh, 760px);
   object-fit: contain;
   background: #fff;
+}
+
+.footprint-hotspot {
+  position: absolute;
+  top: 5%;
+  right: 3%;
+  width: 51%;
+  height: 78%;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.footprint-hotspot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 4px dashed transparent;
+  border-radius: inherit;
+  background: transparent;
+  transition: background 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.footprint-hotspot:hover::after,
+.footprint-hotspot:focus-visible::after {
+  border-color: rgba(255, 212, 56, 0.92);
+  background: rgba(255, 212, 56, 0.08);
+  box-shadow: 0 0 0 6px rgba(29, 111, 209, 0.14);
+}
+
+.footprint-hotspot:focus-visible {
+  outline: 0;
 }
 
 .dialog-actions {

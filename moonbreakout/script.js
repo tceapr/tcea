@@ -33,6 +33,7 @@ const clueScene = document.getElementById('clueScene');
 const imageDialog = document.getElementById('imageDialog');
 const dialogTitle = document.getElementById('dialogTitle');
 const dialogImage = document.getElementById('dialogImage');
+const footprintHotspot = document.getElementById('footprintHotspot');
 const dialogActions = document.getElementById('dialogActions');
 const dialogLink = document.getElementById('dialogLink');
 const imageFallback = document.getElementById('imageFallback');
@@ -41,6 +42,12 @@ const spaceCelebration = document.getElementById('spaceCelebration');
 let celebrationTimer;
 let winTimer;
 let winQueued = false;
+
+const moonMaze = {
+  title: 'Moon Maze',
+  image: 'assets/clue-moon-maze.png',
+  alt: 'Moon maze direction clue graphic'
+};
 
 const clueGraphics = [
   {
@@ -85,13 +92,14 @@ const clueGraphics = [
     title: 'First Footprint',
     icon: 'assets/icon-footprint.png',
     image: 'assets/clue-footprint.png',
-    alt: 'Neil Armstrong first footprint clue graphic'
+    alt: 'Neil Armstrong first footprint clue graphic',
+    hotspot: 'footprint'
   }
 ];
 
 function renderClues() {
   clueScene.innerHTML = clueGraphics.map(clue => `
-    <button class="clue-card-button" type="button" data-image="${clue.image}" data-title="${clue.title}" data-alt="${clue.alt}" ${clue.link ? `data-link="${clue.link}" data-link-text="${clue.linkText}"` : ''} aria-label="Open ${clue.title}">
+    <button class="clue-card-button" type="button" data-image="${clue.image}" data-title="${clue.title}" data-alt="${clue.alt}" ${clue.link ? `data-link="${clue.link}" data-link-text="${clue.linkText}"` : ''} ${clue.hotspot ? `data-hotspot="${clue.hotspot}"` : ''} aria-label="Open ${clue.title}">
       <span class="clue-thumb-wrap">
         <img class="clue-thumb" src="${clue.icon}" alt="" loading="lazy">
         <span class="clue-thumb-fallback" aria-hidden="true">
@@ -193,6 +201,8 @@ function openImage(trigger) {
   dialogImage.src = trigger.dataset.image;
   dialogImage.alt = trigger.dataset.alt || trigger.alt || trigger.getAttribute('aria-label') || '';
   imageDialog.classList.remove('is-missing-image');
+  imageDialog.classList.toggle('has-footprint-hotspot', trigger.dataset.hotspot === 'footprint');
+  footprintHotspot.hidden = trigger.dataset.hotspot !== 'footprint';
   dialogImage.hidden = false;
   imageFallback.hidden = true;
   imageFallback.textContent = '';
@@ -207,6 +217,19 @@ function openImage(trigger) {
   }
 
   imageDialog.showModal();
+}
+
+function openMoonMaze() {
+  dialogTitle.textContent = moonMaze.title;
+  dialogImage.src = moonMaze.image;
+  dialogImage.alt = moonMaze.alt;
+  imageDialog.classList.remove('has-footprint-hotspot', 'is-missing-image');
+  footprintHotspot.hidden = true;
+  dialogImage.hidden = false;
+  imageFallback.hidden = true;
+  imageFallback.textContent = '';
+  dialogActions.hidden = true;
+  dialogLink.href = '#';
 }
 
 function resetGame() {
@@ -265,11 +288,13 @@ document.addEventListener('keydown', event => {
 });
 
 document.getElementById('closeDialog').addEventListener('click', () => imageDialog.close());
+footprintHotspot.addEventListener('click', openMoonMaze);
 document.getElementById('resetButton').addEventListener('click', resetGame);
 document.getElementById('playAgainButton').addEventListener('click', resetGame);
 
 dialogImage.addEventListener('error', () => {
   imageDialog.classList.add('is-missing-image');
+  footprintHotspot.hidden = true;
   dialogImage.hidden = true;
   imageFallback.hidden = false;
   imageFallback.textContent = `This clue is ready for ${dialogImage.getAttribute('src')}. Add the graphic to the assets folder, and it will open here.`;

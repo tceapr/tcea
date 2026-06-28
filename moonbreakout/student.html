@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Moon Breakout</title>
-    <link rel="stylesheet" href="styles.css?v=moon-breakout-1">
+    <link rel="stylesheet" href="styles.css?v=moon-maze-1">
   </head>
   <body>
     <main class="app-shell">
@@ -55,7 +55,10 @@
         <h2 id="dialogTitle"></h2>
         <button class="icon-button" type="button" id="closeDialog" aria-label="Close image">x</button>
       </div>
-      <img id="dialogImage" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" alt="" hidden>
+      <div id="dialogImageStage" class="dialog-image-stage">
+        <img id="dialogImage" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" alt="" hidden>
+        <button id="footprintHotspot" class="footprint-hotspot" type="button" aria-label="Open Moon Maze clue" hidden></button>
+      </div>
       <div id="dialogActions" class="dialog-actions" hidden>
         <a id="dialogLink" href="#" target="_blank" rel="noopener">Open Link</a>
       </div>
@@ -71,6 +74,6 @@
       </div>
     </dialog>
 
-    <script src="script.js?v=moon-breakout-1"></script>
+    <script src="script.js?v=moon-maze-1"></script>
   </body>
 </html>
