@@ -78,6 +78,20 @@ const clueGraphics = [
     icon: 'assets/quiz-glue.png',
     alt: 'Bottle of glue school supply quiz clue',
     quiz: true
+  },
+  {
+    id: 'eraserBread',
+    title: 'Eraser Bread',
+    icon: 'assets/distractor-eraser-bread.png',
+    image: 'assets/distractor-eraser-bread.png',
+    alt: 'Back-to-school fun fact about people using bread before erasers'
+  },
+  {
+    id: 'yellowBus',
+    title: 'Yellow Bus',
+    icon: 'assets/distractor-yellow-bus.png',
+    image: 'assets/distractor-yellow-bus.png',
+    alt: 'Back-to-school fun fact about why school buses are yellow'
   }
 ];
 const locksList = document.getElementById('locksList');
