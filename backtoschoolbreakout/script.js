@@ -50,14 +50,46 @@ const supplyQuiz = [
     answerHash: '356dcdb6'
   }
 ];
+const clueGraphics = [
+  {
+    id: 'rhymingWords',
+    title: 'Rhyming Words',
+    icon: 'assets/rhyming-words.png',
+    image: 'assets/rhyming-words.png',
+    alt: 'Rhyming words clue graphic'
+  },
+  {
+    id: 'subjectBooks',
+    title: 'Subject Books',
+    icon: 'assets/subject-books.png',
+    image: 'assets/subject-books.png',
+    alt: 'Subject books clue graphic'
+  },
+  {
+    id: 'healthySnacks',
+    title: 'Healthy Snacks',
+    icon: 'assets/healthy-snacks.png',
+    image: 'assets/healthy-snacks.png',
+    alt: 'Healthy snacks direction clue graphic'
+  },
+  {
+    id: 'supplyQuiz',
+    title: 'Supply Quiz',
+    icon: 'assets/quiz-glue.png',
+    alt: 'Bottle of glue school supply quiz clue',
+    quiz: true
+  }
+];
 const locksList = document.getElementById('locksList');
 const progressText = document.getElementById('progressText');
 const progressFill = document.getElementById('progressFill');
+const clueScene = document.getElementById('clueScene');
 const quizStepLabel = document.getElementById('quizStepLabel');
 const supplyQuizStage = document.getElementById('supplyQuizStage');
 const imageDialog = document.getElementById('imageDialog');
 const dialogTitle = document.getElementById('dialogTitle');
 const dialogImage = document.getElementById('dialogImage');
+const quizDialog = document.getElementById('quizDialog');
 const winDialog = document.getElementById('winDialog');
 const schoolCelebration = document.getElementById('schoolCelebration');
 let celebrationTimer;
@@ -115,6 +147,28 @@ function renderLocks() {
     </article>
   `).join('');
   updateProgress();
+}
+
+function renderClues() {
+  clueScene.innerHTML = clueGraphics.map(clue => `
+    <button class="clue-card-button" type="button" ${clue.quiz ? 'data-quiz-open' : `data-image="${clue.image}" data-title="${clue.title}" data-alt="${clue.alt}"`} aria-label="Open ${clue.title}">
+      <span class="clue-thumb-wrap">
+        <img class="clue-thumb" src="${clue.icon}" alt="" loading="lazy">
+        <span class="clue-thumb-fallback" aria-hidden="true">
+          <span>${clue.title}</span>
+          <small>Open clue</small>
+        </span>
+      </span>
+      <span class="clue-card-title">${clue.title}</span>
+      ${clue.quiz ? '<span class="link-note">Quiz clue</span>' : ''}
+    </button>
+  `).join('');
+
+  clueScene.querySelectorAll('.clue-thumb').forEach(image => {
+    image.addEventListener('error', () => {
+      image.closest('.clue-card-button').classList.add('is-missing-image');
+    });
+  });
 }
 
 function renderSupplyQuiz() {
@@ -196,8 +250,14 @@ function checkLock(lockId) {
 function openImage(trigger) {
   dialogTitle.textContent = trigger.dataset.title;
   dialogImage.src = trigger.dataset.image;
-  dialogImage.alt = trigger.alt;
+  dialogImage.alt = trigger.dataset.alt || trigger.alt || '';
   imageDialog.showModal();
+}
+
+function openQuizDialog() {
+  quizDialog.showModal();
+  const quizInput = document.getElementById('supplyQuizInput');
+  if (quizInput) quizInput.focus();
 }
 
 function resetGame() {
@@ -244,6 +304,9 @@ document.addEventListener('click', event => {
 
   const quizButton = event.target.closest('[data-quiz-check]');
   if (quizButton) checkSupplyQuiz();
+
+  const quizOpenButton = event.target.closest('[data-quiz-open]');
+  if (quizOpenButton) openQuizDialog();
 });
 
 document.addEventListener('keydown', event => {
@@ -266,8 +329,10 @@ document.addEventListener('keydown', event => {
 });
 
 document.getElementById('closeDialog').addEventListener('click', () => imageDialog.close());
+document.getElementById('closeQuizDialog').addEventListener('click', () => quizDialog.close());
 document.getElementById('resetButton').addEventListener('click', resetGame);
 document.getElementById('playAgainButton').addEventListener('click', resetGame);
 
+renderClues();
 renderLocks();
 renderSupplyQuiz();
