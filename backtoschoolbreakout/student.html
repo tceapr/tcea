@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Back to School Breakout</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="hero" aria-labelledby="page-title">
+        <div>
+          <p class="eyebrow">Digital Breakout</p>
+          <h1 id="page-title">Back to School Breakout</h1>
+          <p class="brief">Use the Back to School clue graphics to open the locks. The lock labels tell you what kind of answer to enter.</p>
+        </div>
+        <div class="progress-panel" aria-live="polite">
+          <span id="progressText">0 of 4 locks open</span>
+          <div class="progress-track" aria-hidden="true"><span id="progressFill"></span></div>
+        </div>
+      </section>
+
+      <section class="workspace" aria-label="Breakout workspace">
+        <div class="clue-area">
+          <div class="clue-toolbar">
+            <h2>Clue Graphics</h2>
+            <button class="ghost-button" type="button" id="resetButton">Reset</button>
+          </div>
+
+          <div class="clue-grid">
+            <figure class="clue-card">
+              <img class="clue-image" src="assets/rhyming-words.png" alt="Rhyming words clue graphic" data-image="assets/rhyming-words.png" data-title="Rhyming Words" role="button" tabindex="0">
+              <figcaption>Rhyming Words</figcaption>
+            </figure>
+
+            <figure class="clue-card">
+              <img class="clue-image" src="assets/subject-books.png" alt="Subject books clue graphic" data-image="assets/subject-books.png" data-title="Subject Books" role="button" tabindex="0">
+              <figcaption>Subject Books</figcaption>
+            </figure>
+
+            <figure class="clue-card">
+              <img class="clue-image" src="assets/healthy-snacks.png" alt="Healthy snacks direction clue graphic" data-image="assets/healthy-snacks.png" data-title="Healthy Snacks" role="button" tabindex="0">
+              <figcaption>Healthy Snacks</figcaption>
+            </figure>
+
+            <article class="clue-card supply-quiz-card" aria-labelledby="supplyQuizTitle">
+              <div class="quiz-header">
+                <span id="quizStepLabel">Section 1 of 4</span>
+                <h3 id="supplyQuizTitle">Name that School Supply Quiz</h3>
+                <p>Make sure you use ALL CAPS.</p>
+              </div>
+              <div id="supplyQuizStage" class="quiz-stage"></div>
+            </article>
+          </div>
+        </div>
+
+        <aside class="locks-panel" aria-label="Breakout locks">
+          <div class="locks-header">
+            <h2>Locks</h2>
+            <p>Solve each lock using the clue graphics.</p>
+          </div>
+          <div id="locksList" class="locks-list"></div>
+        </aside>
+      </section>
+    </main>
+
+    <div id="schoolCelebration" class="school-celebration" aria-hidden="true"></div>
+
+    <dialog id="imageDialog" class="image-dialog">
+      <div class="dialog-header">
+        <h2 id="dialogTitle"></h2>
+        <button class="icon-button" type="button" id="closeDialog" aria-label="Close image">x</button>
+      </div>
+      <img id="dialogImage" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" alt="">
+    </dialog>
+
+    <dialog id="winDialog" class="win-dialog">
+      <div class="win-card">
+        <p class="eyebrow">Breakout Complete</p>
+        <h2>You opened every Back to School lock.</h2>
+        <p>Great detective work. Your clues are organized, your pencils are sharpened, and the breakout is open.</p>
+        <button type="button" id="playAgainButton">Play Again</button>
+      </div>
+    </dialog>
+
+    <script src="script.js"></script>
+  </body>
+</html>
