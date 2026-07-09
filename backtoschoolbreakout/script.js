@@ -54,42 +54,42 @@ const clueGraphics = [
   {
     id: 'rhymingWords',
     title: 'Rhyming Words',
-    icon: 'assets/rhyming-words.png',
+    icon: 'assets/tile-rhyming-words.png',
     image: 'assets/rhyming-words.png',
     alt: 'Rhyming words clue graphic'
   },
   {
     id: 'subjectBooks',
     title: 'Subject Books',
-    icon: 'assets/subject-books.png',
+    icon: 'assets/tile-subject-books.png',
     image: 'assets/subject-books.png',
     alt: 'Subject books clue graphic'
   },
   {
     id: 'healthySnacks',
     title: 'Healthy Snacks',
-    icon: 'assets/healthy-snacks.png',
+    icon: 'assets/tile-healthy-snacks.png',
     image: 'assets/healthy-snacks.png',
     alt: 'Healthy snacks direction clue graphic'
   },
   {
     id: 'supplyQuiz',
     title: 'Supply Quiz',
-    icon: 'assets/quiz-glue.png',
+    icon: 'assets/tile-supply-quiz.png',
     alt: 'Bottle of glue school supply quiz clue',
     quiz: true
   },
   {
     id: 'eraserBread',
     title: 'Eraser Bread',
-    icon: 'assets/distractor-eraser-bread.png',
+    icon: 'assets/tile-eraser-bread.png',
     image: 'assets/distractor-eraser-bread.png',
     alt: 'Back-to-school fun fact about people using bread before erasers'
   },
   {
     id: 'yellowBus',
     title: 'Yellow Bus',
-    icon: 'assets/distractor-yellow-bus.png',
+    icon: 'assets/tile-yellow-bus.png',
     image: 'assets/distractor-yellow-bus.png',
     alt: 'Back-to-school fun fact about why school buses are yellow'
   }
