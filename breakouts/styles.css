@@ -148,6 +148,13 @@ h1 {
 
 .boo-media {
   background: #2b153f;
+  padding: 28px;
+}
+
+.boo-media img {
+  width: min(100%, 190px);
+  height: auto;
+  max-height: 100%;
 }
 
 .spring-media {
