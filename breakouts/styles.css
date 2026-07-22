@@ -146,6 +146,10 @@ h1 {
   background: #eef8ff;
 }
 
+.boo-media {
+  background: #2b153f;
+}
+
 .spring-media {
   background: #ecfbdf;
 }
@@ -267,6 +271,17 @@ h1 {
 .summer-card .open-link {
   background: var(--gold);
   color: #3b2704;
+}
+
+.boo-card .open-link {
+  background: #f27b1d;
+  color: #2b153f;
+}
+
+.boo-card:hover .open-link,
+.boo-card:focus-visible .open-link {
+  background: #c65310;
+  color: #ffffff;
 }
 
 .fall-card .open-link {
