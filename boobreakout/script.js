@@ -40,35 +40,35 @@ const clueGraphics = [
   {
     id: 'candy',
     title: 'Candy Costs',
-    icon: 'assets/boo-icon-8.png',
+    icon: 'assets/boo-icon-3.png',
     image: 'assets/candy.png',
     alt: 'Halloween candy spending fun fact graphic'
   },
   {
     id: 'canYouSpot',
     title: 'Can You Spot?',
-    icon: 'assets/boo-icon-2.png',
+    icon: 'assets/boo-icon-4.png',
     image: 'assets/can-you-spot.png',
     alt: 'Jack-o-lantern direction clue graphic'
   },
   {
     id: 'didYouKnow',
     title: 'Did You Know?',
-    icon: 'assets/boo-icon-7.png',
+    icon: 'assets/boo-icon-6.png',
     image: 'assets/did-you-know.png',
     alt: 'Halloween jack-o-lantern fun fact graphic'
   },
   {
     id: 'pumpkins',
     title: 'Pumpkins Are Squash',
-    icon: 'assets/boo-icon-6.png',
+    icon: 'assets/boo-icon-1.png',
     image: 'assets/pumpkins-are-squash.png',
     alt: 'Pumpkin color clue graphic'
   },
   {
     id: 'countingRiddle',
     title: 'Counting Riddle',
-    icon: 'assets/boo-icon-3.png',
+    icon: 'assets/boo-icon-2.png',
     image: 'assets/counting-riddle.png',
     alt: 'Halloween counting riddle prompt'
   },
@@ -82,14 +82,14 @@ const clueGraphics = [
   {
     id: 'halloweenFacts',
     title: 'Halloween Fun Facts',
-    icon: 'assets/boo-icon-1.png',
+    icon: 'assets/boo-icon-8.png',
     image: 'assets/halloween-facts.png',
     alt: 'Halloween fun facts clue graphic'
   },
   {
     id: 'hauntedHouse',
     title: 'Haunted House Count',
-    icon: 'assets/boo-icon-4.png',
+    icon: 'assets/boo-icon-7.png',
     image: 'assets/haunted-house-counting.png',
     alt: 'Haunted house counting clue graphic'
   }
