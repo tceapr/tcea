@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Taco 'Bout a Breakout!</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="hero" aria-labelledby="page-title">
+        <div>
+          <p class="eyebrow">Digital Breakout</p>
+          <h1 id="page-title">Taco 'Bout a Breakout!</h1>
+          <p class="brief">Use the taco clue graphics to open the locks before the lunch crowd arrives.</p>
+        </div>
+        <div class="progress-panel" aria-live="polite">
+          <span id="progressText">0 of 5 locks open</span>
+          <div class="progress-track" aria-hidden="true"><span id="progressFill"></span></div>
+        </div>
+      </section>
+
+      <section class="workspace" aria-label="Breakout workspace">
+        <div class="clue-area">
+          <div class="clue-toolbar">
+            <h2>Taco Clues</h2>
+            <button class="ghost-button" type="button" id="resetButton">Reset</button>
+          </div>
+
+          <div class="explore-board">
+            <article class="mission-card">
+              <p class="eyebrow">Mission Brief</p>
+              <h2>Secret Recipe Box</h2>
+              <p>The taco truck is ready for Taco Tuesday, but the secret recipe box is locked. To open it before the lunch crowd arrives, you must solve the breakout. Good luck!</p>
+            </article>
+
+            <div id="clueScene" class="clue-scene" aria-label="Clickable Taco Breakout clue board"></div>
+          </div>
+        </div>
+
+        <aside class="locks-panel" aria-label="Breakout locks">
+          <div class="locks-header">
+            <h2>Locks</h2>
+            <p>Solve each lock using the taco clue graphics.</p>
+          </div>
+          <div id="locksList" class="locks-list"></div>
+        </aside>
+      </section>
+    </main>
+
+    <div id="schoolCelebration" class="school-celebration" aria-hidden="true"></div>
+
+    <dialog id="imageDialog" class="image-dialog">
+      <div class="dialog-header">
+        <h2 id="dialogTitle"></h2>
+        <button class="icon-button" type="button" id="closeDialog" aria-label="Close image">x</button>
+      </div>
+      <img id="dialogImage" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" alt="">
+    </dialog>
+
+    <dialog id="winDialog" class="win-dialog">
+      <div class="win-card">
+        <p class="eyebrow">Breakout Complete</p>
+        <h2>You opened every taco lock.</h2>
+        <p>The secret recipe box is open and the taco truck is ready for the lunch crowd.</p>
+        <button type="button" id="playAgainButton">Play Again</button>
+      </div>
+    </dialog>
+
+    <script src="script.js?v=taco-breakout-1"></script>
+  </body>
+</html>

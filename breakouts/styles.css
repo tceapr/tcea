@@ -157,6 +157,18 @@ h1 {
   max-height: 100%;
 }
 
+.taco-media {
+  background: #fff2c9;
+  padding: 18px;
+}
+
+.taco-media img {
+  width: 100%;
+  height: auto;
+  max-height: 100%;
+  object-fit: contain;
+}
+
 .spring-media {
   background: #ecfbdf;
 }
@@ -289,6 +301,16 @@ h1 {
 .boo-card:focus-visible .open-link {
   background: #c65310;
   color: #ffffff;
+}
+
+.taco-card .open-link {
+  background: #e65a1f;
+  color: #fffdf5;
+}
+
+.taco-card:hover .open-link,
+.taco-card:focus-visible .open-link {
+  background: #a83b12;
 }
 
 .fall-card .open-link {
