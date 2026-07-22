@@ -721,29 +721,51 @@ figcaption {
   z-index: 20;
 }
 
-.school-confetti {
+.taco-confetti {
   position: absolute;
-  top: -34px;
+  top: -44px;
   left: var(--x);
-  width: 14px;
+  width: 34px;
   height: 22px;
-  border-radius: 3px;
-  background: var(--confetti-color);
+  border: 2px solid #7a3f14;
+  border-bottom-width: 4px;
+  border-radius: 34px 34px 7px 7px;
+  background:
+    radial-gradient(circle at 25% 72%, #d94824 0 3px, transparent 4px),
+    radial-gradient(circle at 52% 74%, #57a546 0 3px, transparent 4px),
+    radial-gradient(circle at 74% 72%, #d94824 0 3px, transparent 4px),
+    linear-gradient(180deg, #ffd75a 0 58%, #e9a93b 59% 100%);
   opacity: 0;
-  box-shadow: inset -3px -4px 0 rgba(17, 43, 84, 0.12);
-  animation: schoolFall var(--duration) linear var(--delay) forwards;
+  box-shadow:
+    inset -4px -5px 0 rgba(122, 63, 20, 0.12),
+    0 8px 18px rgba(58, 31, 11, 0.12);
+  animation: tacoFall var(--duration) linear var(--delay) forwards;
 }
 
-.school-confetti::after {
+.taco-confetti::before,
+.taco-confetti::after {
   content: "";
   position: absolute;
-  left: 7px;
-  top: 3px;
-  width: 2px;
-  height: 18px;
+  left: 5px;
+  right: 5px;
+  height: 4px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.42);
-  transform: rotate(36deg);
+}
+
+.taco-confetti::before {
+  top: 8px;
+  background: #57a546;
+  box-shadow:
+    7px -3px 0 #57a546,
+    15px -1px 0 #57a546;
+}
+
+.taco-confetti::after {
+  bottom: 4px;
+  background: #f5f0d6;
+  box-shadow:
+    9px -1px 0 #f5f0d6,
+    18px 0 0 #f5f0d6;
 }
 
 @keyframes lockPop {
@@ -757,7 +779,7 @@ figcaption {
   100% { transform: translate(7px, -3px) rotate(21deg); }
 }
 
-@keyframes schoolFall {
+@keyframes tacoFall {
   0% {
     opacity: 0;
     transform: translate3d(0, -40px, 0) rotate(0deg);

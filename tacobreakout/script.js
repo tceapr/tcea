@@ -188,7 +188,7 @@ function updateProgress() {
   progressFill.style.width = `${(solved / locks.length) * 100}%`;
   if (solved === locks.length && !winDialog.open && !winQueued) {
     winQueued = true;
-    startBooCelebration();
+    startTacoCelebration();
     winTimer = setTimeout(() => winDialog.showModal(), 1300);
   }
 }
@@ -205,6 +205,7 @@ function checkLock(lockId) {
 
   if (hashValue(normalize(input.value)) === lock.answerHash) {
     state.set(lockId, true);
+    dropTinyTacos(18, 3600);
     renderLocks();
     return;
   }
@@ -224,31 +225,35 @@ function resetGame() {
   locks.forEach(lock => state.set(lock.id, false));
   winQueued = false;
   clearTimeout(winTimer);
-  clearBooCelebration();
+  clearTacoCelebration();
   if (winDialog.open) winDialog.close();
   renderLocks();
 }
 
-function startBooCelebration() {
-  const colors = ['#f05a28', '#ffd75a', '#54a24b', '#ffffff', '#7a3f14'];
-  clearBooCelebration();
+function startTacoCelebration() {
+  clearTacoCelebration();
+  dropTinyTacos(76, 8200);
 
-  for (let i = 0; i < 44; i += 1) {
-    const confetti = document.createElement('span');
-    confetti.className = 'school-confetti';
-    confetti.style.setProperty('--x', `${Math.random() * 100}vw`);
-    confetti.style.setProperty('--drift', `${Math.random() * 220 - 110}px`);
-    confetti.style.setProperty('--duration', `${4.8 + Math.random() * 2.8}s`);
-    confetti.style.setProperty('--delay', `${Math.random() * 1.4}s`);
-    confetti.style.setProperty('--spin', `${Math.random() * 680 + 240}deg`);
-    confetti.style.setProperty('--confetti-color', colors[i % colors.length]);
-    celebrationLayer.appendChild(confetti);
-  }
-
-  celebrationTimer = setTimeout(clearBooCelebration, 8200);
+  celebrationTimer = setTimeout(clearTacoCelebration, 8200);
 }
 
-function clearBooCelebration() {
+function dropTinyTacos(count, longestDuration) {
+  for (let i = 0; i < count; i += 1) {
+    const taco = document.createElement('span');
+    taco.className = 'taco-confetti';
+    taco.style.setProperty('--x', `${Math.random() * 100}vw`);
+    taco.style.setProperty('--drift', `${Math.random() * 240 - 120}px`);
+    taco.style.setProperty('--duration', `${2.8 + Math.random() * 3.2}s`);
+    taco.style.setProperty('--delay', `${Math.random() * 0.75}s`);
+    taco.style.setProperty('--spin', `${Math.random() * 760 - 380}deg`);
+    celebrationLayer.appendChild(taco);
+  }
+
+  clearTimeout(celebrationTimer);
+  celebrationTimer = setTimeout(clearTacoCelebration, longestDuration);
+}
+
+function clearTacoCelebration() {
   clearTimeout(celebrationTimer);
   celebrationLayer.replaceChildren();
 }
