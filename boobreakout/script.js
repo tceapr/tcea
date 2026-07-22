@@ -39,7 +39,7 @@ const locks = [
 const clueGraphics = [
   {
     id: 'candy',
-    title: 'Candy Costs',
+    title: 'Big Money',
     icon: 'assets/boo-icon-3.png',
     image: 'assets/candy.png',
     alt: 'Halloween candy spending fun fact graphic'
@@ -67,7 +67,7 @@ const clueGraphics = [
   },
   {
     id: 'countingRiddle',
-    title: 'Counting Riddle',
+    title: 'Bats, Cats, No Rats, Oh My!',
     icon: 'assets/boo-icon-2.png',
     image: 'assets/counting-riddle.png',
     alt: 'Halloween counting riddle prompt'
@@ -88,7 +88,7 @@ const clueGraphics = [
   },
   {
     id: 'hauntedHouse',
-    title: 'Haunted House Count',
+    title: 'Spook Scene!',
     icon: 'assets/boo-icon-7.png',
     image: 'assets/haunted-house-counting.png',
     alt: 'Haunted house counting clue graphic'
