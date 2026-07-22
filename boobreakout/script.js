@@ -3,35 +3,35 @@ const locks = [
     id: 'directionFive',
     title: '5 Direction Lock',
     badge: 'Direction',
-    label: 'Use U, D, L, and R. No spaces or commas. Example: URLRD',
-    answerHash: '6c739dc0'
+    label: 'Use U=Up, D=Down, L=Left, and R=Right. Example: UDLR',
+    answerHash: 'cc48553c'
   },
   {
     id: 'date',
     title: 'Date Lock',
     badge: 'Date',
-    label: 'Use the Halloween date. Example: 10/31',
+    label: 'Use MM/DD/YYYY format. Example: 01/31/2000 or MM/DD Example: 01/30',
     answerHash: '939f386c'
   },
   {
     id: 'numberFive',
     title: '5 Number Lock',
     badge: 'Number',
-    label: 'Count bats, pumpkins, ghosts, witches, and black cats. Example: 12345',
+    label: 'Example: 12345',
     answerHash: '129e49f1'
   },
   {
     id: 'alliteration',
     title: '3 Word Alliteration Lock',
     badge: 'Words',
-    label: 'Type the three alliterative words. No spaces needed. Example: SILLYSPOOKYSNACKS',
+    label: 'Example: SHESELLSSEASHELLS',
     answerHash: '92bfdcad'
   },
   {
     id: 'colorSix',
     title: '6 Color Lock',
     badge: 'Color',
-    label: 'Use the first initial of each pumpkin color. Example: OWRGYB',
+    label: 'First initial of each color. Use all capital letters. Example: RBG',
     answerHash: 'c6e3a12f'
   }
 ];
