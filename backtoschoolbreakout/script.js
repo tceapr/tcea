@@ -53,17 +53,17 @@ const supplyQuiz = [
 const clueGraphics = [
   {
     id: 'rhymingWords',
-    title: 'Rhyming Words',
+    title: "It's Rhyme Time",
     icon: 'assets/tile-rhyming-words.png',
     image: 'assets/rhyming-words.png',
     alt: 'Rhyming words clue graphic'
   },
   {
-    id: 'subjectBooks',
-    title: 'Subject Books',
-    icon: 'assets/tile-subject-books.png',
-    image: 'assets/subject-books.png',
-    alt: 'Subject books clue graphic'
+    id: 'eraserBread',
+    title: 'Who Knew?',
+    icon: 'assets/tile-eraser-bread.png',
+    image: 'assets/distractor-eraser-bread.png',
+    alt: 'Back-to-school fun fact about people using bread before erasers'
   },
   {
     id: 'healthySnacks',
@@ -80,11 +80,11 @@ const clueGraphics = [
     quiz: true
   },
   {
-    id: 'eraserBread',
-    title: 'Eraser Bread',
-    icon: 'assets/tile-eraser-bread.png',
-    image: 'assets/distractor-eraser-bread.png',
-    alt: 'Back-to-school fun fact about people using bread before erasers'
+    id: 'subjectBooks',
+    title: 'Subject Books',
+    icon: 'assets/tile-subject-books.png',
+    image: 'assets/subject-books.png',
+    alt: 'Subject books clue graphic'
   },
   {
     id: 'yellowBus',
@@ -174,7 +174,6 @@ function renderClues() {
         </span>
       </span>
       <span class="clue-card-title">${clue.title}</span>
-      ${clue.quiz ? '<span class="link-note">Quiz clue</span>' : ''}
     </button>
   `).join('');
 
