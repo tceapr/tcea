@@ -29,10 +29,10 @@ const locks = [
   },
   {
     id: 'word',
-    title: '1 Word Lock',
-    badge: 'Pending',
-    label: 'Example: WORD',
-    answerHash: ''
+    title: '2 Word Lock',
+    badge: 'Words',
+    label: 'No spaces. Example: WORDWORD',
+    answerHash: '3d803404'
   }
 ];
 
