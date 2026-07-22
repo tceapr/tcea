@@ -205,7 +205,6 @@ function checkLock(lockId) {
 
   if (hashValue(normalize(input.value)) === lock.answerHash) {
     state.set(lockId, true);
-    dropTinyTacos(18, 3600);
     renderLocks();
     return;
   }
