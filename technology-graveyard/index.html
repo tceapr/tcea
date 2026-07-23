@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>The Technology Graveyard</title>
+    <meta
+      name="description"
+      content="A middle school investigation activity about outdated technology, its purpose, limitations, and replacements."
+    >
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to activity</a>
+
+    <header class="topbar" aria-label="Activity progress">
+      <div class="brand-mark" aria-hidden="true">TG</div>
+      <div class="progress-wrap">
+        <p class="progress-title">Investigation Progress</p>
+        <div class="progress-stats" aria-live="polite">
+          <span><strong id="completed-count">0</strong> of 9 exhibits completed</span>
+          <span><strong id="score-count">0</strong> / 27 points</span>
+        </div>
+        <div class="meter" aria-hidden="true">
+          <span id="progress-meter"></span>
+        </div>
+      </div>
+      <button class="ghost-button" id="reset-button" type="button">Reset Activity</button>
+    </header>
+
+    <main id="main-content">
+      <section class="screen welcome-screen active" id="welcome-screen" aria-labelledby="welcome-title">
+        <div class="sky-glow" aria-hidden="true"></div>
+        <div class="leaf leaf-one" aria-hidden="true"></div>
+        <div class="leaf leaf-two" aria-hidden="true"></div>
+        <div class="welcome-copy">
+          <p class="eyebrow">Middle School Investigation</p>
+          <h1 id="welcome-title">The Technology Graveyard</h1>
+          <p class="subtitle">Can you identify the technology that time left behind?</p>
+          <p>
+            Technology changes quickly. Some devices that once seemed amazing have nearly disappeared
+            from homes, schools, and offices. Enter the Technology Graveyard to investigate nine
+            technology relics and discover what eventually replaced them.
+          </p>
+          <button class="primary-button" id="enter-button" type="button">Enter the Graveyard</button>
+        </div>
+      </section>
+
+      <section class="screen directions-screen" id="directions-screen" aria-labelledby="directions-title">
+        <div class="content-panel">
+          <p class="eyebrow">Student Directions</p>
+          <h2 id="directions-title">How to investigate each exhibit</h2>
+          <p>
+            Visit each exhibit and study the image and clues. First, identify the technology relic.
+            Next, decide what problem it helped people solve. Finally, choose the technology that
+            eventually replaced it.
+          </p>
+          <p>You may revisit exhibits before submitting your final answers.</p>
+          <div class="direction-grid" aria-label="Investigation steps">
+            <div>
+              <span class="step-number">1</span>
+              <h3>Identify it</h3>
+              <p>Use the clues and image area to decide what the object is.</p>
+            </div>
+            <div>
+              <span class="step-number">2</span>
+              <h3>Find its purpose</h3>
+              <p>Choose the problem this technology helped people solve.</p>
+            </div>
+            <div>
+              <span class="step-number">3</span>
+              <h3>Track its replacement</h3>
+              <p>Select the newer technology that eventually took its place.</p>
+            </div>
+          </div>
+          <button class="primary-button" id="start-exhibits-button" type="button">Start Investigating</button>
+        </div>
+      </section>
+
+      <section class="screen exhibit-list-screen" id="exhibit-list-screen" aria-labelledby="exhibit-list-title">
+        <div class="section-heading">
+          <p class="eyebrow">Nine Mystery Relics</p>
+          <h2 id="exhibit-list-title">Choose an exhibit to investigate</h2>
+          <p>Each tombstone opens a three-part investigation. Finished exhibits stay available for review.</p>
+        </div>
+        <div class="graveyard-grid" id="exhibit-grid"></div>
+        <div class="finish-row">
+          <button class="primary-button" id="finish-button" type="button" disabled>See My Final Score</button>
+        </div>
+      </section>
+
+      <section class="screen exhibit-screen" id="exhibit-screen" aria-labelledby="exhibit-title">
+        <button class="back-button" id="back-to-list-button" type="button">Back to Exhibits</button>
+        <article class="exhibit-layout">
+          <div class="relic-visual">
+            <div class="image-frame">
+              <img id="relic-image" src="" alt="">
+              <div class="image-placeholder" id="image-placeholder">
+                <span id="placeholder-label">Image Placeholder</span>
+                <small id="placeholder-path"></small>
+              </div>
+            </div>
+            <div class="clue-box">
+              <p class="eyebrow" id="exhibit-number-label">Exhibit</p>
+              <h2 id="exhibit-title">Mystery Relic</h2>
+              <ul id="clue-list"></ul>
+            </div>
+          </div>
+
+          <form class="question-panel" id="investigation-form">
+            <div id="question-list"></div>
+            <div class="feedback-box" id="feedback-box" aria-live="polite"></div>
+            <div class="reveal-box" id="reveal-box"></div>
+            <div class="action-row">
+              <button class="primary-button" id="check-button" type="submit">Check My Investigation</button>
+              <button class="secondary-button hidden" id="continue-button" type="button">Continue</button>
+            </div>
+          </form>
+        </article>
+      </section>
+
+      <section class="screen score-screen" id="score-screen" aria-labelledby="score-title">
+        <div class="content-panel score-panel">
+          <p class="eyebrow">Final Score</p>
+          <h2 id="score-title">Your Technology Graveyard Result</h2>
+          <div class="score-badge" id="score-badge" aria-live="polite"></div>
+          <p id="score-message"></p>
+          <div class="score-actions">
+            <button class="secondary-button" id="review-button" type="button">Review Exhibits</button>
+            <button class="primary-button" id="reflection-button" type="button">Technology Detective Reflection</button>
+            <button class="ghost-button" id="try-again-button" type="button">Try Again</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen reflection-screen" id="reflection-screen" aria-labelledby="reflection-title">
+        <div class="content-panel reflection-panel">
+          <p class="eyebrow">Technology Detective Reflection</p>
+          <h2 id="reflection-title">Explain what you discovered</h2>
+          <form id="reflection-form">
+            <label>
+              <span>The technology relic I chose</span>
+              <select id="reflection-relic" name="reflectionRelic"></select>
+            </label>
+            <label>
+              <span>The problem it helped people solve</span>
+              <textarea id="reflection-purpose" name="reflectionPurpose" rows="3"></textarea>
+            </label>
+            <label>
+              <span>One limitation it had</span>
+              <textarea id="reflection-limitation" name="reflectionLimitation" rows="3"></textarea>
+            </label>
+            <label>
+              <span>The technology that replaced it</span>
+              <textarea id="reflection-replacement" name="reflectionReplacement" rows="3"></textarea>
+            </label>
+            <label>
+              <span>One modern technology I think may become a relic someday</span>
+              <textarea id="reflection-future" name="reflectionFuture" rows="3"></textarea>
+            </label>
+            <div class="score-actions">
+              <button class="secondary-button" id="back-to-score-button" type="button">Back to Score</button>
+              <button class="primary-button" id="print-button" type="button">Print My Investigation</button>
+            </div>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <template id="print-template">
+      <section class="print-page">
+        <h1>The Technology Graveyard</h1>
+        <p class="print-score"></p>
+        <h2>Technology Detective Reflection</h2>
+        <dl></dl>
+      </section>
+    </template>
+
+    <script src="script.js"></script>
+  </body>
+</html>

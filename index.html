@@ -264,6 +264,31 @@
         background: #532057;
       }
 
+      .tech-graveyard-media {
+        position: relative;
+        padding: 0;
+        background:
+          radial-gradient(circle at 70% 22%, rgba(247, 189, 74, 0.3), transparent 26%),
+          linear-gradient(180deg, #1b103d, #3b2456);
+      }
+
+      .tech-graveyard-media img {
+        width: 100%;
+        height: 100%;
+        max-height: none;
+        object-fit: cover;
+      }
+
+      .tech-graveyard-card .open-link {
+        color: #241044;
+        background: #f7bd4a;
+      }
+
+      .tech-graveyard-card:hover .open-link,
+      .tech-graveyard-card:focus-visible .open-link {
+        background: #e87d2d;
+      }
+
       footer {
         margin-top: 34px;
         color: var(--muted);
@@ -351,6 +376,19 @@
               <p>Pick a breakout path by level, including seasonal puzzles, PB&amp;J, and more to come.</p>
             </span>
             <span class="open-link">Open Digital Breakouts</span>
+          </span>
+        </a>
+
+        <a class="activity-card tech-graveyard-card" href="technology-graveyard/">
+          <span class="activity-media tech-graveyard-media">
+            <img src="technology-graveyard/images/graveyard-scene.png" alt="Illustrated technology graveyard scene with outdated devices">
+          </span>
+          <span class="activity-copy">
+            <span>
+              <h2>The Technology Graveyard</h2>
+              <p>Investigate outdated technology relics, their original jobs, and what replaced them.</p>
+            </span>
+            <span class="open-link">Open Graveyard</span>
           </span>
         </a>
       </nav>
