@@ -1,4 +1,4 @@
-const STORAGE_KEY = "technologyGraveyardProgressV4";
+const STORAGE_KEY = "technologyGraveyardProgressV5";
 const TOTAL_POINTS = 27;
 
 const exhibits = [
@@ -9,7 +9,8 @@ const exhibits = [
     clues: [
       "I stored computer files.",
       "I was small, square, and removable.",
-      "My shape is still used as a save icon."
+      "My shape is still used as a save icon.",
+      "I held much less information than today's storage devices."
     ],
     purpose: "Saving and moving computer files",
     limitation: "Very limited storage capacity",
@@ -27,7 +28,8 @@ const exhibits = [
     clues: [
       "Teachers often used me at the front of the classroom.",
       "I shined light through clear plastic sheets.",
-      "I enlarged writing and images onto a screen."
+      "I enlarged writing and images onto a screen.",
+      "Teachers could write on the sheets while I projected them."
     ],
     purpose: "Displaying information to a large group",
     limitation: "Required transparencies and a projection surface",
@@ -45,7 +47,8 @@ const exhibits = [
     clues: [
       "I stored sound on magnetic tape.",
       "I sometimes had to be rewound.",
-      "My tape could become tangled."
+      "My tape could become tangled.",
+      "I had two small reels that moved the tape from one side to the other."
     ],
     purpose: "Recording and playing portable audio",
     limitation: "Listeners had to rewind or fast-forward to find a specific recording",
@@ -63,7 +66,8 @@ const exhibits = [
     clues: [
       "I was loaded into many film cameras.",
       "I came in a light-tight cassette.",
-      "A roll usually held 24 or 36 pictures."
+      "A roll usually held 24 or 36 pictures.",
+      "I had to be developed before the pictures could be seen."
     ],
     purpose: "Capturing photographs on a removable roll of film",
     limitation: "Photos could not be viewed instantly, and the film had to be developed",
@@ -81,7 +85,8 @@ const exhibits = [
     clues: [
       "I connected through a telephone line.",
       "I made beeps, squeals, and static while connecting.",
-      "The telephone often could not be used while I was online."
+      "The telephone often could not be used while I was online.",
+      "I used a modem to connect a computer to the internet."
     ],
     purpose: "Connecting home computers to online services and the internet",
     limitation: "Slow speeds and use of the telephone line",
@@ -99,7 +104,8 @@ const exhibits = [
     clues: [
       "I fit in a person's hand.",
       "I stored contacts, appointments, notes, and lists.",
-      "People often entered information with a stylus."
+      "People often entered information with a stylus.",
+      "I could synchronize information with a desktop computer."
     ],
     purpose: "Organizing personal information electronically",
     limitation: "Limited communication, internet, and multimedia capabilities",
@@ -117,7 +123,8 @@ const exhibits = [
     clues: [
       "Teachers used me to make classroom copies.",
       "My copies often had purple-blue ink.",
-      "Fresh pages sometimes had a strong smell."
+      "Fresh pages sometimes had a strong smell.",
+      "I used a prepared master sheet to produce each set of copies."
     ],
     purpose: "Making multiple paper copies for students",
     limitation: "Copies could fade, and the process used special masters and fluid",
@@ -135,7 +142,8 @@ const exhibits = [
     clues: [
       "I looked like a music CD.",
       "I contained articles, maps, images, audio, and video.",
-      "Students could use me without connecting to the internet."
+      "Students could use me without connecting to the internet.",
+      "My information could not be updated until a new disc was released."
     ],
     purpose: "Providing digital reference and research information",
     limitation: "Information could become outdated and was difficult to update",
@@ -153,7 +161,8 @@ const exhibits = [
     clues: [
       "I printed on paper with holes along the edges.",
       "I made a loud grinding sound.",
-      "My letters were formed from tiny dots."
+      "My letters were formed from tiny dots.",
+      "My paper often came in one long, connected stack with perforated edges."
     ],
     purpose: "Printing text and simple graphics from a computer",
     limitation: "Printing was noisy, slow, and lower quality than modern printers",
