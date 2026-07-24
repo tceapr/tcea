@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Debug the Haunted House</title>
+    <meta name="description" content="A friendly Halloween debugging activity for grades 3-5.">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cellipse cx='32' cy='38' rx='24' ry='18' fill='%23f27b1d'/%3E%3Cpath d='M32 20q-4-8 5-12' fill='none' stroke='%235d421c' stroke-width='6' stroke-linecap='round'/%3E%3Cpath d='M18 38q14 12 28 0' fill='none' stroke='%23211331' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div class="sky" aria-hidden="true">
+      <span class="star s1"></span>
+      <span class="star s2"></span>
+      <span class="star s3"></span>
+      <span class="mist m1"></span>
+      <span class="mist m2"></span>
+    </div>
+
+    <header class="topbar">
+      <button class="icon-button" id="homeButton" type="button" aria-label="Go to home">
+        <span aria-hidden="true">Home</span>
+      </button>
+      <div class="tracker" aria-label="Activity progress">
+        <div class="room-dots" id="roomDots"></div>
+        <div class="letter-slots" id="letterSlots" aria-label="Collected letters"></div>
+      </div>
+      <button class="reset-button" id="resetButton" type="button">Reset Activity</button>
+    </header>
+
+    <main class="app-shell">
+      <section class="screen home-screen active" id="homeScreen" aria-labelledby="homeTitle">
+        <div class="home-grid">
+          <div class="intro">
+            <p class="eyebrow">Grades 3-5 coding challenge</p>
+            <h1 id="homeTitle">Debug the Haunted House</h1>
+            <p>
+              Welcome to the Haunted House Debugging Challenge!
+            </p>
+            <p>
+              The friendly haunted house is full of bugs. The doors will not open, the witch cannot reach the moon, the potion recipe is scrambled, and the pumpkins are being carved in the wrong order.
+            </p>
+            <p>
+              Complete the six debugging challenges before midnight. Each correct answer will give you one letter. Put the letters together to unlock the final message and help the Halloween characters get ready for trick-or-treaters.
+            </p>
+            <div class="home-actions">
+              <button class="primary-button" id="continueButton" type="button">Start Room 1</button>
+              <button class="secondary-button" id="teacherToggle" type="button" aria-expanded="false" aria-controls="teacherGuide">Teacher Guide</button>
+            </div>
+          </div>
+
+          <div class="house-card" aria-label="Friendly haunted house illustration">
+            <svg viewBox="0 0 640 420" role="img" aria-labelledby="houseTitle houseDesc">
+              <title id="houseTitle">Friendly haunted house at night</title>
+              <desc id="houseDesc">A colorful purple haunted house with a moon, pumpkins, bats, and glowing windows.</desc>
+              <rect width="640" height="420" fill="#16204a"></rect>
+              <circle cx="520" cy="82" r="48" fill="#fff6b7"></circle>
+              <circle cx="500" cy="68" r="48" fill="#16204a"></circle>
+              <path d="M0 342 C80 312 144 350 224 326 C310 298 380 344 472 320 C545 300 594 324 640 302 L640 420 L0 420 Z" fill="#253562"></path>
+              <path d="M64 326 C130 292 218 290 300 319 C397 353 481 325 582 300" fill="none" stroke="#a5e557" stroke-width="8" stroke-linecap="round" opacity=".65"></path>
+              <g transform="translate(154 84)">
+                <path d="M44 260 L44 108 L122 38 L188 108 L188 260 Z" fill="#5b2a86" stroke="#1e1536" stroke-width="8" stroke-linejoin="round"></path>
+                <path d="M176 260 L176 142 L266 66 L356 142 L356 260 Z" fill="#7234a8" stroke="#1e1536" stroke-width="8" stroke-linejoin="round"></path>
+                <path d="M10 122 L122 18 L224 122" fill="none" stroke="#25143d" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"></path>
+                <path d="M152 152 L266 45 L382 152" fill="none" stroke="#25143d" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"></path>
+                <rect x="80" y="142" width="48" height="50" rx="6" fill="#ffcf4a" stroke="#211331" stroke-width="6"></rect>
+                <path d="M104 144 V190 M82 166 H126" stroke="#211331" stroke-width="5"></path>
+                <rect x="236" y="154" width="58" height="54" rx="6" fill="#a5e557" stroke="#211331" stroke-width="6"></rect>
+                <path d="M265 156 V207 M238 181 H292" stroke="#211331" stroke-width="5"></path>
+                <path d="M220 260 V204 Q220 176 248 176 Q276 176 276 204 V260 Z" fill="#f27b1d" stroke="#211331" stroke-width="7"></path>
+                <circle cx="260" cy="220" r="5" fill="#211331"></circle>
+                <path d="M40 260 H368" stroke="#211331" stroke-width="8" stroke-linecap="round"></path>
+              </g>
+              <g transform="translate(78 330)">
+                <ellipse cx="42" cy="30" rx="42" ry="26" fill="#f27b1d" stroke="#211331" stroke-width="5"></ellipse>
+                <path d="M42 10 C36 6 36 0 44 -8" fill="none" stroke="#5b3b1d" stroke-width="6" stroke-linecap="round"></path>
+                <path d="M22 27 Q42 44 62 27" fill="none" stroke="#211331" stroke-width="4" stroke-linecap="round"></path>
+              </g>
+              <g transform="translate(512 304)">
+                <path d="M8 76 Q34 18 62 76 Z" fill="#111827"></path>
+                <circle cx="36" cy="30" r="22" fill="#111827"></circle>
+                <path d="M22 13 L28 -6 L35 14 M42 14 L52 -4 L52 18" fill="#111827"></path>
+                <circle cx="28" cy="30" r="3" fill="#a5e557"></circle>
+                <circle cx="44" cy="30" r="3" fill="#a5e557"></circle>
+                <path d="M58 55 Q88 45 84 20" fill="none" stroke="#111827" stroke-width="9" stroke-linecap="round"></path>
+              </g>
+              <path d="M92 96 q24 -20 48 0 q24 -20 48 0" fill="none" stroke="#080b1f" stroke-width="8" stroke-linecap="round"></path>
+              <path d="M432 142 q18 -16 36 0 q18 -16 36 0" fill="none" stroke="#080b1f" stroke-width="7" stroke-linecap="round"></path>
+            </svg>
+          </div>
+        </div>
+
+        <section class="teacher-guide" id="teacherGuide" hidden>
+          <h2>Teacher Guide</h2>
+          <div class="guide-grid">
+            <article>
+              <h3>Recommended Grade Levels</h3>
+              <p>Grades 3-5</p>
+            </article>
+            <article>
+              <h3>Learning Objectives</h3>
+              <p>Students practice debugging, sequencing, algorithm development, pattern recognition, directional language, spatial reasoning, if-then conditions, and testing instructions.</p>
+            </article>
+            <article>
+              <h3>Time</h3>
+              <p>About 20 to 30 minutes.</p>
+            </article>
+            <article>
+              <h3>Classroom Use</h3>
+              <p>Use individually, with partners, or as a whole-class projected activity. Partners can take turns as driver and checker.</p>
+            </article>
+          </div>
+          <details>
+            <summary>Answer Key</summary>
+            <ol>
+              <li>The Crooked Path: change the third arrow from Down to Up. Letter T.</li>
+              <li>The Potion Room: put the recipe steps in order and move "Add three more spider rings" to Do Not Use. Letter R.</li>
+              <li>The Witch's Tower: change command 4 from Turn right to Turn left. Letter E.</li>
+              <li>The Pumpkin Workshop: arrange the safe carving steps in order. Letter A.</li>
+              <li>The Ghostly Hallway: replace the sixth item, Cat, with Ghost. Letter T.</li>
+              <li>The Escape Hall: choose "If you see a ghost, turn left." Letter S.</li>
+              <li>Final word: TREATS.</li>
+            </ol>
+          </details>
+          <details>
+            <summary>Discussion Questions</summary>
+            <ol>
+              <li>What is a bug?</li>
+              <li>How did testing help you find mistakes?</li>
+              <li>Which challenge was most difficult?</li>
+              <li>Where do people debug instructions outside of computer programming?</li>
+              <li>How could you make one of the algorithms shorter or clearer?</li>
+            </ol>
+          </details>
+          <details>
+            <summary>Extension Activity</summary>
+            <p>Create your own Halloween algorithm with one intentional bug. Trade with a partner and see whether your partner can identify and fix the mistake.</p>
+          </details>
+        </section>
+
+        <section class="map-section" aria-labelledby="mapTitle">
+          <h2 id="mapTitle">Haunted House Map</h2>
+          <div class="room-map" id="roomMap"></div>
+        </section>
+      </section>
+
+      <section class="screen room-screen" id="roomScreen" aria-live="polite">
+        <div class="room-header">
+          <div>
+            <p class="eyebrow" id="roomEyebrow">Room</p>
+            <h2 id="roomTitle"></h2>
+            <p id="roomIntro"></p>
+          </div>
+          <button class="secondary-button" id="hintButton" type="button">Hint</button>
+        </div>
+        <div class="hint-box" id="hintBox" hidden></div>
+        <div id="roomContent"></div>
+        <div class="room-actions">
+          <button class="secondary-button" id="testButton" type="button">Test</button>
+          <button class="primary-button" id="checkButton" type="button">Check Answer</button>
+        </div>
+        <div class="feedback-box" id="feedbackBox" role="status" aria-live="polite"></div>
+      </section>
+
+      <section class="screen final-screen" id="finalScreen" aria-labelledby="finalTitle">
+        <div class="final-card">
+          <p class="eyebrow">Final Unlock</p>
+          <h2 id="finalTitle">Open the Front Door</h2>
+          <p>Collected letters: <strong id="finalLetters">_ _ _ _ _ _</strong></p>
+          <label for="secretInput">Enter the six-letter secret word.</label>
+          <div class="final-input-row">
+            <input id="secretInput" type="text" autocomplete="off" maxlength="20">
+            <button class="primary-button" id="unlockButton" type="button">Unlock</button>
+          </div>
+          <div class="front-door" id="frontDoor" aria-label="Closed front door">
+            <span class="door-panel"></span>
+          </div>
+          <div class="feedback-box" id="finalFeedback" role="status" aria-live="polite"></div>
+          <button class="secondary-button" id="playAgainButton" type="button" hidden>Play Again</button>
+        </div>
+        <div class="celebration" id="celebration" aria-hidden="true"></div>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
