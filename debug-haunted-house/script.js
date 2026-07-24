@@ -1,4 +1,5 @@
 const STORAGE_KEY = 'debugHauntedHouseProgress';
+const TEACHER_GUIDE_PASSWORD = 'TCEA';
 const DIRECTIONS = ['Up', 'Down', 'Left', 'Right'];
 const ARROWS = { Up: '^', Down: 'v', Left: '<', Right: '>' };
 const DELAY = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 30 : 420;
@@ -92,6 +93,12 @@ const secretInput = document.getElementById('secretInput');
 const frontDoor = document.getElementById('frontDoor');
 const playAgainButton = document.getElementById('playAgainButton');
 const celebration = document.getElementById('celebration');
+const teacherPassword = document.getElementById('teacherPassword');
+const teacherUnlockButton = document.getElementById('teacherUnlockButton');
+const teacherAuthFeedback = document.getElementById('teacherAuthFeedback');
+const teacherPasswordPanel = document.getElementById('teacherPasswordPanel');
+const teacherGuideContent = document.getElementById('teacherGuideContent');
+let teacherGuideUnlocked = false;
 
 document.getElementById('homeButton').addEventListener('click', showHome);
 document.getElementById('continueButton').addEventListener('click', () => {
@@ -108,6 +115,10 @@ document.getElementById('checkButton').addEventListener('click', checkCurrentRoo
 document.getElementById('unlockButton').addEventListener('click', checkFinalWord);
 document.getElementById('playAgainButton').addEventListener('click', () => resetActivity(false));
 document.getElementById('teacherToggle').addEventListener('click', toggleTeacherGuide);
+teacherUnlockButton.addEventListener('click', unlockTeacherGuide);
+teacherPassword.addEventListener('keydown', event => {
+  if (event.key === 'Enter') unlockTeacherGuide();
+});
 secretInput.addEventListener('keydown', event => {
   if (event.key === 'Enter') checkFinalWord();
 });
@@ -245,8 +256,34 @@ function showFinal() {
 function toggleTeacherGuide() {
   const guide = document.getElementById('teacherGuide');
   const toggle = document.getElementById('teacherToggle');
-  guide.hidden = !guide.hidden;
-  toggle.setAttribute('aria-expanded', String(!guide.hidden));
+  const isOpening = guide.hidden;
+  guide.hidden = !isOpening;
+  toggle.setAttribute('aria-expanded', String(isOpening));
+  toggle.textContent = isOpening ? 'Hide Teacher Guide' : 'Teacher Guide';
+  if (isOpening) {
+    if (teacherGuideUnlocked) {
+      teacherGuideContent.hidden = false;
+      teacherPasswordPanel.hidden = true;
+    } else {
+      teacherPasswordPanel.hidden = false;
+      teacherGuideContent.hidden = true;
+      teacherPassword.focus();
+    }
+  }
+}
+
+function unlockTeacherGuide() {
+  const normalizedPassword = teacherPassword.value.trim().toUpperCase();
+  if (normalizedPassword !== TEACHER_GUIDE_PASSWORD) {
+    teacherAuthFeedback.textContent = 'That password did not work. Please ask your teacher.';
+    teacherPassword.select();
+    return;
+  }
+  teacherGuideUnlocked = true;
+  teacherPassword.value = '';
+  teacherAuthFeedback.textContent = '';
+  teacherPasswordPanel.hidden = true;
+  teacherGuideContent.hidden = false;
 }
 
 function renderRoom(roomId) {

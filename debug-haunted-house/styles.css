@@ -300,7 +300,8 @@ p {
 }
 
 .guide-grid article,
-details {
+details,
+.password-panel {
   padding: 16px;
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -314,6 +315,37 @@ details {
 summary {
   font-weight: 900;
   cursor: pointer;
+}
+
+.password-panel {
+  display: grid;
+  gap: 10px;
+  max-width: 560px;
+}
+
+.password-panel p {
+  margin-bottom: 0;
+}
+
+.password-panel label {
+  font-weight: 900;
+}
+
+.teacher-password-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.teacher-password-row input {
+  max-width: 260px;
+}
+
+.auth-feedback {
+  min-height: 1.4em;
+  color: #b9442c;
+  font-weight: 800;
 }
 
 .room-map {

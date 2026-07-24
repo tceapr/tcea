@@ -50,5 +50,6 @@ Most activity text and answers are in `script.js`.
 - Change Room 6 choices in `renderRoom6` and the correct answer inside `checkCurrentRoom`.
 - Change the final word in `checkFinalWord`.
 - Change the final message in `unlockFinalDoor`.
+- Change the teacher guide password by editing `TEACHER_GUIDE_PASSWORD` in `script.js`. The default password is `TCEA`.
 
 The activity saves completed rooms in the browser's local storage. The Reset Activity button clears that saved progress after confirmation.

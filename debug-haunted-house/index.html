@@ -92,50 +92,62 @@
 
         <section class="teacher-guide" id="teacherGuide" hidden>
           <h2>Teacher Guide</h2>
-          <div class="guide-grid">
-            <article>
-              <h3>Recommended Grade Levels</h3>
-              <p>Grades 3-5</p>
-            </article>
-            <article>
-              <h3>Learning Objectives</h3>
-              <p>Students practice debugging, sequencing, algorithm development, pattern recognition, directional language, spatial reasoning, if-then conditions, and testing instructions.</p>
-            </article>
-            <article>
-              <h3>Time</h3>
-              <p>About 20 to 30 minutes.</p>
-            </article>
-            <article>
-              <h3>Classroom Use</h3>
-              <p>Use individually, with partners, or as a whole-class projected activity. Partners can take turns as driver and checker.</p>
-            </article>
+          <div class="password-panel" id="teacherPasswordPanel">
+            <p>Enter the teacher password to view the guide and answer key.</p>
+            <label for="teacherPassword">Teacher password</label>
+            <div class="teacher-password-row">
+              <input id="teacherPassword" type="password" autocomplete="off">
+              <button class="primary-button" id="teacherUnlockButton" type="button">Unlock Guide</button>
+            </div>
+            <p class="auth-feedback" id="teacherAuthFeedback" role="status" aria-live="polite"></p>
           </div>
-          <details>
-            <summary>Answer Key</summary>
-            <ol>
-              <li>The Crooked Path: change the third arrow from Down to Up. Letter T.</li>
-              <li>The Potion Room: put the recipe steps in order and move "Add three more spider rings" to Do Not Use. Letter R.</li>
-              <li>The Witch's Tower: change command 4 from Turn right to Turn left. Letter E.</li>
-              <li>The Pumpkin Workshop: arrange the safe carving steps in order. Letter A.</li>
-              <li>The Ghostly Hallway: replace the sixth item, Cat, with Ghost. Letter T.</li>
-              <li>The Escape Hall: choose "If you see a ghost, turn left." Letter S.</li>
-              <li>Final word: TREATS.</li>
-            </ol>
-          </details>
-          <details>
-            <summary>Discussion Questions</summary>
-            <ol>
-              <li>What is a bug?</li>
-              <li>How did testing help you find mistakes?</li>
-              <li>Which challenge was most difficult?</li>
-              <li>Where do people debug instructions outside of computer programming?</li>
-              <li>How could you make one of the algorithms shorter or clearer?</li>
-            </ol>
-          </details>
-          <details>
-            <summary>Extension Activity</summary>
-            <p>Create your own Halloween algorithm with one intentional bug. Trade with a partner and see whether your partner can identify and fix the mistake.</p>
-          </details>
+
+          <div id="teacherGuideContent" hidden>
+            <div class="guide-grid">
+              <article>
+                <h3>Recommended Grade Levels</h3>
+                <p>Grades 3-5</p>
+              </article>
+              <article>
+                <h3>Learning Objectives</h3>
+                <p>Students practice debugging, sequencing, algorithm development, pattern recognition, directional language, spatial reasoning, if-then conditions, and testing instructions.</p>
+              </article>
+              <article>
+                <h3>Time</h3>
+                <p>About 20 to 30 minutes.</p>
+              </article>
+              <article>
+                <h3>Classroom Use</h3>
+                <p>Use individually, with partners, or as a whole-class projected activity. Partners can take turns as driver and checker.</p>
+              </article>
+            </div>
+            <details>
+              <summary>Answer Key</summary>
+              <ol>
+                <li>The Crooked Path: change the third arrow from Down to Up. Letter T.</li>
+                <li>The Potion Room: put the recipe steps in order and move "Add three more spider rings" to Do Not Use. Letter R.</li>
+                <li>The Witch's Tower: change command 4 from Turn right to Turn left. Letter E.</li>
+                <li>The Pumpkin Workshop: arrange the safe carving steps in order. Letter A.</li>
+                <li>The Ghostly Hallway: replace the sixth item, Cat, with Ghost. Letter T.</li>
+                <li>The Escape Hall: choose "If you see a ghost, turn left." Letter S.</li>
+                <li>Final word: TREATS.</li>
+              </ol>
+            </details>
+            <details>
+              <summary>Discussion Questions</summary>
+              <ol>
+                <li>What is a bug?</li>
+                <li>How did testing help you find mistakes?</li>
+                <li>Which challenge was most difficult?</li>
+                <li>Where do people debug instructions outside of computer programming?</li>
+                <li>How could you make one of the algorithms shorter or clearer?</li>
+              </ol>
+            </details>
+            <details>
+              <summary>Extension Activity</summary>
+              <p>Create your own Halloween algorithm with one intentional bug. Trade with a partner and see whether your partner can identify and fix the mistake.</p>
+            </details>
+          </div>
         </section>
 
         <section class="map-section" aria-labelledby="mapTitle">
