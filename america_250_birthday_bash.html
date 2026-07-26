@@ -1,0 +1,1517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>America's 250th Birthday Bash</title>
+  <style>
+    :root {
+      --navy: #15315f;
+      --blue: #2f6fcc;
+      --sky: #dbeeff;
+      --red: #d64045;
+      --cream: #fff8e8;
+      --gold: #f4bf3a;
+      --green: #3d8b61;
+      --ink: #1f2937;
+      --white: #ffffff;
+      --shadow: 0 10px 30px rgba(20, 49, 95, 0.18);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Trebuchet MS", Arial, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 12%, rgba(214, 64, 69, 0.15) 0 4px, transparent 5px),
+        radial-gradient(circle at 88% 18%, rgba(47, 111, 204, 0.15) 0 5px, transparent 6px),
+        linear-gradient(135deg, #f7fbff, #fff8e8);
+      background-size: 42px 42px, 55px 55px, auto;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button,
+    select {
+      min-height: 48px;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .screen {
+      display: none;
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .screen.active {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .panel {
+      width: min(960px, 100%);
+      background: rgba(255, 255, 255, 0.96);
+      border: 4px solid var(--navy);
+      border-radius: 26px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .hero {
+      padding: 54px 28px;
+      text-align: center;
+      position: relative;
+      background:
+        linear-gradient(180deg, rgba(219, 238, 255, 0.92), rgba(255, 255, 255, 0.95));
+    }
+
+    .mini-stars {
+      font-size: 30px;
+      letter-spacing: 10px;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      margin-bottom: 14px;
+      font-size: clamp(2.3rem, 6vw, 4.7rem);
+      line-height: 0.95;
+      color: var(--navy);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    h1 span {
+      color: var(--red);
+    }
+
+    .subtitle {
+      max-width: 700px;
+      margin: 0 auto 26px;
+      font-size: clamp(1rem, 2.2vw, 1.3rem);
+      line-height: 1.5;
+    }
+
+    .start-button,
+    .primary-button,
+    .next-button {
+      border: 0;
+      border-radius: 999px;
+      padding: 14px 26px;
+      color: var(--white);
+      background: var(--red);
+      font-weight: 800;
+      box-shadow: 0 6px 0 #9d252a;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .start-button {
+      font-size: 1.25rem;
+      padding: 17px 34px;
+    }
+
+    .start-button:hover,
+    .primary-button:hover,
+    .next-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 0 #9d252a;
+    }
+
+    .start-button:active,
+    .primary-button:active,
+    .next-button:active {
+      transform: translateY(3px);
+      box-shadow: 0 3px 0 #9d252a;
+    }
+
+    .party-icons {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 12px;
+      margin: 34px auto 0;
+      max-width: 650px;
+    }
+
+    .party-icon {
+      display: grid;
+      place-items: center;
+      min-height: 74px;
+      border-radius: 18px;
+      background: var(--white);
+      border: 3px solid var(--sky);
+      font-size: 34px;
+    }
+
+    .game-layout {
+      width: min(1100px, 100%);
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 18px;
+    }
+
+    .topbar {
+      width: 100%;
+      background: var(--navy);
+      color: var(--white);
+      border-radius: 20px;
+      padding: 14px 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      align-items: center;
+      text-align: center;
+      font-weight: 800;
+    }
+
+    .stat {
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 14px;
+      padding: 10px;
+    }
+
+    .progress-track {
+      height: 14px;
+      margin-top: 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.22);
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      width: 0;
+      height: 100%;
+      background: var(--gold);
+      transition: width 0.4s ease;
+    }
+
+    .game-card {
+      min-height: 600px;
+      background: rgba(255, 255, 255, 0.97);
+      border: 4px solid var(--navy);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .challenge-number {
+      display: inline-block;
+      border-radius: 999px;
+      background: var(--sky);
+      color: var(--navy);
+      padding: 8px 14px;
+      font-weight: 900;
+      margin-bottom: 12px;
+    }
+
+    .game-title {
+      color: var(--navy);
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      margin-bottom: 8px;
+    }
+
+    .directions {
+      font-size: 1.08rem;
+      line-height: 1.5;
+      max-width: 760px;
+      margin-bottom: 22px;
+    }
+
+    .status-box {
+      min-height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      margin-top: 18px;
+      padding: 12px 16px;
+      border-radius: 14px;
+      background: var(--cream);
+      border: 2px dashed var(--gold);
+      font-weight: 800;
+    }
+
+    .status-box.success {
+      background: #e7f7ee;
+      border-color: var(--green);
+      color: #1f6846;
+    }
+
+    .status-box.try-again {
+      background: #fff0f0;
+      border-color: var(--red);
+      color: #922a2e;
+    }
+
+    .next-row {
+      display: flex;
+      justify-content: center;
+      margin-top: 18px;
+    }
+
+    .next-button {
+      display: none;
+      background: var(--blue);
+      box-shadow: 0 6px 0 #1d4d95;
+    }
+
+    .next-button:hover {
+      box-shadow: 0 8px 0 #1d4d95;
+    }
+
+    .cake-area {
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) minmax(260px, 1fr);
+      gap: 24px;
+      align-items: center;
+    }
+
+    .cake-stage {
+      min-height: 350px;
+      display: flex;
+      flex-direction: column-reverse;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 20px;
+      border-radius: 22px;
+      background: linear-gradient(#dff1ff, #fff);
+      border: 3px solid var(--sky);
+    }
+
+    .cake-plate {
+      width: 250px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--navy);
+      margin-top: 8px;
+    }
+
+    .cake-layer {
+      width: 210px;
+      height: 62px;
+      border-radius: 18px 18px 8px 8px;
+      border: 4px solid rgba(0, 0, 0, 0.12);
+      display: grid;
+      place-items: center;
+      color: var(--white);
+      font-weight: 900;
+      margin-top: -4px;
+      animation: popIn 0.35s ease;
+    }
+
+    .cake-layer:nth-of-type(2) {
+      width: 180px;
+    }
+
+    .cake-layer:nth-of-type(3) {
+      width: 150px;
+    }
+
+    .cake-topper {
+      font-size: 40px;
+      margin-bottom: 4px;
+      animation: bounce 1s infinite alternate;
+    }
+
+    .choice-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .choice-button {
+      border: 3px solid var(--navy);
+      border-radius: 16px;
+      background: var(--white);
+      padding: 15px 14px;
+      font-weight: 800;
+      color: var(--navy);
+      transition: transform 0.15s ease, background 0.15s ease;
+    }
+
+    .choice-button:hover {
+      transform: translateY(-2px);
+      background: var(--sky);
+    }
+
+    .choice-button:disabled {
+      opacity: 0.55;
+      cursor: default;
+      transform: none;
+    }
+
+    .firework-board {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(72px, 120px));
+      justify-content: center;
+      gap: 14px;
+      padding: 24px;
+      border-radius: 22px;
+      background: var(--navy);
+    }
+
+    .firework-button {
+      aspect-ratio: 1;
+      border-radius: 50%;
+      border: 4px solid var(--white);
+      box-shadow: inset 0 0 0 8px rgba(255, 255, 255, 0.18);
+      font-weight: 900;
+      color: var(--white);
+      transition: transform 0.15s ease, filter 0.15s ease;
+    }
+
+    .firework-button:hover {
+      transform: scale(1.06);
+      filter: brightness(1.12);
+    }
+
+    .firework-button.flash {
+      animation: flash 0.45s ease;
+    }
+
+    .sequence-display {
+      text-align: center;
+      font-size: clamp(1.3rem, 3vw, 2rem);
+      font-weight: 900;
+      color: var(--navy);
+      margin-bottom: 18px;
+      min-height: 52px;
+    }
+
+    .picnic-grid,
+    .balloon-grid,
+    .playlist-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+      gap: 14px;
+    }
+
+    .item-card {
+      border: 3px solid var(--sky);
+      border-radius: 18px;
+      background: var(--white);
+      padding: 18px 12px;
+      min-height: 125px;
+      display: grid;
+      place-items: center;
+      gap: 8px;
+      text-align: center;
+      font-weight: 800;
+      line-height: 1.25;
+      transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    }
+
+    .item-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--blue);
+    }
+
+    .item-card.selected {
+      background: #e7f7ee;
+      border-color: var(--green);
+    }
+
+    .item-card.wrong {
+      background: #fff0f0;
+      border-color: var(--red);
+    }
+
+    .item-emoji {
+      font-size: 38px;
+    }
+
+    .check-row {
+      display: flex;
+      justify-content: center;
+      margin-top: 18px;
+    }
+
+    .balloon-button {
+      border: 0;
+      min-height: 120px;
+      border-radius: 50% 50% 48% 48%;
+      position: relative;
+      color: var(--navy);
+      font-size: 1.3rem;
+      font-weight: 900;
+      background: var(--sky);
+      box-shadow: inset -8px -10px 0 rgba(0, 0, 0, 0.07);
+      transition: transform 0.15s ease;
+    }
+
+    .balloon-button::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: -23px;
+      width: 2px;
+      height: 24px;
+      background: var(--navy);
+    }
+
+    .balloon-button:hover {
+      transform: translateY(-5px) rotate(-1deg);
+    }
+
+    .balloon-button.popped {
+      visibility: hidden;
+    }
+
+    .playlist-card {
+      border: 3px solid var(--sky);
+      border-radius: 18px;
+      padding: 16px;
+      background: var(--white);
+    }
+
+    .playlist-card h3 {
+      color: var(--navy);
+      margin-bottom: 10px;
+    }
+
+    .playlist-card select {
+      width: 100%;
+      padding: 10px;
+      border: 2px solid var(--navy);
+      border-radius: 10px;
+      background: var(--white);
+      font-weight: 700;
+    }
+
+    .map-wrap {
+      display: grid;
+      grid-template-columns: minmax(250px, 1fr) minmax(260px, 1fr);
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .map {
+      min-height: 330px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      padding: 16px;
+      border-radius: 22px;
+      background: #e8f5e9;
+      border: 3px solid #8ac19d;
+    }
+
+    .location {
+      border: 3px solid var(--navy);
+      border-radius: 18px;
+      background: var(--white);
+      padding: 15px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      font-weight: 900;
+      color: var(--navy);
+    }
+
+    .location.visited {
+      background: var(--gold);
+    }
+
+    .clue-panel {
+      border-radius: 22px;
+      background: var(--cream);
+      border: 3px solid var(--gold);
+      padding: 22px;
+    }
+
+    .clue-panel h3 {
+      color: var(--navy);
+    }
+
+    .clue-buttons {
+      display: grid;
+      gap: 10px;
+    }
+
+    .final-panel {
+      text-align: center;
+      padding: 42px 24px 54px;
+      background: linear-gradient(180deg, #dbeeff, #fff8e8);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .final-panel h1 {
+      margin-top: 16px;
+    }
+
+    .eagle {
+      width: 180px;
+      height: 180px;
+      margin: 0 auto 18px;
+      position: relative;
+      animation: dance 0.8s infinite alternate ease-in-out;
+    }
+
+    .eagle-body {
+      width: 95px;
+      height: 110px;
+      border-radius: 50% 50% 40% 40%;
+      background: #7b4b2a;
+      position: absolute;
+      left: 42px;
+      top: 48px;
+      border: 4px solid var(--navy);
+    }
+
+    .eagle-head {
+      width: 78px;
+      height: 68px;
+      border-radius: 50%;
+      background: var(--white);
+      position: absolute;
+      left: 51px;
+      top: 10px;
+      border: 4px solid var(--navy);
+    }
+
+    .eagle-beak {
+      width: 0;
+      height: 0;
+      border-top: 12px solid transparent;
+      border-bottom: 12px solid transparent;
+      border-left: 28px solid var(--gold);
+      position: absolute;
+      right: -22px;
+      top: 28px;
+    }
+
+    .eagle-wing {
+      width: 72px;
+      height: 42px;
+      border-radius: 60% 10% 60% 10%;
+      background: #8a5631;
+      position: absolute;
+      top: 72px;
+      border: 4px solid var(--navy);
+    }
+
+    .wing-left {
+      left: 0;
+      transform: rotate(-22deg);
+    }
+
+    .wing-right {
+      right: 0;
+      transform: scaleX(-1) rotate(-22deg);
+    }
+
+    .party-hat {
+      width: 0;
+      height: 0;
+      border-left: 28px solid transparent;
+      border-right: 28px solid transparent;
+      border-bottom: 62px solid var(--red);
+      position: absolute;
+      left: 62px;
+      top: -43px;
+      transform: rotate(-5deg);
+    }
+
+    .party-hat::after {
+      content: "★";
+      position: absolute;
+      top: 38px;
+      left: -9px;
+      color: var(--white);
+      font-size: 18px;
+    }
+
+    .score-badge {
+      display: inline-block;
+      margin: 6px auto 18px;
+      padding: 12px 20px;
+      border-radius: 999px;
+      background: var(--navy);
+      color: var(--white);
+      font-weight: 900;
+      font-size: 1.2rem;
+    }
+
+    .restart-button {
+      border: 3px solid var(--navy);
+      border-radius: 999px;
+      padding: 12px 22px;
+      background: var(--white);
+      color: var(--navy);
+      font-weight: 900;
+    }
+
+    .confetti-piece {
+      position: fixed;
+      top: -20px;
+      width: 10px;
+      height: 18px;
+      z-index: 9999;
+      pointer-events: none;
+      animation: fall linear forwards;
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(110vh) rotate(720deg);
+      }
+    }
+
+    @keyframes popIn {
+      from {
+        opacity: 0;
+        transform: scale(0.7);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes flash {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.25);
+        filter: brightness(1.5);
+      }
+    }
+
+    @keyframes bounce {
+      from {
+        transform: translateY(0);
+      }
+      to {
+        transform: translateY(-8px);
+      }
+    }
+
+    @keyframes dance {
+      from {
+        transform: rotate(-4deg) translateY(0);
+      }
+      to {
+        transform: rotate(4deg) translateY(-8px);
+      }
+    }
+
+    @media (max-width: 760px) {
+      .screen {
+        padding: 12px;
+      }
+
+      .game-card {
+        padding: 20px;
+        min-height: auto;
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .cake-area,
+      .map-wrap {
+        grid-template-columns: 1fr;
+      }
+
+      .party-icons {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .firework-board {
+        grid-template-columns: repeat(2, minmax(72px, 110px));
+      }
+
+      .choice-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .screen {
+        padding: 8px;
+      }
+
+      .panel,
+      .game-card,
+      .topbar {
+        border-radius: 16px;
+      }
+
+      .hero {
+        padding: 34px 18px;
+      }
+
+      .party-icons {
+        gap: 8px;
+      }
+
+      .party-icon {
+        min-height: 62px;
+        font-size: 28px;
+      }
+
+      .picnic-grid,
+      .balloon-grid,
+      .playlist-grid {
+        grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <section id="startScreen" class="screen active" aria-labelledby="mainTitle">
+      <div class="panel hero">
+        <div class="mini-stars" aria-hidden="true">★ ★ ★</div>
+        <h1 id="mainTitle">America's <span>250th</span><br />Birthday Bash</h1>
+        <p class="subtitle">
+          America is turning 250! Help get the party ready. Play six quick mini-games,
+          unlock each party item, and start the big celebration.
+        </p>
+        <button id="startButton" class="start-button">Start the Party</button>
+
+        <div class="party-icons" aria-label="Party items to unlock">
+          <div class="party-icon" title="Cake">🎂</div>
+          <div class="party-icon" title="Fireworks">🎆</div>
+          <div class="party-icon" title="Picnic">🧺</div>
+          <div class="party-icon" title="Balloons">🎈</div>
+          <div class="party-icon" title="Music">🎵</div>
+          <div class="party-icon" title="Mascot">🦅</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="gameScreen" class="screen">
+      <div class="game-layout">
+        <header class="topbar">
+          <div class="stats">
+            <div class="stat">Party Points <span id="scoreValue">0</span>/250</div>
+            <div class="stat">Time <span id="timerValue">250</span> seconds</div>
+            <div class="stat">Party Items <span id="itemValue">0</span>/6</div>
+          </div>
+          <div class="progress-track" aria-label="Party progress">
+            <div id="progressFill" class="progress-fill"></div>
+          </div>
+        </header>
+
+        <section id="gameCard" class="game-card" aria-live="polite"></section>
+      </div>
+    </section>
+
+    <section id="finalScreen" class="screen">
+      <div class="panel final-panel">
+        <div class="eagle" aria-label="A dancing eagle wearing a party hat">
+          <div class="party-hat"></div>
+          <div class="eagle-wing wing-left"></div>
+          <div class="eagle-wing wing-right"></div>
+          <div class="eagle-body"></div>
+          <div class="eagle-head">
+            <div class="eagle-beak"></div>
+          </div>
+        </div>
+
+        <div class="mini-stars" aria-hidden="true">★ ★ ★</div>
+        <h1>Start the Party!</h1>
+        <p class="subtitle">
+          You built the cake, launched the fireworks, packed the picnic, popped the balloons,
+          fixed the music, and found the missing mascot.
+        </p>
+        <div class="score-badge">Official America 250 Party Planner</div>
+        <p><strong>Final score</strong> <span id="finalScore">250</span> out of 250</p>
+        <button id="restartButton" class="restart-button">Play Again</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const startScreen = document.getElementById("startScreen");
+    const gameScreen = document.getElementById("gameScreen");
+    const finalScreen = document.getElementById("finalScreen");
+    const gameCard = document.getElementById("gameCard");
+    const scoreValue = document.getElementById("scoreValue");
+    const timerValue = document.getElementById("timerValue");
+    const itemValue = document.getElementById("itemValue");
+    const progressFill = document.getElementById("progressFill");
+    const finalScore = document.getElementById("finalScore");
+
+    let currentGame = 0;
+    let score = 0;
+    let completedItems = 0;
+    let timeLeft = 250;
+    let timerId = null;
+    let currentSolved = false;
+    let audioContext = null;
+
+    const pointValues = [40, 40, 40, 40, 40, 50];
+
+    const games = [
+      renderCakeGame,
+      renderFireworksGame,
+      renderPicnicGame,
+      renderBalloonGame,
+      renderPlaylistGame,
+      renderMascotGame
+    ];
+
+    document.getElementById("startButton").addEventListener("click", startGame);
+    document.getElementById("restartButton").addEventListener("click", restartGame);
+
+    function startGame() {
+      startScreen.classList.remove("active");
+      finalScreen.classList.remove("active");
+      gameScreen.classList.add("active");
+
+      currentGame = 0;
+      score = 0;
+      completedItems = 0;
+      timeLeft = 250;
+      currentSolved = false;
+      updateStats();
+      startTimer();
+      games[currentGame]();
+    }
+
+    function restartGame() {
+      clearInterval(timerId);
+      finalScreen.classList.remove("active");
+      startScreen.classList.add("active");
+    }
+
+    function startTimer() {
+      clearInterval(timerId);
+      timerId = setInterval(() => {
+        if (timeLeft > 0) {
+          timeLeft -= 1;
+          timerValue.textContent = timeLeft;
+        } else {
+          timerValue.textContent = "Bonus";
+        }
+      }, 1000);
+    }
+
+    function updateStats() {
+      scoreValue.textContent = score;
+      itemValue.textContent = completedItems;
+      progressFill.style.width = `${(completedItems / 6) * 100}%`;
+    }
+
+    function challengeHeader(number, title, directions) {
+      return `
+        <div class="challenge-number">Challenge ${number} of 6</div>
+        <h2 class="game-title">${title}</h2>
+        <p class="directions">${directions}</p>
+      `;
+    }
+
+    function finishChallenge(message) {
+      if (currentSolved) return;
+      currentSolved = true;
+      score += pointValues[currentGame];
+      completedItems += 1;
+      updateStats();
+
+      const status = document.getElementById("statusBox");
+      status.textContent = message;
+      status.className = "status-box success";
+
+      const nextButton = document.getElementById("nextButton");
+      nextButton.style.display = "inline-block";
+      nextButton.focus();
+
+      launchMiniConfetti(45);
+      playCheerSound();
+    }
+
+    function nextChallenge() {
+      currentGame += 1;
+      currentSolved = false;
+
+      if (currentGame >= games.length) {
+        showFinale();
+        return;
+      }
+
+      games[currentGame]();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function commonNextButton(label = "Next Challenge") {
+      return `
+        <div class="next-row">
+          <button id="nextButton" class="next-button">${label}</button>
+        </div>
+      `;
+    }
+
+    function attachNextButton() {
+      document.getElementById("nextButton").addEventListener("click", nextChallenge);
+    }
+
+    function renderCakeGame() {
+      const correctOrder = ["blue", "white", "red"];
+      const labels = {
+        blue: "Blue Layer",
+        white: "White Layer",
+        red: "Red Layer"
+      };
+
+      gameCard.innerHTML = `
+        ${challengeHeader(
+          1,
+          "Build the Birthday Cake",
+          "The cake layers are mixed up. Build the cake from bottom to top: blue, white, red."
+        )}
+        <div class="cake-area">
+          <div class="cake-stage" id="cakeStage">
+            <div class="cake-plate"></div>
+          </div>
+          <div>
+            <div class="choice-grid" id="cakeChoices">
+              <button class="choice-button" data-color="red">Red Layer</button>
+              <button class="choice-button" data-color="blue">Blue Layer</button>
+              <button class="choice-button" data-color="white">White Layer</button>
+              <button class="choice-button" id="resetCake">Reset Cake</button>
+            </div>
+            <div id="statusBox" class="status-box">Add all three layers.</div>
+            ${commonNextButton()}
+          </div>
+        </div>
+      `;
+
+      const cakeStage = document.getElementById("cakeStage");
+      const choices = [...document.querySelectorAll("[data-color]")];
+      let builtOrder = [];
+
+      choices.forEach(button => {
+        button.addEventListener("click", () => {
+          if (currentSolved || builtOrder.length >= 3) return;
+
+          const color = button.dataset.color;
+          builtOrder.push(color);
+          button.disabled = true;
+
+          const layer = document.createElement("div");
+          layer.className = "cake-layer";
+          layer.textContent = labels[color];
+          layer.style.background = color === "white" ? "#f4f4f4" : color === "blue" ? "#2f6fcc" : "#d64045";
+          layer.style.color = color === "white" ? "#15315f" : "#ffffff";
+
+          cakeStage.insertBefore(layer, cakeStage.firstChild);
+
+          if (builtOrder.length === 3) {
+            if (builtOrder.join(",") === correctOrder.join(",")) {
+              const topper = document.createElement("div");
+              topper.className = "cake-topper";
+              topper.textContent = "250";
+              cakeStage.insertBefore(topper, cakeStage.firstChild);
+              finishChallenge("Cake complete! You unlocked the birthday cake.");
+            } else {
+              const status = document.getElementById("statusBox");
+              status.textContent = "Not quite. Reset the cake and try the color order again.";
+              status.className = "status-box try-again";
+            }
+          }
+        });
+      });
+
+      document.getElementById("resetCake").addEventListener("click", () => {
+        if (currentSolved) return;
+        builtOrder = [];
+        choices.forEach(button => button.disabled = false);
+        [...cakeStage.querySelectorAll(".cake-layer, .cake-topper")].forEach(el => el.remove());
+        const status = document.getElementById("statusBox");
+        status.textContent = "Add all three layers.";
+        status.className = "status-box";
+      });
+
+      attachNextButton();
+    }
+
+    function renderFireworksGame() {
+      const colors = [
+        { name: "Red", value: "#d64045" },
+        { name: "Blue", value: "#2f6fcc" },
+        { name: "Gold", value: "#f4bf3a" },
+        { name: "Green", value: "#3d8b61" }
+      ];
+
+      const sequence = shuffle(colors).slice(0, 4);
+      let playerStep = 0;
+      let canPlay = false;
+
+      gameCard.innerHTML = `
+        ${challengeHeader(
+          2,
+          "Untangle the Fireworks",
+          "Watch the four colors. Then click the fireworks in the same order."
+        )}
+        <div id="sequenceDisplay" class="sequence-display">Press Show Sequence</div>
+        <div class="firework-board">
+          ${colors.map(color => `
+            <button
+              class="firework-button"
+              data-name="${color.name}"
+              style="background:${color.value}"
+              aria-label="${color.name} firework"
+            >
+              ${color.name}
+            </button>
+          `).join("")}
+        </div>
+        <div class="check-row">
+          <button id="showSequence" class="primary-button">Show Sequence</button>
+        </div>
+        <div id="statusBox" class="status-box">Watch first, then tap the colors.</div>
+        ${commonNextButton()}
+      `;
+
+      const buttons = [...document.querySelectorAll(".firework-button")];
+      const sequenceDisplay = document.getElementById("sequenceDisplay");
+
+      document.getElementById("showSequence").addEventListener("click", async () => {
+        if (currentSolved) return;
+        canPlay = false;
+        playerStep = 0;
+        sequenceDisplay.textContent = "Watch closely...";
+
+        for (const color of sequence) {
+          await wait(350);
+          const button = buttons.find(btn => btn.dataset.name === color.name);
+          button.classList.add("flash");
+          sequenceDisplay.textContent = color.name;
+          playTone(280 + colors.findIndex(c => c.name === color.name) * 90, 0.18);
+          await wait(500);
+          button.classList.remove("flash");
+        }
+
+        sequenceDisplay.textContent = "Your turn!";
+        canPlay = true;
+      });
+
+      buttons.forEach(button => {
+        button.addEventListener("click", () => {
+          if (!canPlay || currentSolved) return;
+
+          button.classList.add("flash");
+          setTimeout(() => button.classList.remove("flash"), 350);
+
+          const expected = sequence[playerStep].name;
+          if (button.dataset.name === expected) {
+            playerStep += 1;
+            playTone(420 + playerStep * 60, 0.12);
+
+            if (playerStep === sequence.length) {
+              canPlay = false;
+              finishChallenge("Great memory! You unlocked the fireworks show.");
+            }
+          } else {
+            playerStep = 0;
+            canPlay = false;
+            sequenceDisplay.textContent = "Try again. Show the sequence again.";
+            const status = document.getElementById("statusBox");
+            status.textContent = "That was not the order. Watch again and try once more.";
+            status.className = "status-box try-again";
+          }
+        });
+      });
+
+      attachNextButton();
+    }
+
+    function renderPicnicGame() {
+      const items = shuffle([
+        { name: "Watermelon", emoji: "🍉", good: true },
+        { name: "Sandwiches", emoji: "🥪", good: true },
+        { name: "Lemonade", emoji: "🥤", good: true },
+        { name: "Picnic Blanket", emoji: "🧺", good: true },
+        { name: "Napkins", emoji: "🧻", good: true },
+        { name: "Snow Boots", emoji: "🥾", good: false },
+        { name: "Rubber Chicken", emoji: "🐔", good: false },
+        { name: "Cactus", emoji: "🌵", good: false },
+        { name: "Forty-Seven Mustards", emoji: "🟨", good: false }
+      ]);
+
+      gameCard.innerHTML = `
+        ${challengeHeader(
+          3,
+          "Pack the Giant Picnic",
+          "Choose the five useful things for the party picnic. Leave the silly items behind."
+        )}
+        <div class="picnic-grid">
+          ${items.map((item, index) => `
+            <button class="item-card" data-index="${index}">
+              <span class="item-emoji">${item.emoji}</span>
+              <span>${item.name}</span>
+            </button>
+          `).join("")}
+        </div>
+        <div class="check-row">
+          <button id="checkPicnic" class="primary-button">Check the Picnic Basket</button>
+        </div>
+        <div id="statusBox" class="status-box">Select exactly five items.</div>
+        ${commonNextButton()}
+      `;
+
+      const selected = new Set();
+      const cards = [...document.querySelectorAll(".item-card")];
+
+      cards.forEach(card => {
+        card.addEventListener("click", () => {
+          if (currentSolved) return;
+          const index = Number(card.dataset.index);
+
+          if (selected.has(index)) {
+            selected.delete(index);
+            card.classList.remove("selected");
+          } else if (selected.size < 5) {
+            selected.add(index);
+            card.classList.add("selected");
+          }
+
+          document.getElementById("statusBox").textContent = `${selected.size} of 5 items selected.`;
+        });
+      });
+
+      document.getElementById("checkPicnic").addEventListener("click", () => {
+        if (currentSolved) return;
+
+        if (selected.size !== 5) {
+          const status = document.getElementById("statusBox");
+          status.textContent = "Choose exactly five items before checking.";
+          status.className = "status-box try-again";
+          return;
+        }
+
+        const allCorrect = [...selected].every(index => items[index].good);
+
+        if (allCorrect) {
+          finishChallenge("Perfect picnic! You unlocked the picnic basket.");
+        } else {
+          cards.forEach(card => {
+            const index = Number(card.dataset.index);
+            if (selected.has(index) && !items[index].good) {
+              card.classList.add("wrong");
+            }
+          });
+
+          const status = document.getElementById("statusBox");
+          status.textContent = "One item does not belong. Change your choices and try again.";
+          status.className = "status-box try-again";
+        }
+      });
+
+      attachNextButton();
+    }
+
+    function renderBalloonGame() {
+      const numbers = shuffle([15, 22, 30, 41, 55, 64, 75, 83, 90, 97, 105, 118]);
+      const targets = numbers.filter(number => number % 5 === 0);
+      let popped = 0;
+
+      gameCard.innerHTML = `
+        ${challengeHeader(
+          4,
+          "Catch the Balloons",
+          "Pop each balloon with a number that ends in 0 or 5. Leave the other balloons alone."
+        )}
+        <div class="balloon-grid">
+          ${numbers.map(number => `
+            <button class="balloon-button" data-number="${number}" aria-label="Balloon ${number}">
+              ${number}
+            </button>
+          `).join("")}
+        </div>
+        <div id="statusBox" class="status-box">Find ${targets.length} matching balloons.</div>
+        ${commonNextButton()}
+      `;
+
+      document.querySelectorAll(".balloon-button").forEach(button => {
+        button.addEventListener("click", () => {
+          if (currentSolved) return;
+          const number = Number(button.dataset.number);
+
+          if (number % 5 === 0) {
+            button.classList.add("popped");
+            popped += 1;
+            playPopSound();
+
+            if (popped === targets.length) {
+              finishChallenge("Nice number work! You unlocked the balloons.");
+            } else {
+              document.getElementById("statusBox").textContent =
+                `${targets.length - popped} correct balloon${targets.length - popped === 1 ? "" : "s"} left.`;
+            }
+          } else {
+            button.animate(
+              [
+                { transform: "translateX(0)" },
+                { transform: "translateX(-8px)" },
+                { transform: "translateX(8px)" },
+                { transform: "translateX(0)" }
+              ],
+              { duration: 280 }
+            );
+
+            const status = document.getElementById("statusBox");
+            status.textContent = "Leave that balloon. Look for a number ending in 0 or 5.";
+            status.className = "status-box try-again";
+          }
+        });
+      });
+
+      attachNextButton();
+    }
+
+    function renderPlaylistGame() {
+      const tracks = [
+        "Star-Spangled Stomp",
+        "Picnic Blanket Boogie",
+        "Firework Finale"
+      ];
+
+      gameCard.innerHTML = `
+        ${challengeHeader(
+          5,
+          "Fix the Party Playlist",
+          "Choose the song title that best matches each party moment."
+        )}
+        <div class="playlist-grid">
+          <div class="playlist-card">
+            <h3>Opening Parade</h3>
+            ${playlistSelect("parade", tracks)}
+          </div>
+          <div class="playlist-card">
+            <h3>Picnic Dance Break</h3>
+            ${playlistSelect("picnic", tracks)}
+          </div>
+          <div class="playlist-card">
+            <h3>Fireworks Finale</h3>
+            ${playlistSelect("fireworks", tracks)}
+          </div>
+        </div>
+        <div class="check-row">
+          <button id="checkPlaylist" class="primary-button">Test the Playlist</button>
+        </div>
+        <div id="statusBox" class="status-box">Match each moment with a song.</div>
+        ${commonNextButton()}
+      `;
+
+      document.getElementById("checkPlaylist").addEventListener("click", () => {
+        if (currentSolved) return;
+
+        const answers = {
+          parade: "Star-Spangled Stomp",
+          picnic: "Picnic Blanket Boogie",
+          fireworks: "Firework Finale"
+        };
+
+        const correct = Object.entries(answers).every(([id, answer]) => {
+          return document.getElementById(id).value === answer;
+        });
+
+        if (correct) {
+          finishChallenge("The playlist is ready! You unlocked the music.");
+        } else {
+          const status = document.getElementById("statusBox");
+          status.textContent = "One song does not match. Check the titles and try again.";
+          status.className = "status-box try-again";
+        }
+      });
+
+      attachNextButton();
+    }
+
+    function playlistSelect(id, tracks) {
+      return `
+        <select id="${id}" aria-label="${id} song choice">
+          <option value="">Choose a song</option>
+          ${tracks.map(track => `<option value="${track}">${track}</option>`).join("")}
+        </select>
+      `;
+    }
+
+    function renderMascotGame() {
+      const steps = [
+        {
+          clue: "First clue: Go to the birthday cake.",
+          answer: "Cake Tent"
+        },
+        {
+          clue: "Second clue: Go where the music is playing.",
+          answer: "Music Stage"
+        },
+        {
+          clue: "Final clue: Go where the fireworks will shine.",
+          answer: "Fireworks Hill"
+        }
+      ];
+
+      let step = 0;
+
+      gameCard.innerHTML = `
+        ${challengeHeader(
+          6,
+          "Find the Missing Mascot",
+          "Follow the clues around the party. Find the eagle mascot."
+        )}
+        <div class="map-wrap">
+          <div class="map">
+            <button class="location" data-place="Cake Tent">🎂<br />Cake Tent</button>
+            <button class="location" data-place="Music Stage">🎵<br />Music Stage</button>
+            <button class="location" data-place="Picnic Lawn">🧺<br />Picnic Lawn</button>
+            <button class="location" data-place="Fireworks Hill">🎆<br />Fireworks Hill</button>
+          </div>
+          <div class="clue-panel">
+            <h3>Mascot Clue</h3>
+            <p id="clueText">${steps[step].clue}</p>
+            <p><strong>Visited</strong> <span id="visitedCount">0</span> of 3 clue locations</p>
+          </div>
+        </div>
+        <div id="statusBox" class="status-box">Choose the first place.</div>
+        ${commonNextButton("Start the Party")}
+      `;
+
+      const visited = new Set();
+
+      document.querySelectorAll(".location").forEach(button => {
+        button.addEventListener("click", () => {
+          if (currentSolved) return;
+
+          if (button.dataset.place === steps[step].answer) {
+            button.classList.add("visited");
+            visited.add(button.dataset.place);
+            document.getElementById("visitedCount").textContent = visited.size;
+            playTone(520 + step * 90, 0.18);
+            step += 1;
+
+            if (step === steps.length) {
+              button.innerHTML = "🦅<br />Mascot Found!";
+              finishChallenge("You found the missing mascot! Every party item is unlocked.");
+            } else {
+              document.getElementById("clueText").textContent = steps[step].clue;
+              document.getElementById("statusBox").textContent = "Good clue work. Choose the next place.";
+              document.getElementById("statusBox").className = "status-box";
+            }
+          } else {
+            const status = document.getElementById("statusBox");
+            status.textContent = "No mascot here. Read the clue and choose another place.";
+            status.className = "status-box try-again";
+          }
+        });
+      });
+
+      attachNextButton();
+    }
+
+    function showFinale() {
+      clearInterval(timerId);
+      gameScreen.classList.remove("active");
+      finalScreen.classList.add("active");
+      finalScore.textContent = score;
+      launchMiniConfetti(180);
+      playFinaleSound();
+    }
+
+    function shuffle(array) {
+      const copy = [...array];
+      for (let i = copy.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function wait(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    function launchMiniConfetti(amount) {
+      const colors = ["#d64045", "#2f6fcc", "#f4bf3a", "#3d8b61", "#ffffff"];
+
+      for (let i = 0; i < amount; i += 1) {
+        const piece = document.createElement("div");
+        piece.className = "confetti-piece";
+        piece.style.left = `${Math.random() * 100}vw`;
+        piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+        piece.style.animationDuration = `${2.4 + Math.random() * 2.2}s`;
+        piece.style.opacity = `${0.65 + Math.random() * 0.35}`;
+        piece.style.transform = `rotate(${Math.random() * 360}deg)`;
+        document.body.appendChild(piece);
+        setTimeout(() => piece.remove(), 5000);
+      }
+    }
+
+    function getAudioContext() {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContext) return null;
+      if (!audioContext) audioContext = new AudioContext();
+      if (audioContext.state === "suspended") audioContext.resume();
+      return audioContext;
+    }
+
+    function playTone(frequency, duration) {
+      const context = getAudioContext();
+      if (!context) return;
+
+      const oscillator = context.createOscillator();
+      const gain = context.createGain();
+
+      oscillator.type = "sine";
+      oscillator.frequency.value = frequency;
+      gain.gain.setValueAtTime(0.12, context.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, context.currentTime + duration);
+
+      oscillator.connect(gain);
+      gain.connect(context.destination);
+      oscillator.start();
+      oscillator.stop(context.currentTime + duration);
+    }
+
+    function playPopSound() {
+      playTone(190, 0.08);
+    }
+
+    function playCheerSound() {
+      [440, 554, 659].forEach((frequency, index) => {
+        setTimeout(() => playTone(frequency, 0.2), index * 120);
+      });
+    }
+
+    function playFinaleSound() {
+      [392, 494, 587, 784].forEach((frequency, index) => {
+        setTimeout(() => playTone(frequency, 0.28), index * 150);
+      });
+    }
+  </script>
+</body>
+</html>
