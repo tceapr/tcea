@@ -544,10 +544,12 @@
 
     .playlist-card select {
       width: 100%;
-      padding: 10px;
+      min-height: 64px;
+      padding: 14px 16px;
       border: 2px solid var(--navy);
       border-radius: 10px;
       background: var(--white);
+      font-size: 1.15rem;
       font-weight: 700;
     }
 
@@ -776,6 +778,10 @@
       .balloon-grid,
       .playlist-grid {
         grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
+      }
+
+      .playlist-card select {
+        font-size: 1.05rem;
       }
 
       .item-card {
