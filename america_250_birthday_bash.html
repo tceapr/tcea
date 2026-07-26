@@ -1295,7 +1295,7 @@
         ${challengeHeader(
           4,
           "Catch the Balloons",
-          "Pop each balloon with a number that ends in 0 or 5. Leave the other balloons alone."
+          "Pop each balloon showing a multiple of 5. Hint: multiples of 5 end in 0 or 5."
         )}
         <div class="balloon-grid">
           ${numbers.map(number => `
@@ -1304,7 +1304,7 @@
             </button>
           `).join("")}
         </div>
-        <div id="statusBox" class="status-box">Find ${targets.length} matching balloons.</div>
+        <div id="statusBox" class="status-box">Find ${targets.length} multiples of 5.</div>
         ${commonNextButton()}
       `;
 
@@ -1336,7 +1336,7 @@
             );
 
             const status = document.getElementById("statusBox");
-            status.textContent = "Leave that balloon. Look for a number ending in 0 or 5.";
+            status.textContent = "Leave that balloon. It is not a multiple of 5. Look for a number ending in 0 or 5.";
             status.className = "status-box try-again";
           }
         });
