@@ -295,13 +295,21 @@
     .cake-stage {
       min-height: 350px;
       display: flex;
-      flex-direction: column-reverse;
+      flex-direction: column;
       align-items: center;
-      justify-content: flex-start;
+      justify-content: flex-end;
       padding: 20px;
       border-radius: 22px;
       background: linear-gradient(#dff1ff, #fff);
       border: 3px solid var(--sky);
+    }
+
+    .cake-stack {
+      display: flex;
+      flex-direction: column-reverse;
+      align-items: center;
+      min-height: 208px;
+      justify-content: flex-start;
     }
 
     .cake-plate {
@@ -325,18 +333,47 @@
       animation: popIn 0.35s ease;
     }
 
-    .cake-layer:nth-of-type(2) {
+    .cake-layer.layer-white {
       width: 180px;
     }
 
-    .cake-layer:nth-of-type(3) {
+    .cake-layer.layer-red {
       width: 150px;
     }
 
-    .cake-topper {
-      font-size: 40px;
-      margin-bottom: 4px;
+    .cake-candles {
+      display: flex;
+      gap: 18px;
+      align-items: flex-end;
+      margin-bottom: 8px;
       animation: bounce 1s infinite alternate;
+    }
+
+    .candle {
+      position: relative;
+      width: 14px;
+      height: 42px;
+      border: 3px solid var(--navy);
+      border-radius: 6px;
+      background:
+        repeating-linear-gradient(
+          45deg,
+          #ffffff 0 7px,
+          #d64045 7px 14px
+        );
+    }
+
+    .candle::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: -20px;
+      width: 13px;
+      height: 20px;
+      border-radius: 50% 50% 50% 50%;
+      background: var(--gold);
+      transform: translateX(-50%);
+      box-shadow: 0 0 10px rgba(244, 191, 58, 0.7);
     }
 
     .choice-grid {
@@ -993,6 +1030,7 @@
         )}
         <div class="cake-area">
           <div class="cake-stage" id="cakeStage">
+            <div class="cake-stack" id="cakeStack"></div>
             <div class="cake-plate"></div>
           </div>
           <div>
@@ -1008,7 +1046,7 @@
         </div>
       `;
 
-      const cakeStage = document.getElementById("cakeStage");
+      const cakeStack = document.getElementById("cakeStack");
       const choices = [...document.querySelectorAll("[data-color]")];
       let builtOrder = [];
 
@@ -1021,19 +1059,20 @@
           button.disabled = true;
 
           const layer = document.createElement("div");
-          layer.className = "cake-layer";
+          layer.className = `cake-layer layer-${color}`;
           layer.textContent = labels[color];
           layer.style.background = color === "white" ? "#f4f4f4" : color === "blue" ? "#2f6fcc" : "#d64045";
           layer.style.color = color === "white" ? "#15315f" : "#ffffff";
 
-          cakeStage.insertBefore(layer, cakeStage.firstChild);
+          cakeStack.appendChild(layer);
 
           if (builtOrder.length === 3) {
             if (builtOrder.join(",") === correctOrder.join(",")) {
-              const topper = document.createElement("div");
-              topper.className = "cake-topper";
-              topper.textContent = "250";
-              cakeStage.insertBefore(topper, cakeStage.firstChild);
+              const candles = document.createElement("div");
+              candles.className = "cake-candles";
+              candles.setAttribute("aria-label", "Candles on top of the cake");
+              candles.innerHTML = '<span class="candle"></span><span class="candle"></span><span class="candle"></span>';
+              cakeStack.appendChild(candles);
               finishChallenge("Cake complete! You unlocked the birthday cake.");
             } else {
               const status = document.getElementById("statusBox");
@@ -1048,7 +1087,7 @@
         if (currentSolved) return;
         builtOrder = [];
         choices.forEach(button => button.disabled = false);
-        [...cakeStage.querySelectorAll(".cake-layer, .cake-topper")].forEach(el => el.remove());
+        cakeStack.innerHTML = "";
         const status = document.getElementById("statusBox");
         status.textContent = "Add all three layers.";
         status.className = "status-box";
