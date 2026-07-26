@@ -1360,12 +1360,30 @@
     }
 
     function playlistSelect(id, tracks) {
+      const shuffledTracks = shuffledChoices(tracks);
+
       return `
         <select id="${id}" aria-label="${id} song choice">
           <option value="">Choose a song</option>
-          ${tracks.map(track => `<option value="${track}">${track}</option>`).join("")}
+          ${shuffledTracks.map(track => `<option value="${track}">${track}</option>`).join("")}
         </select>
       `;
+    }
+
+    function shuffledChoices(choices) {
+      const shuffled = [...choices];
+
+      for (let index = shuffled.length - 1; index > 0; index--) {
+        const swapIndex = Math.floor(Math.random() * (index + 1));
+        [shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex], shuffled[index]];
+      }
+
+      const stayedInOrder = shuffled.every((choice, index) => choice === choices[index]);
+      if (stayedInOrder && shuffled.length > 1) {
+        shuffled.push(shuffled.shift());
+      }
+
+      return shuffled;
     }
 
     function renderMascotGame() {
