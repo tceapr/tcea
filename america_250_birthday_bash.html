@@ -569,16 +569,31 @@
       border: 3px solid var(--navy);
       border-radius: 18px;
       background: var(--white);
-      padding: 15px;
+      padding: 18px;
       display: grid;
       place-items: center;
+      align-content: center;
+      gap: 10px;
+      min-height: 180px;
       text-align: center;
+      font-size: 1.25rem;
       font-weight: 900;
       color: var(--navy);
     }
 
     .location.visited {
       background: var(--gold);
+    }
+
+    .location-graphic {
+      width: clamp(76px, 15vw, 108px);
+      height: clamp(76px, 15vw, 108px);
+      display: block;
+      filter: drop-shadow(0 5px 0 rgba(21, 49, 95, 0.13));
+    }
+
+    .location-label {
+      display: block;
     }
 
     .clue-panel {
@@ -757,6 +772,21 @@
       .balloon-grid,
       .playlist-grid {
         grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
+      }
+
+      .map {
+        padding: 10px;
+      }
+
+      .location {
+        min-height: 142px;
+        padding: 12px;
+        font-size: 1.05rem;
+      }
+
+      .location-graphic {
+        width: 68px;
+        height: 68px;
       }
     }
   </style>
@@ -1364,10 +1394,58 @@
         )}
         <div class="map-wrap">
           <div class="map">
-            <button class="location" data-place="Cake Tent">🎂<br />Cake Tent</button>
-            <button class="location" data-place="Music Stage">🎵<br />Music Stage</button>
-            <button class="location" data-place="Picnic Lawn">🧺<br />Picnic Lawn</button>
-            <button class="location" data-place="Fireworks Hill">🎆<br />Fireworks Hill</button>
+            <button class="location" data-place="Cake Tent">
+              <svg class="location-graphic" viewBox="0 0 96 96" aria-hidden="true">
+                <path d="M18 74 H78 Q84 74 84 80 V84 H12 V80 Q12 74 18 74 Z" fill="#15315f"/>
+                <path d="M20 52 H76 Q81 52 81 57 V74 H15 V57 Q15 52 20 52 Z" fill="#2f6fcc" stroke="#15315f" stroke-width="4"/>
+                <path d="M24 38 H72 Q77 38 77 43 V55 H19 V43 Q19 38 24 38 Z" fill="#fff8e8" stroke="#15315f" stroke-width="4"/>
+                <path d="M30 24 H66 Q71 24 71 29 V40 H25 V29 Q25 24 30 24 Z" fill="#d64045" stroke="#15315f" stroke-width="4"/>
+                <path d="M34 24 V14 M44 24 V14 M54 24 V14 M64 24 V14" stroke="#15315f" stroke-width="4" stroke-linecap="round"/>
+                <circle cx="34" cy="12" r="4" fill="#f4bf3a"/>
+                <circle cx="44" cy="12" r="4" fill="#f4bf3a"/>
+                <circle cx="54" cy="12" r="4" fill="#f4bf3a"/>
+                <circle cx="64" cy="12" r="4" fill="#f4bf3a"/>
+                <text x="48" y="70" text-anchor="middle" font-size="18" font-weight="900" fill="#ffffff">250</text>
+              </svg>
+              <span class="location-label">Cake Tent</span>
+            </button>
+            <button class="location" data-place="Music Stage">
+              <svg class="location-graphic" viewBox="0 0 96 96" aria-hidden="true">
+                <path d="M14 76 H82 L74 86 H22 Z" fill="#15315f"/>
+                <path d="M20 28 H76 Q82 28 82 34 V76 H14 V34 Q14 28 20 28 Z" fill="#fff8e8" stroke="#15315f" stroke-width="4"/>
+                <path d="M22 28 L48 12 L74 28 Z" fill="#d64045" stroke="#15315f" stroke-width="4" stroke-linejoin="round"/>
+                <path d="M28 76 V50 M42 76 V44 M56 76 V50 M70 76 V44" stroke="#15315f" stroke-width="4"/>
+                <circle cx="35" cy="58" r="7" fill="#2f6fcc"/>
+                <circle cx="62" cy="51" r="7" fill="#f4bf3a"/>
+                <path d="M42 58 V31 L68 26 V51" fill="none" stroke="#15315f" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span class="location-label">Music Stage</span>
+            </button>
+            <button class="location" data-place="Picnic Lawn">
+              <svg class="location-graphic" viewBox="0 0 96 96" aria-hidden="true">
+                <path d="M18 76 H78 L84 86 H12 Z" fill="#3d8b61"/>
+                <path d="M20 44 H76 V78 H20 Z" fill="#fff8e8" stroke="#15315f" stroke-width="4" stroke-linejoin="round"/>
+                <path d="M20 54 H76 M20 66 H76 M32 44 V78 M48 44 V78 M64 44 V78" stroke="#d64045" stroke-width="3"/>
+                <path d="M29 43 C31 23 65 23 67 43" fill="none" stroke="#15315f" stroke-width="5" stroke-linecap="round"/>
+                <path d="M31 43 H65 Q73 43 72 51 L68 78 H28 L24 51 Q23 43 31 43 Z" fill="#c9782f" stroke="#15315f" stroke-width="4"/>
+                <path d="M31 52 H65 M35 62 H61" stroke="#fff8e8" stroke-width="4" stroke-linecap="round"/>
+                <circle cx="31" cy="33" r="8" fill="#f4bf3a" stroke="#15315f" stroke-width="3"/>
+                <path d="M31 25 V41 M23 33 H39" stroke="#fff8e8" stroke-width="2"/>
+              </svg>
+              <span class="location-label">Picnic Lawn</span>
+            </button>
+            <button class="location" data-place="Fireworks Hill">
+              <svg class="location-graphic" viewBox="0 0 96 96" aria-hidden="true">
+                <path d="M13 79 C28 64 68 64 83 79 V87 H13 Z" fill="#3d8b61"/>
+                <path d="M48 30 V10 M48 30 L36 14 M48 30 L60 14 M48 30 L28 30 M48 30 L68 30 M48 30 L34 46 M48 30 L62 46" stroke="#f4bf3a" stroke-width="5" stroke-linecap="round"/>
+                <circle cx="48" cy="30" r="7" fill="#d64045" stroke="#15315f" stroke-width="3"/>
+                <path d="M24 36 V22 M24 36 L14 28 M24 36 L34 28 M24 36 L12 42 M24 36 L36 42" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
+                <circle cx="24" cy="36" r="5" fill="#2f6fcc" stroke="#15315f" stroke-width="2"/>
+                <path d="M69 53 V39 M69 53 L59 45 M69 53 L79 45 M69 53 L57 59 M69 53 L81 59" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
+                <circle cx="69" cy="53" r="5" fill="#d64045" stroke="#15315f" stroke-width="2"/>
+              </svg>
+              <span class="location-label">Fireworks Hill</span>
+            </button>
           </div>
           <div class="clue-panel">
             <h3>Mascot Clue</h3>
