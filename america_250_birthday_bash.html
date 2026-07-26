@@ -1493,6 +1493,11 @@
         ${commonNextButton("Start the Party")}
       `;
 
+      const map = document.querySelector(".map");
+      shuffledChoices([...map.children]).forEach(location => {
+        map.appendChild(location);
+      });
+
       const visited = new Set();
 
       document.querySelectorAll(".location").forEach(button => {
