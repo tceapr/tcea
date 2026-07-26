@@ -483,6 +483,12 @@
       font-size: 38px;
     }
 
+    .picnic-icon {
+      width: 48px;
+      height: 48px;
+      display: block;
+    }
+
     .check-row {
       display: flex;
       justify-content: center;
@@ -1193,7 +1199,11 @@
         { name: "Sandwiches", emoji: "🥪", good: true },
         { name: "Lemonade", emoji: "🥤", good: true },
         { name: "Picnic Blanket", emoji: "🧺", good: true },
-        { name: "Napkins", emoji: "🧻", good: true },
+        {
+          name: "Napkins",
+          icon: '<svg class="picnic-icon" viewBox="0 0 64 64" role="img" aria-label="Folded napkins"><path d="M12 10 H50 Q54 10 54 14 V54 H12 Z" fill="#ffffff" stroke="#15315f" stroke-width="4" stroke-linejoin="round"/><path d="M18 16 H48 V48 H18 Z" fill="#dbeeff" stroke="#15315f" stroke-width="3"/><path d="M18 16 L48 48 M48 16 L18 48" stroke="#d64045" stroke-width="3" stroke-linecap="round"/><path d="M24 22 H42 M22 34 H44 M24 46 H42" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/></svg>',
+          good: true
+        },
         { name: "Snow Boots", emoji: "🥾", good: false },
         { name: "Rubber Chicken", emoji: "🐔", good: false },
         { name: "Cactus", emoji: "🌵", good: false },
@@ -1209,7 +1219,7 @@
         <div class="picnic-grid">
           ${items.map((item, index) => `
             <button class="item-card" data-index="${index}">
-              <span class="item-emoji">${item.emoji}</span>
+              <span class="item-emoji">${item.icon || item.emoji}</span>
               <span>${item.name}</span>
             </button>
           `).join("")}
