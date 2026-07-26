@@ -454,7 +454,7 @@
       border-radius: 18px;
       background: var(--white);
       padding: 18px 12px;
-      min-height: 125px;
+      min-height: 150px;
       display: grid;
       place-items: center;
       gap: 8px;
@@ -480,12 +480,16 @@
     }
 
     .item-emoji {
-      font-size: 38px;
+      display: grid;
+      place-items: center;
+      min-height: 76px;
+      font-size: 56px;
+      line-height: 1;
     }
 
     .picnic-icon {
-      width: 48px;
-      height: 48px;
+      width: 76px;
+      height: 76px;
       display: block;
     }
 
@@ -772,6 +776,20 @@
       .balloon-grid,
       .playlist-grid {
         grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
+      }
+
+      .item-card {
+        min-height: 132px;
+      }
+
+      .item-emoji {
+        min-height: 64px;
+        font-size: 48px;
+      }
+
+      .picnic-icon {
+        width: 64px;
+        height: 64px;
       }
 
       .map {
