@@ -560,6 +560,34 @@
       word-break: break-word;
     }
 
+    .alphabet-hint {
+      display: grid;
+      gap: 8px;
+      margin-top: 14px;
+      padding: 14px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.28);
+      color: var(--white);
+      font-weight: 900;
+    }
+
+    .alphabet-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+
+    .alphabet-row span {
+      display: grid;
+      place-items: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      background: var(--white);
+      color: var(--navy);
+    }
+
     .decoder {
       display: grid;
       gap: 12px;
@@ -1376,6 +1404,12 @@
             <h3>Encrypted Signal</h3>
             <p class="cipher-text">${puzzle.cipher}</p>
             <p>Signal note: Caesar shift +3</p>
+            <div class="alphabet-hint" aria-label="Alphabet hint">
+              <span>Alphabet Hint</span>
+              <div class="alphabet-row">
+                ${alphabetLetters().map(letter => `<span>${letter}</span>`).join("")}
+              </div>
+            </div>
           </div>
           <div class="decoder">
             <label class="field">Decoded Word
@@ -1385,7 +1419,7 @@
             <button class="primary-button" id="checkDecode">Test Decoder</button>
           </div>
         </div>
-        <div id="statusBox" class="status-box">Move each encrypted letter three spaces back in the alphabet.</div>
+        <div id="statusBox" class="status-box">Use the alphabet hint to test each encrypted letter.</div>
         ${nextButton()}
       `;
 
@@ -1404,6 +1438,10 @@
       });
 
       attachNextButton();
+    }
+
+    function alphabetLetters() {
+      return "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
     }
 
     function renderPastPresent() {
