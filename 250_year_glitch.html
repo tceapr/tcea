@@ -354,6 +354,30 @@
       background: #fff0f0;
     }
 
+    .mode-brief {
+      margin: 14px 0 18px;
+      padding: 14px 16px;
+      border: 3px solid var(--gold);
+      border-radius: 18px;
+      background: var(--cream);
+      color: var(--navy);
+      font-weight: 800;
+      line-height: 1.45;
+    }
+
+    .mode-note {
+      width: min(720px, 100%);
+      margin: -8px auto 0;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(255, 248, 232, 0.92);
+      border: 3px solid rgba(21, 49, 95, 0.22);
+      color: var(--navy);
+      font-weight: 800;
+      line-height: 1.45;
+      text-align: left;
+    }
+
     .scene-frame {
       margin-top: 18px;
       padding: 18px;
@@ -786,12 +810,13 @@
           <label class="field">
             Play Mode
             <select id="playMode">
-              <option>Team play</option>
-              <option>Individual play</option>
-              <option>Whole-class mission</option>
+              <option value="team">Team play</option>
+              <option value="individual">Individual play</option>
+              <option value="whole">Whole-class mission</option>
             </select>
           </label>
         </div>
+        <p class="mode-note" id="modeNote">Team play: assign a reader, a clue tracker, and a final checker before you begin.</p>
         <button class="start-button" id="startButton">Start Mission Timer</button>
       </div>
     </div>
@@ -801,7 +826,7 @@
     <div class="topbar" aria-label="Mission progress">
       <div class="stat-row">
         <div class="stat"><small>Agent</small><span id="agentValue">Time Repair Crew</span></div>
-        <div class="stat"><small>Score</small><span><span id="scoreValue">0</span> / 250</span></div>
+        <div class="stat"><small id="scoreLabel">Team Score</small><span><span id="scoreValue">0</span> / 250</span></div>
         <div class="stat"><small>Timer</small><span><span id="timerValue">250</span> seconds</span></div>
         <div class="stat"><small>Mission</small><span><span id="missionValue">1</span> / 6</span></div>
       </div>
@@ -840,20 +865,68 @@
     const missionValue = document.getElementById("missionValue");
     const progressFill = document.getElementById("progressFill");
     const agentValue = document.getElementById("agentValue");
+    const scoreLabel = document.getElementById("scoreLabel");
     const badgeName = document.getElementById("badgeName");
     const finalCopy = document.getElementById("finalCopy");
+    const playModeSelect = document.getElementById("playMode");
+    const modeNote = document.getElementById("modeNote");
 
-    const missionLimit = 250;
+    const baseMissionLimit = 250;
     const missionPoints = [40, 40, 40, 40, 40, 50];
+    const playModes = {
+      individual: {
+        label: "Individual",
+        timer: 250,
+        scoreLabel: "Score",
+        startHint: "Solo mission: read carefully, make your own choices, and use hints only when you need a nudge.",
+        missionTips: [
+          "Solo check: choose your two answers, then reread the scene year before you repair it.",
+          "Solo check: put the cards in order, then scan from top to bottom before locking.",
+          "Solo check: decode on scratch paper first, then type the word.",
+          "Solo check: answer every card before verifying.",
+          "Solo check: make your invention name clear enough that another student could picture it.",
+          "Solo check: compare each entry with the clue list before repairing the timeline."
+        ]
+      },
+      team: {
+        label: "Team",
+        timer: 250,
+        scoreLabel: "Team Score",
+        startHint: "Team mission: assign a reader, a clue tracker, and a final checker before you begin.",
+        missionTips: [
+          "Team roles: one person reads the scene, one watches for time clues, and one selects after the team agrees.",
+          "Team roles: one person moves cards, one gives date clues, and one checks the final order.",
+          "Team roles: one person shifts letters, one reads the hint, and one types the final word.",
+          "Team roles: vote quickly, then have one teammate explain the trickiest fact.",
+          "Team roles: one person names the invention, one describes it, and one checks the sentence.",
+          "Team roles: the clue tracker reads each clue aloud while the final checker types."
+        ]
+      },
+      whole: {
+        label: "Whole Class",
+        timer: 300,
+        scoreLabel: "Class Score",
+        startHint: "Whole-class mission: the teacher can project each mission, take votes, and let students defend choices.",
+        missionTips: [
+          "Class vote: pause after the scene appears, take two object nominations, then reveal the class choice.",
+          "Class vote: arrange the cards together and ask students to defend any card they want moved.",
+          "Class vote: decode one letter together, then let students predict the word.",
+          "Class vote: students show fingers for Real Past or Made Up before the class locks answers.",
+          "Class brainstorm: collect a few invention names, then choose one class invention to submit.",
+          "Class repair: have different students read each clue before the final entries are typed."
+        ]
+      }
+    };
     let currentMission = 0;
     let score = 0;
-    let timeLeft = missionLimit;
+    let timeLeft = baseMissionLimit;
     let timerId = null;
     let currentSolved = false;
     let currentPossiblePoints = missionPoints[0];
     let audioContext = null;
     let dragIndex = null;
     let teamName = "Time Repair Crew";
+    let playMode = playModes.team;
 
     const clues = {
       year: "",
@@ -980,14 +1053,24 @@
     ];
 
     document.getElementById("startButton").addEventListener("click", startGame);
+    playModeSelect.addEventListener("change", updateModeNote);
     document.getElementById("playAgainButton").addEventListener("click", () => {
       finalScreen.classList.remove("active");
       startScreen.classList.add("active");
     });
 
+    updateModeNote();
+
+    function updateModeNote() {
+      const selectedMode = playModes[playModeSelect.value] || playModes.team;
+      modeNote.textContent = `${selectedMode.label} mode: ${selectedMode.startHint}`;
+    }
+
     function startGame() {
       teamName = document.getElementById("teamName").value.trim() || "Time Repair Crew";
+      playMode = playModes[playModeSelect.value] || playModes.team;
       agentValue.textContent = teamName;
+      scoreLabel.textContent = playMode.scoreLabel;
       score = 0;
       currentMission = 0;
       clues.year = "";
@@ -1023,7 +1106,7 @@
 
     function startMissionTimer() {
       clearInterval(timerId);
-      timeLeft = missionLimit;
+      timeLeft = playMode.timer;
       timerValue.textContent = timeLeft;
       timerId = setInterval(() => {
         timeLeft -= 1;
@@ -1040,6 +1123,7 @@
         <div class="mission-number">Mission ${number} of 6</div>
         <h2 class="game-title">${title}</h2>
         <p class="directions">${directions}</p>
+        <div class="mode-brief"><strong>${playMode.label} mode:</strong> ${playMode.missionTips[number - 1]}</div>
       `;
     }
 
