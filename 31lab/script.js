@@ -52,7 +52,7 @@ const missions = [
   },
   {
     id: 'state',
-    title: 'State Map Mission',
+    title: '31st State Case',
     symbol: 'CA',
     category: 'Geography',
     fact: 'California became the 31st state.'
@@ -73,7 +73,7 @@ const missions = [
   },
   {
     id: 'president',
-    title: 'Presidential Match',
+    title: 'Presidential Timeline Case',
     symbol: 'H',
     category: 'History',
     fact: 'Herbert Hoover was the 31st U.S. president.'
@@ -277,17 +277,30 @@ function renderHalloween(mission) {
 }
 
 function renderState(mission) {
-  challengeShell(mission, 'Click California on the map to power the state-history circuit.', `
+  challengeShell(mission, 'Build the evidence file for the 31st state, then choose the matching state on the map.', `
+    <div class="tool-card">
+      <h3>Evidence file</h3>
+      <div class="clue-grid">
+        <button class="choice-button" type="button" data-state-clue="coast" data-clue-value="west">West Coast</button>
+        <button class="choice-button" type="button" data-state-clue="coast" data-clue-value="east">East Coast</button>
+        <button class="choice-button" type="button" data-state-clue="event" data-clue-value="gold">Gold Rush</button>
+        <button class="choice-button" type="button" data-state-clue="event" data-clue-value="space">Space Coast</button>
+        <button class="choice-button" type="button" data-state-clue="capital" data-clue-value="sacramento">Sacramento</button>
+        <button class="choice-button" type="button" data-state-clue="capital" data-clue-value="austin">Austin</button>
+        <button class="choice-button" type="button" data-state-clue="date" data-clue-value="1850">Joined in 1850</button>
+        <button class="choice-button" type="button" data-state-clue="date" data-clue-value="1959">Joined in 1959</button>
+      </div>
+    </div>
     <div class="tool-card map-wrap">
-      <div class="map-board" aria-label="Simplified United States map with clickable region buttons">
+      <div class="map-board" aria-label="Simplified United States map with clickable state targets">
         <div class="map-shape" aria-hidden="true"></div>
-        <button class="map-region northwest" type="button" data-state="not-ca">Northwest</button>
-        <button class="map-region ca" type="button" data-state="ca">California</button>
-        <button class="map-region southwest" type="button" data-state="not-ca">Southwest</button>
-        <button class="map-region plains" type="button" data-state="not-ca">Plains</button>
-        <button class="map-region midwest" type="button" data-state="not-ca">Midwest</button>
-        <button class="map-region southeast" type="button" data-state="not-ca">Southeast</button>
-        <button class="map-region northeast" type="button" data-state="not-ca">Northeast</button>
+        <button class="map-region northwest" type="button" data-state="not-ca">State B</button>
+        <button class="map-region ca" type="button" data-state="ca">State A</button>
+        <button class="map-region southwest" type="button" data-state="not-ca">State C</button>
+        <button class="map-region plains" type="button" data-state="not-ca">State D</button>
+        <button class="map-region midwest" type="button" data-state="not-ca">State E</button>
+        <button class="map-region southeast" type="button" data-state="not-ca">State F</button>
+        <button class="map-region northeast" type="button" data-state="not-ca">State G</button>
       </div>
     </div>
   `);
@@ -351,17 +364,29 @@ function renderFlavor(mission) {
 }
 
 function renderPresident(mission) {
-  challengeShell(mission, 'Match Herbert Hoover to his correct place on the presidential timeline.', `
+  challengeShell(mission, 'Use the timeline clues to identify the president who belongs in the #31 slot.', `
     <div class="tool-card">
-      <h3>Herbert Hoover</h3>
+      <h3>Timeline window</h3>
+      <div class="president-timeline" aria-label="Presidents 29 through 33">
+        <div><strong>29</strong><span>Warren G. Harding</span></div>
+        <div><strong>30</strong><span>Calvin Coolidge</span></div>
+        <div class="mystery-slot"><strong>31</strong><span>?</span></div>
+        <div><strong>32</strong><span>Franklin D. Roosevelt</span></div>
+        <div><strong>33</strong><span>Harry S. Truman</span></div>
+      </div>
+    </div>
+    <div class="tool-card">
+      <h3>Clues</h3>
+      <div class="clue-list">
+        <span>He served after Calvin Coolidge.</span>
+        <span>Franklin D. Roosevelt came next.</span>
+        <span>The Great Depression began during his presidency.</span>
+      </div>
+    </div>
+    <div class="tool-card">
+      <h3>Choose the missing president</h3>
       <div class="button-grid">
-        ${[
-          ['29', 'Warren G. Harding'],
-          ['30', 'Calvin Coolidge'],
-          ['31', 'Herbert Hoover'],
-          ['32', 'Franklin D. Roosevelt'],
-          ['33', 'Harry S. Truman']
-        ].map(([number, name]) => `<button class="timeline-button" type="button" data-president-slot="${number}"><strong>${number}</strong><br>${name}</button>`).join('')}
+        ${['Warren G. Harding', 'Calvin Coolidge', 'Herbert Hoover', 'Franklin D. Roosevelt', 'Harry S. Truman'].map(name => `<button class="timeline-button" type="button" data-president-name="${name}">${name}</button>`).join('')}
       </div>
     </div>
   `);
@@ -545,26 +570,50 @@ challengeRoot.addEventListener('click', event => {
   const octDay = event.target.closest('[data-oct-day]');
   if (octDay) updateOctober(Number(octDay.dataset.octDay));
 
+  const stateClue = event.target.closest('[data-state-clue]');
+  if (stateClue) {
+    challengeRoot.querySelectorAll(`[data-state-clue="${stateClue.dataset.stateClue}"]`).forEach(button => button.classList.remove('selected'));
+    stateClue.classList.add('selected');
+  }
+
   const mapRegion = event.target.closest('[data-state]');
   if (mapRegion) {
+    const requiredClues = {
+      coast: 'west',
+      event: 'gold',
+      capital: 'sacramento',
+      date: '1850'
+    };
+    const selectedClues = [...challengeRoot.querySelectorAll('[data-state-clue].selected')];
+    const evidenceReady = Object.entries(requiredClues).every(([group, value]) => (
+      selectedClues.some(button => button.dataset.stateClue === group && button.dataset.clueValue === value)
+    ));
+
+    if (!evidenceReady) {
+      setFeedback('Choose the evidence that points to the 31st state first.');
+      return;
+    }
+
     if (mapRegion.dataset.state === 'ca') {
       mapRegion.classList.add('correct');
-      solveMission('state', 'California is the 31st state. Section active.');
+      solveMission('state', 'The clues point to California, the 31st state. Section active.');
     } else {
       mapRegion.classList.add('wrong');
       setTimeout(() => mapRegion.classList.remove('wrong'), 320);
-      setFeedback('Try the long state on the west coast.');
+      setFeedback('That state does not match all four clues. Check the west-coast target.');
     }
   }
 
-  const presidentSlot = event.target.closest('[data-president-slot]');
-  if (presidentSlot) {
-    challengeRoot.querySelectorAll('[data-president-slot]').forEach(button => button.classList.remove('selected'));
-    presidentSlot.classList.add('selected');
-    if (presidentSlot.dataset.presidentSlot === '31') {
-      solveMission('president', 'Herbert Hoover was president number 31. Section active.');
+  const presidentButton = event.target.closest('[data-president-name]');
+  if (presidentButton) {
+    challengeRoot.querySelectorAll('[data-president-name]').forEach(button => button.classList.remove('selected'));
+    presidentButton.classList.add('selected');
+    if (presidentButton.dataset.presidentName === 'Herbert Hoover') {
+      const mysterySlot = challengeRoot.querySelector('.mystery-slot span');
+      if (mysterySlot) mysterySlot.textContent = 'Herbert Hoover';
+      solveMission('president', 'The #31 slot belongs to Herbert Hoover. Section active.');
     } else {
-      setFeedback('Not that spot. Look for the 31 on the timeline.');
+      setFeedback('Not that person. Use the presidents before and after #31.');
     }
   }
 

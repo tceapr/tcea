@@ -560,6 +560,27 @@ h3 {
   text-align: center;
 }
 
+.clue-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.clue-list {
+  display: grid;
+  gap: 10px;
+}
+
+.clue-list span {
+  display: block;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(57, 111, 214, 0.08);
+  color: var(--navy);
+  font-weight: 800;
+}
+
 .map-board {
   position: relative;
   min-height: 330px;
@@ -606,6 +627,39 @@ h3 {
 .midwest { left: 56%; top: 31%; }
 .southeast { left: 62%; top: 66%; }
 .northeast { right: 8%; top: 34%; }
+
+.president-timeline {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.president-timeline div {
+  display: grid;
+  gap: 8px;
+  align-content: center;
+  min-height: 106px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #ffffff;
+  color: var(--navy);
+  text-align: center;
+  font-weight: 800;
+}
+
+.president-timeline strong {
+  font-size: 1.45rem;
+}
+
+.president-timeline span {
+  display: block;
+}
+
+.president-timeline .mystery-slot {
+  border-color: var(--gold);
+  background: rgba(244, 189, 61, 0.18);
+}
 
 .gallium-lab {
   display: grid;
@@ -817,7 +871,9 @@ h3 {
   }
 
   .mission-ring,
-  .history-row {
+  .history-row,
+  .clue-grid,
+  .president-timeline {
     grid-template-columns: 1fr;
   }
 
