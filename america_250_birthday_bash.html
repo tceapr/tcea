@@ -150,17 +150,17 @@
       grid-template-columns: repeat(6, 1fr);
       gap: 12px;
       margin: 34px auto 0;
-      max-width: 650px;
+      max-width: 780px;
     }
 
     .party-icon {
       display: grid;
       place-items: center;
-      min-height: 74px;
+      min-height: 92px;
       border-radius: 18px;
       background: var(--white);
       border: 3px solid var(--sky);
-      font-size: 34px;
+      font-size: 46px;
     }
 
     .game-layout {
@@ -842,8 +842,8 @@
       }
 
       .party-icon {
-        min-height: 62px;
-        font-size: 28px;
+        min-height: 76px;
+        font-size: 36px;
       }
 
       .picnic-grid,
@@ -1078,6 +1078,9 @@
         white: "Ghost White Layer",
         red: "Pumpkin Orange Layer"
       };
+      const layerChoices = shuffle(correctOrder).map(color => `
+        <button class="choice-button" data-color="${color}">${labels[color]}</button>
+      `).join("");
       const fill = { blue: "#5b47d6", white: "#f7f2ff", red: "#f06a28" };
       const ink = { blue: "#ffffff", white: "#21133f", red: "#ffffff" };
 
@@ -1094,9 +1097,7 @@
           </div>
           <div>
             <div class="choice-grid" id="cakeChoices">
-              <button class="choice-button" data-color="red">Pumpkin Orange Layer</button>
-              <button class="choice-button" data-color="blue">Midnight Purple Layer</button>
-              <button class="choice-button" data-color="white">Ghost White Layer</button>
+              ${layerChoices}
               <button class="choice-button" id="resetCake">Reset Cake</button>
             </div>
             <div id="statusBox" class="status-box">Add all three layers.</div>
