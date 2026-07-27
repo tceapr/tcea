@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>The 31 Lab</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="lab-shell">
+      <header class="lab-header" aria-labelledby="pageTitle">
+        <div>
+          <p class="eyebrow">Digital Discovery Game</p>
+          <h1 id="pageTitle">The 31 Lab</h1>
+          <p class="brief">Rebuild the broken number machine by proving that 31 is hiding in math, science, history, geography, calendars, and culture.</p>
+        </div>
+        <div class="progress-card" aria-live="polite">
+          <span id="progressCount">0 of 13 sections active</span>
+          <div class="progress-track" aria-hidden="true">
+            <span id="progressFill"></span>
+          </div>
+        </div>
+      </header>
+
+      <section class="machine-grid" aria-label="31 Lab mission board">
+        <section class="machine-panel" aria-labelledby="machineTitle">
+          <div class="machine-stage">
+            <div class="number-core" aria-hidden="true">
+              <span class="digit digit-three">3</span>
+              <span class="digit digit-one">1</span>
+              <span class="spark s1"></span>
+              <span class="spark s2"></span>
+              <span class="spark s3"></span>
+              <span class="spark s4"></span>
+              <span class="spark s5"></span>
+              <span class="spark s6"></span>
+              <span class="spark s7"></span>
+              <span class="spark s8"></span>
+              <span class="spark s9"></span>
+              <span class="spark s10"></span>
+              <span class="spark s11"></span>
+              <span class="spark s12"></span>
+              <span class="spark s13"></span>
+            </div>
+          </div>
+          <h2 id="machineTitle">Number machine</h2>
+          <p id="machineMessage">Choose a locked mission to light up the 31.</p>
+          <div class="mission-ring" id="missionRing"></div>
+        </section>
+
+        <section class="challenge-panel" aria-labelledby="challengeTitle">
+          <div class="challenge-top">
+            <p class="eyebrow">Active Mission</p>
+            <h2 id="challengeTitle">Pick a mission</h2>
+          </div>
+          <div id="challengeRoot" class="challenge-root">
+            <div class="empty-state">
+              <span class="empty-number">31</span>
+              <p>Select any mission tile around the machine. Every solved mission activates another piece of the giant 31.</p>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <section class="final-panel" id="finalPanel" aria-labelledby="finalTitle" hidden>
+        <div>
+          <p class="eyebrow">Final Challenge</p>
+          <h2 id="finalTitle">Sort the evidence</h2>
+          <p>Put each discovery into the correct category. When the lab agrees, the machine will reveal the badge.</p>
+        </div>
+        <div id="sortRoot" class="sort-root"></div>
+        <button class="primary-button" id="checkSortButton" type="button">Check categories</button>
+        <p class="feedback" id="sortFeedback" aria-live="polite"></p>
+      </section>
+
+      <dialog id="badgeDialog" class="badge-dialog">
+        <div class="badge-card">
+          <p class="eyebrow">31 Is Everywhere</p>
+          <img class="badge-image" src="assets/investigator-badge.png" alt="Certified 31 Investigator badge">
+          <h2>Certified 31 Investigator</h2>
+          <p>You rebuilt the number machine and sorted every fact into place.</p>
+          <button class="primary-button" id="closeBadgeButton" type="button">Return to lab</button>
+        </div>
+      </dialog>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
