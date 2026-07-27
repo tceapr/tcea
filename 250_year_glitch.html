@@ -700,9 +700,9 @@
 
     .clue-list {
       display: grid;
-      gap: 8px;
+      gap: 12px;
       margin: 18px 0;
-      padding: 16px;
+      padding: 18px;
       border-radius: 18px;
       background: #071324;
       color: var(--white);
@@ -712,32 +712,86 @@
       color: var(--gold);
     }
 
+    .clue-card {
+      display: grid;
+      grid-template-columns: minmax(150px, auto) 1fr;
+      gap: 10px;
+      align-items: start;
+      padding: 12px;
+      border: 2px solid rgba(255, 255, 255, 0.18);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.06);
+      line-height: 1.35;
+    }
+
+    .clue-card span {
+      color: #dbeeff;
+    }
+
+    .clue-note {
+      margin: 0;
+      color: #ffffff;
+    }
+
     .badge {
       display: grid;
-      gap: 10px;
+      gap: 12px;
       justify-items: center;
       margin: 18px auto 0;
-      width: min(360px, 100%);
-      padding: 24px;
+      width: min(520px, 100%);
+      padding: 28px;
       border: 5px solid var(--gold);
       border-radius: 26px;
       background:
-        radial-gradient(circle at 50% 0, rgba(244, 191, 58, 0.45), transparent 40%),
+        linear-gradient(135deg, rgba(255, 255, 255, 0.12), transparent 40%),
+        radial-gradient(circle at 50% 0, rgba(244, 191, 58, 0.52), transparent 45%),
         var(--navy);
       color: var(--white);
       text-align: center;
+      box-shadow: 0 18px 34px rgba(21, 49, 95, 0.28);
     }
 
     .badge-mark {
       display: grid;
       place-items: center;
-      width: 104px;
-      height: 104px;
+      width: 138px;
+      height: 138px;
       border-radius: 50%;
       background: var(--gold);
       color: var(--navy);
-      border: 5px solid var(--white);
-      font-size: 2rem;
+      border: 7px solid var(--white);
+      font-size: 2.35rem;
+      font-weight: 900;
+      box-shadow: inset 0 0 0 8px rgba(21, 49, 95, 0.18), 0 10px 0 rgba(0, 0, 0, 0.16);
+    }
+
+    .badge-mark svg {
+      width: 108px;
+      height: 108px;
+      display: block;
+    }
+
+    .badge h2 {
+      margin: 4px 0 0;
+      font-size: clamp(1.7rem, 4vw, 2.7rem);
+      line-height: 1;
+      color: var(--gold);
+      text-transform: uppercase;
+    }
+
+    .badge-details {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      width: 100%;
+      margin-top: 4px;
+    }
+
+    .badge-detail {
+      padding: 10px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.18);
       font-weight: 900;
     }
 
@@ -801,6 +855,10 @@
 
       .fact-buttons {
         justify-content: flex-start;
+      }
+
+      .clue-card {
+        grid-template-columns: 1fr;
       }
     }
 
@@ -889,9 +947,20 @@
           <h1>America 250 is ready to celebrate.</h1>
           <p class="subtitle" id="finalCopy"></p>
           <div class="badge" aria-label="Certified Time Repair Agent badge">
-            <div class="badge-mark">250</div>
+            <div class="badge-mark" aria-hidden="true">
+              <svg viewBox="0 0 120 120">
+                <circle cx="60" cy="60" r="44" fill="#fff8e8" stroke="#15315f" stroke-width="6"></circle>
+                <path d="M60 18 L70 48 H102 L76 66 L86 98 L60 78 L34 98 L44 66 L18 48 H50 Z" fill="#f4bf3a" stroke="#15315f" stroke-width="5" stroke-linejoin="round"></path>
+                <circle cx="60" cy="60" r="18" fill="#2f6fcc" stroke="#15315f" stroke-width="5"></circle>
+                <path d="M60 47 V60 L71 67" stroke="#ffffff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </div>
             <h2>Certified Time Repair Agent</h2>
             <p id="badgeName">Time Repair Crew</p>
+            <div class="badge-details">
+              <span class="badge-detail">Timeline Restored</span>
+              <span class="badge-detail">America 250 Ready</span>
+            </div>
           </div>
           <button class="start-button" id="playAgainButton">Run Another Timeline</button>
         </div>
@@ -1557,26 +1626,41 @@
     function renderFinalMission() {
       currentPossiblePoints = missionPoints[5];
       gameCard.innerHTML = `
-        ${missionHeader(6, "Stop the Master Glitch", "Use the clues you collected to unlock the repaired timeline.")}
+        ${missionHeader(6, "Stop the Master Glitch", "Use each clue from Missions 1-5 to open the matching timeline lock. Copy each clue into the lock with the same name.")}
         <div class="clue-list">
-          <span><strong>Four-digit year:</strong> ${clues.year}</span>
-          <span><strong>Color sequence:</strong> ${clues.colorSequence}</span>
-          <span><strong>Decoded word:</strong> ${clues.decodedWord}</span>
-          <span><strong>Timeline order:</strong> ${clues.timelineOrder}</span>
-          <span><strong>Final answer:</strong> ${clues.finalAnswer}</span>
+          <div class="clue-card">
+            <strong>Mission 1 year lock</strong>
+            <p class="clue-note">Use the scene year from Spot the Glitch: <span>${clues.year}</span></p>
+          </div>
+          <div class="clue-card">
+            <strong>Mission 4 color lock</strong>
+            <p class="clue-note">Use the colors earned from each Past or Present card, in order: <span>${clues.colorSequence}</span></p>
+          </div>
+          <div class="clue-card">
+            <strong>Mission 3 word lock</strong>
+            <p class="clue-note">Use the decoded message word: <span>${clues.decodedWord}</span></p>
+          </div>
+          <div class="clue-card">
+            <strong>Mission 2 timeline lock</strong>
+            <p class="clue-note">Use the clue letters from the correctly ordered timeline cards: <span>${clues.timelineOrder}</span></p>
+          </div>
+          <div class="clue-card">
+            <strong>Mission 5 idea lock</strong>
+            <p class="clue-note">Use the big idea behind the remix invention: <span>${clues.finalAnswer}</span></p>
+          </div>
         </div>
         <div class="final-grid">
-          <label>Four-digit year <input id="finalYear" inputmode="numeric" maxlength="4"></label>
-          <label>Color sequence <input id="finalColors" placeholder="blue-gold-red-blue-gold"></label>
-          <label>Decoded word <input id="finalWord" placeholder="PORTAL"></label>
-          <label>Timeline order <input id="finalTimeline" placeholder="CHRONO"></label>
-          <label>Final answer <input id="finalAnswer" placeholder="innovation"></label>
+          <label>Mission 1 year lock <input id="finalYear" inputmode="numeric" maxlength="4" placeholder="Enter the scene year"></label>
+          <label>Mission 4 color lock <input id="finalColors" placeholder="Enter the color sequence"></label>
+          <label>Mission 3 word lock <input id="finalWord" placeholder="Enter the decoded word"></label>
+          <label>Mission 2 timeline lock <input id="finalTimeline" placeholder="Enter the timeline letters"></label>
+          <label>Mission 5 idea lock <input id="finalAnswer" placeholder="Enter the big idea"></label>
         </div>
         <div class="check-row">
           <button class="secondary-button" id="hintButton">Hint costs 5 points</button>
           <button class="primary-button" id="checkFinal">Repair Timeline</button>
         </div>
-        <div id="statusBox" class="status-box">Enter the clues exactly, but capitalization does not matter.</div>
+        <div id="statusBox" class="status-box">Each lock matches one mission clue above. Capital letters and hyphens do not matter.</div>
         ${nextButton("Claim Badge")}
       `;
 
