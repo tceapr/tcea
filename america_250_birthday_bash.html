@@ -501,25 +501,30 @@
 
     .balloon-button {
       border: 0;
-      min-height: 120px;
-      border-radius: 50% 50% 48% 48%;
+      min-height: 150px;
       position: relative;
       color: var(--navy);
-      font-size: 1.3rem;
-      font-weight: 900;
-      background: var(--sky);
-      box-shadow: inset -8px -10px 0 rgba(0, 0, 0, 0.07);
+      background: transparent;
+      display: grid;
+      place-items: center;
+      padding: 8px;
       transition: transform 0.15s ease;
     }
 
-    .balloon-button::after {
-      content: "";
-      position: absolute;
-      left: 50%;
-      bottom: -23px;
-      width: 2px;
-      height: 24px;
-      background: var(--navy);
+    .ghost-number {
+      width: min(136px, 100%);
+      height: auto;
+      overflow: visible;
+      filter: drop-shadow(0 12px 0 rgba(33, 19, 63, 0.14));
+      animation: ghostFloat 3s ease-in-out infinite alternate;
+    }
+
+    .balloon-button:nth-child(2n) .ghost-number {
+      animation-delay: -1.2s;
+    }
+
+    .balloon-button:nth-child(3n) .ghost-number {
+      animation-delay: -2s;
     }
 
     .balloon-button:hover {
@@ -715,6 +720,21 @@
       }
       to {
         transform: rotate(4deg) translateY(-8px);
+      }
+    }
+
+    @keyframes ghostFloat {
+      from {
+        transform: translateY(0);
+      }
+      to {
+        transform: translateY(-10px);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .ghost-number {
+        animation: none;
       }
     }
 
@@ -1306,6 +1326,33 @@
       attachNextButton();
     }
 
+    function ghostNumberSvg(number) {
+      return `
+        <svg class="ghost-number" viewBox="0 0 120 132" aria-hidden="true">
+          <path
+            d="M16 116 V54 C16 28 35 10 60 10 C85 10 104 28 104 54 V116
+              Q95 103 86 116 Q76 103 67 116 Q58 103 49 116
+              Q40 103 31 116 Q23 105 16 116 Z"
+            fill="#ffffff"
+            stroke="#21133f"
+            stroke-width="6"
+            stroke-linejoin="round"
+          />
+          <path
+            d="M28 99 Q60 114 92 99"
+            fill="none"
+            stroke="#eadfff"
+            stroke-width="8"
+            stroke-linecap="round"
+          />
+          <circle cx="43" cy="49" r="8" fill="#21133f" />
+          <circle cx="77" cy="49" r="8" fill="#21133f" />
+          <path d="M52 68 Q60 75 68 68" fill="none" stroke="#21133f" stroke-width="5" stroke-linecap="round" />
+          <text x="60" y="93" text-anchor="middle" font-size="25" font-weight="900" fill="#21133f">${number}</text>
+        </svg>
+      `;
+    }
+
     function renderBalloonGame() {
       const numbers = shuffle([15, 22, 30, 41, 55, 64, 75, 83, 90, 97, 105, 118]);
       const targets = numbers.filter(number => number % 5 === 0);
@@ -1320,7 +1367,7 @@
         <div class="balloon-grid">
           ${numbers.map(number => `
             <button class="balloon-button" data-number="${number}" aria-label="Ghost ${number}">
-              ${number}
+              ${ghostNumberSvg(number)}
             </button>
           `).join("")}
         </div>
