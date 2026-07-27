@@ -1203,17 +1203,29 @@
 
     function renderPicnicGame() {
       const items = shuffle([
-        { name: "Wrapped Candy", emoji: "🍬", good: true },
-        { name: "Apple Cider", emoji: "🧃", good: true },
         {
-          name: "Glow Sticks",
-          emoji: '✨',
+          name: "Pumpkin Bucket",
+          icon: '<svg class="picnic-icon" viewBox="0 0 64 64" role="img" aria-label="Pumpkin bucket"><path d="M24 18 C24 8 40 8 40 18" fill="none" stroke="#21133f" stroke-width="4" stroke-linecap="round"/><path d="M13 28 Q13 16 25 20 Q32 12 39 20 Q51 16 51 28 V42 Q51 56 32 56 Q13 56 13 42 Z" fill="#f06a28" stroke="#21133f" stroke-width="4"/><path d="M25 35 L21 41 H29 Z M39 35 L35 41 H43 Z" fill="#21133f"/><path d="M25 48 Q32 52 39 48" fill="none" stroke="#21133f" stroke-width="4" stroke-linecap="round"/></svg>',
           good: true
         },
-        { name: "Costume Cape", emoji: "🦸", good: true },
         {
-          name: "Paper Napkins",
-          icon: '<svg class="picnic-icon" viewBox="0 0 64 64" role="img" aria-label="Folded napkins"><path d="M12 10 H50 Q54 10 54 14 V54 H12 Z" fill="#ffffff" stroke="#21133f" stroke-width="4" stroke-linejoin="round"/><path d="M18 16 H48 V48 H18 Z" fill="#eadfff" stroke="#21133f" stroke-width="3"/><path d="M18 16 L48 48 M48 16 L18 48" stroke="#f06a28" stroke-width="3" stroke-linecap="round"/><path d="M24 22 H42 M22 34 H44 M24 46 H42" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/></svg>',
+          name: "Flashlight",
+          icon: '<svg class="picnic-icon" viewBox="0 0 64 64" role="img" aria-label="Flashlight"><path d="M37 12 L56 20 L37 28 Z" fill="#ffc94a" opacity=".65"/><path d="M12 35 L31 16 L45 30 L26 49 Z" fill="#5b47d6" stroke="#21133f" stroke-width="4" stroke-linejoin="round"/><path d="M31 16 L42 27" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/><circle cx="22" cy="39" r="4" fill="#49a463" stroke="#21133f" stroke-width="3"/></svg>',
+          good: true
+        },
+        {
+          name: "Water Bottle",
+          icon: '<svg class="picnic-icon" viewBox="0 0 64 64" role="img" aria-label="Water bottle"><path d="M25 8 H39 V17 L44 24 V55 Q44 59 40 59 H24 Q20 59 20 55 V24 L25 17 Z" fill="#eadfff" stroke="#21133f" stroke-width="4" stroke-linejoin="round"/><path d="M25 8 H39 V16 H25 Z" fill="#5b47d6" stroke="#21133f" stroke-width="3"/><path d="M22 35 H42 V54 Q42 57 39 57 H25 Q22 57 22 54 Z" fill="#7ed9ff"/><path d="M25 42 C30 36 35 48 40 42" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/></svg>',
+          good: true
+        },
+        {
+          name: "Costume",
+          icon: '<svg class="picnic-icon" viewBox="0 0 64 64" role="img" aria-label="Costume"><path d="M24 13 Q32 22 40 13 L52 22 L45 34 L40 31 V56 H24 V31 L19 34 L12 22 Z" fill="#5b47d6" stroke="#21133f" stroke-width="4" stroke-linejoin="round"/><path d="M28 18 H36 M29 31 H35" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/><path d="M24 56 H40" stroke="#f06a28" stroke-width="5" stroke-linecap="round"/></svg>',
+          good: true
+        },
+        {
+          name: "Mask",
+          icon: '<svg class="picnic-icon" viewBox="0 0 64 64" role="img" aria-label="Mask"><path d="M11 30 Q22 18 32 28 Q42 18 53 30 Q49 47 36 43 Q32 42 28 43 Q15 47 11 30 Z" fill="#ffc94a" stroke="#21133f" stroke-width="4" stroke-linejoin="round"/><path d="M21 31 Q25 28 29 32 M35 32 Q39 28 43 31" fill="none" stroke="#21133f" stroke-width="4" stroke-linecap="round"/><path d="M27 39 Q32 42 37 39" fill="none" stroke="#f06a28" stroke-width="3" stroke-linecap="round"/></svg>',
           good: true
         },
         { name: "Snow Boots", emoji: "🥾", good: false },
@@ -1226,7 +1238,7 @@
         ${challengeHeader(
           3,
           "Pack the Trick-or-Treat Bag",
-          "Choose the five useful things for the Halloween party. Leave the silly items behind."
+          "Choose the five useful things to bring trick-or-treating. Leave the silly items behind."
         )}
         <div class="picnic-grid">
           ${items.map((item, index) => `
@@ -1276,7 +1288,7 @@
         const allCorrect = [...selected].every(index => items[index].good);
 
         if (allCorrect) {
-          finishChallenge("Treat bag packed! You unlocked the Halloween treats.");
+          finishChallenge("Treat bag packed! You chose the useful trick-or-treat items.");
         } else {
           cards.forEach(card => {
             const index = Number(card.dataset.index);
