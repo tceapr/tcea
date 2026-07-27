@@ -1400,7 +1400,7 @@
             playPopSound();
 
             if (popped === targets.length) {
-              finishChallenge("Nice number work! You calmed the floating ghosts.");
+              finishChallenge("Nice number work! You found all the correct ghosts.");
             } else {
               document.getElementById("statusBox").textContent =
                 `${targets.length - popped} correct ghost${targets.length - popped === 1 ? "" : "s"} left.`;
