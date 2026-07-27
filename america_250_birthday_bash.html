@@ -341,39 +341,54 @@
       width: 150px;
     }
 
-    .cake-candles {
+    .cake-toppers {
       display: flex;
-      gap: 18px;
-      align-items: flex-end;
-      margin-bottom: 8px;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 10px;
       animation: bounce 1s infinite alternate;
     }
 
-    .candle {
+    .topper-moon {
       position: relative;
-      width: 14px;
-      height: 42px;
-      border: 3px solid var(--navy);
-      border-radius: 6px;
-      background:
-        repeating-linear-gradient(
-          45deg,
-          #ffffff 0 7px,
-          #f06a28 7px 14px
-        );
+      width: 36px;
+      height: 36px;
+      border: 4px solid var(--navy);
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 14px rgba(244, 191, 58, 0.55);
+      overflow: hidden;
     }
 
-    .candle::before {
+    .topper-moon::after {
+      content: "";
+      position: absolute;
+      right: -3px;
+      top: 3px;
+      width: 24px;
+      height: 28px;
+      border-radius: 50%;
+      background: #dff1ff;
+    }
+
+    .topper-bat {
+      position: relative;
+      width: 46px;
+      height: 28px;
+      background: var(--navy);
+      clip-path: polygon(0 16%, 20% 46%, 34% 20%, 50% 60%, 66% 20%, 80% 46%, 100% 16%, 88% 94%, 60% 72%, 50% 100%, 40% 72%, 12% 94%);
+    }
+
+    .topper-bat::after {
       content: "";
       position: absolute;
       left: 50%;
-      top: -20px;
-      width: 13px;
-      height: 20px;
-      border-radius: 50% 50% 50% 50%;
-      background: var(--gold);
+      top: 8px;
+      width: 12px;
+      height: 13px;
+      border-radius: 50%;
+      background: #0b0620;
       transform: translateX(-50%);
-      box-shadow: 0 0 10px rgba(244, 191, 58, 0.7);
     }
 
     .choice-grid {
@@ -1075,11 +1090,11 @@
 
           if (builtOrder.length === 3) {
             if (builtOrder.join(",") === correctOrder.join(",")) {
-              const candles = document.createElement("div");
-              candles.className = "cake-candles";
-              candles.setAttribute("aria-label", "Candles on top of the cake");
-              candles.innerHTML = '<span class="candle"></span><span class="candle"></span><span class="candle"></span>';
-              cakeStack.appendChild(candles);
+              const toppers = document.createElement("div");
+              toppers.className = "cake-toppers";
+              toppers.setAttribute("aria-label", "Moon and bat toppers on the cake");
+              toppers.innerHTML = '<span class="topper-bat" aria-hidden="true"></span><span class="topper-moon" aria-hidden="true"></span><span class="topper-bat" aria-hidden="true"></span>';
+              cakeStack.appendChild(toppers);
               finishChallenge("Spooky cake complete! You unlocked the moonlit cake.");
             } else {
               const status = document.getElementById("statusBox");
