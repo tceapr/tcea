@@ -901,7 +901,7 @@
           <h1>The <span>250-Year</span> Glitch</h1>
           <p class="subtitle">
             A time-travel experiment scrambled objects, inventions, music, slang, and moments from American history.
-            Repair five missions, then stop the Master Glitch before the timeline locks.
+            Repair five missions, collect the repair letters, and stop the Master Glitch before the timeline locks.
           </p>
         </div>
         <div class="start-grid">
@@ -1046,7 +1046,8 @@
       colorSequence: "",
       decodedWord: "",
       timelineOrder: "",
-      finalAnswer: "innovation"
+      finalAnswer: "innovation",
+      repairLetters: []
     };
 
     const scenes = [
@@ -1190,6 +1191,8 @@
       clues.colorSequence = "";
       clues.decodedWord = "";
       clues.timelineOrder = "";
+      clues.finalAnswer = "innovation";
+      clues.repairLetters = [];
       currentSolved = false;
       startScreen.classList.remove("active");
       finalScreen.classList.remove("active");
@@ -1372,8 +1375,9 @@
       document.getElementById("checkGlitch").addEventListener("click", () => {
         const chosen = [...selected].map(index => objects[index]);
         if (chosen.length === 2 && chosen.every(object => object.glitch)) {
-          completeMission(`Scene repaired. Final clue saved: year ${scene.year}.`, () => {
+          completeMission(`Scene repaired. Repair code letter earned: A.`, () => {
             clues.year = scene.year;
+            clues.repairLetters[0] = "A";
           });
         } else {
           const status = document.getElementById("statusBox");
@@ -1411,8 +1415,9 @@
       document.getElementById("checkTimeline").addEventListener("click", () => {
         const correct = cards.every((card, index) => card.date === [...set.cards].sort((a, b) => a.date - b.date)[index].date);
         if (correct) {
-          completeMission("Timeline repaired. Final clue saved: CHRONO.", () => {
+          completeMission("Timeline repaired. Repair code letter earned: G.", () => {
             clues.timelineOrder = cards.map(card => card.code).join("");
+            clues.repairLetters[1] = "G";
           });
         } else {
           const status = document.getElementById("statusBox");
@@ -1496,8 +1501,9 @@
       document.getElementById("checkDecode").addEventListener("click", () => {
         const answer = normalize(document.getElementById("decodedInput").value);
         if (answer === puzzle.answer) {
-          completeMission(`Message decoded. Final clue saved: ${puzzle.answer}.`, () => {
+          completeMission(`Message decoded. Repair code letter earned: E.`, () => {
             clues.decodedWord = puzzle.answer;
+            clues.repairLetters[2] = "E";
           });
         } else {
           const status = document.getElementById("statusBox");
@@ -1559,8 +1565,9 @@
         const complete = facts.every((_, index) => answers[index] !== undefined);
         const correct = complete && facts.every((fact, index) => answers[index] === fact.answer);
         if (correct) {
-          completeMission("Facts verified. Final color sequence saved.", () => {
+          completeMission("Facts verified. Repair code letter earned: N.", () => {
             clues.colorSequence = facts.map(fact => fact.color).join("-");
+            clues.repairLetters[3] = "N";
           });
         } else {
           const status = document.getElementById("statusBox");
@@ -1610,8 +1617,9 @@
         const name = document.getElementById("inventionName").value.trim();
         const description = document.getElementById("inventionDescription").value.trim();
         if (name.length >= 4 && description.split(/\s+/).length >= 6 && /[.!?]$/.test(description)) {
-          completeMission("Invention logged. Final answer clue saved: INNOVATION.", () => {
+          completeMission("Invention logged. Repair code letter earned: T.", () => {
             clues.finalAnswer = "innovation";
+            clues.repairLetters[4] = "T";
           });
         } else {
           const status = document.getElementById("statusBox");
@@ -1625,69 +1633,57 @@
 
     function renderFinalMission() {
       currentPossiblePoints = missionPoints[5];
+      const repairCode = "AGENT";
+      const earnedLetters = clues.repairLetters.map((letter, index) => letter || "?");
       gameCard.innerHTML = `
-        ${missionHeader(6, "Stop the Master Glitch", "Use each clue from Missions 1-5 to open the matching timeline lock. Copy each clue into the lock with the same name.")}
+        ${missionHeader(6, "Stop the Master Glitch", "Use the five repair letters you earned to unlock the final timeline code.")}
         <div class="clue-list">
           <div class="clue-card">
-            <strong>Mission 1 year lock</strong>
-            <p class="clue-note">Use the scene year from Spot the Glitch: <span>${clues.year}</span></p>
+            <strong>Mission 1: Spot the Glitch</strong>
+            <p class="clue-note">Earned letter: <span>${earnedLetters[0]}</span></p>
           </div>
           <div class="clue-card">
-            <strong>Mission 4 color lock</strong>
-            <p class="clue-note">Use the colors earned from each Past or Present card, in order: <span>${clues.colorSequence}</span></p>
+            <strong>Mission 2: Timeline Takedown</strong>
+            <p class="clue-note">Earned letter: <span>${earnedLetters[1]}</span></p>
           </div>
           <div class="clue-card">
-            <strong>Mission 3 word lock</strong>
-            <p class="clue-note">Use the decoded message word: <span>${clues.decodedWord}</span></p>
+            <strong>Mission 3: Decode the Message</strong>
+            <p class="clue-note">Earned letter: <span>${earnedLetters[2]}</span></p>
           </div>
           <div class="clue-card">
-            <strong>Mission 2 timeline lock</strong>
-            <p class="clue-note">Use the clue letters from the correctly ordered timeline cards: <span>${clues.timelineOrder}</span></p>
+            <strong>Mission 4: Past or Present</strong>
+            <p class="clue-note">Earned letter: <span>${earnedLetters[3]}</span></p>
           </div>
           <div class="clue-card">
-            <strong>Mission 5 idea lock</strong>
-            <p class="clue-note">Use the big idea behind the remix invention: <span>${clues.finalAnswer}</span></p>
+            <strong>Mission 5: The 250 Remix</strong>
+            <p class="clue-note">Earned letter: <span>${earnedLetters[4]}</span></p>
           </div>
         </div>
         <div class="final-grid">
-          <label>Mission 1 year lock <input id="finalYear" inputmode="numeric" maxlength="4" placeholder="Enter the scene year"></label>
-          <label>Mission 4 color lock <input id="finalColors" placeholder="Enter the color sequence"></label>
-          <label>Mission 3 word lock <input id="finalWord" placeholder="Enter the decoded word"></label>
-          <label>Mission 2 timeline lock <input id="finalTimeline" placeholder="Enter the timeline letters"></label>
-          <label>Mission 5 idea lock <input id="finalAnswer" placeholder="Enter the big idea"></label>
+          <label>Master Repair Code <input id="finalCode" autocomplete="off" placeholder="Type the five-letter code"></label>
         </div>
         <div class="check-row">
           <button class="secondary-button" id="hintButton">Hint costs 5 points</button>
           <button class="primary-button" id="checkFinal">Repair Timeline</button>
         </div>
-        <div id="statusBox" class="status-box">Each lock matches one mission clue above. Capital letters and hyphens do not matter.</div>
+        <div id="statusBox" class="status-box">Read the earned letters from Mission 1 to Mission 5. Type the five-letter word they spell.</div>
         ${nextButton("Claim Badge")}
       `;
 
       document.getElementById("hintButton").addEventListener("click", () => {
-        useHint("Hyphens and spaces are ignored. The timeline order is the six clue letters from Mission 2.");
+        useHint("The five letters spell the role students have been playing: a time repair AGENT.");
       });
 
       document.getElementById("checkFinal").addEventListener("click", () => {
-        const year = normalize(document.getElementById("finalYear").value);
-        const colors = normalize(document.getElementById("finalColors").value);
-        const word = normalize(document.getElementById("finalWord").value);
-        const timeline = normalize(document.getElementById("finalTimeline").value);
-        const answer = normalize(document.getElementById("finalAnswer").value);
-
-        const correct =
-          year === normalize(clues.year) &&
-          colors === normalize(clues.colorSequence) &&
-          word === normalize(clues.decodedWord) &&
-          timeline === normalize(clues.timelineOrder) &&
-          answer === normalize(clues.finalAnswer);
+        const code = normalize(document.getElementById("finalCode").value);
+        const correct = code === repairCode;
 
         if (correct) {
           completeMission("Timeline restored. America 250 is ready to celebrate.", () => {});
           progressFill.style.width = "100%";
         } else {
           const status = document.getElementById("statusBox");
-          status.textContent = "The Master Glitch is still active. Compare each entry with the clue list.";
+          status.textContent = "The Master Glitch is still active. Read the earned letters from top to bottom.";
           status.className = "status-box try-again";
         }
       });
