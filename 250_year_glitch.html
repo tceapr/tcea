@@ -484,9 +484,23 @@
 
     .timeline-card {
       grid-template-columns: auto 1fr auto;
-      min-height: 90px;
+      min-height: 118px;
       text-align: left;
+      font-size: 1.28rem;
+      line-height: 1.25;
       cursor: grab;
+    }
+
+    .timeline-card strong {
+      font-size: 1.45rem;
+      line-height: 1.15;
+    }
+
+    .timeline-card small {
+      display: block;
+      margin-top: 6px;
+      font-size: 1.12rem;
+      line-height: 1.25;
     }
 
     .timeline-card:active {
@@ -496,11 +510,12 @@
     .drag-handle {
       display: grid;
       place-items: center;
-      width: 44px;
-      height: 44px;
+      width: 56px;
+      height: 56px;
       border-radius: 12px;
       color: var(--white);
       background: var(--navy);
+      font-size: 1.2rem;
       font-weight: 900;
     }
 
@@ -510,12 +525,13 @@
     }
 
     .move-tools button {
-      width: 42px;
-      min-height: 42px;
+      width: 58px;
+      min-height: 50px;
       border: 0;
       border-radius: 10px;
       color: var(--white);
       background: var(--blue);
+      font-size: 1rem;
       font-weight: 900;
     }
 
