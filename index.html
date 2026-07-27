@@ -110,22 +110,22 @@
       }
 
       .fruit-media {
-        padding: 14px;
+        padding: 0;
         background: #fff7ec;
       }
 
       .groupup-media {
-        padding: 14px;
+        padding: 0;
         background: #fff6df;
       }
 
       .slurpee-media {
-        padding: 14px;
+        padding: 0;
         background: #eaf7ff;
       }
 
       .breakout-media {
-        padding: 14px;
+        padding: 0;
         background: #f8efdc;
       }
 
@@ -265,19 +265,23 @@
         background: #532057;
       }
 
+      .full-bleed-media img {
+        width: 100%;
+        height: 100%;
+        max-height: none;
+        object-fit: cover;
+      }
+
+      .groupup-media img {
+        object-position: 38% center;
+      }
+
       .tech-graveyard-media {
         position: relative;
         padding: 0;
         background:
           radial-gradient(circle at 70% 22%, rgba(247, 189, 74, 0.3), transparent 26%),
           linear-gradient(180deg, #1b103d, #3b2456);
-      }
-
-      .tech-graveyard-media img {
-        width: 100%;
-        height: 100%;
-        max-height: none;
-        object-fit: cover;
       }
 
       .tech-graveyard-card .open-link {
@@ -384,13 +388,6 @@
         background: #17324d;
       }
 
-      .lab-31-media img {
-        width: 100%;
-        height: 100%;
-        max-height: none;
-        object-fit: cover;
-      }
-
       .lab-31-card .open-link {
         background: #168b87;
       }
@@ -439,7 +436,7 @@
 
       <nav class="menu" aria-label="Activity menu">
         <a class="activity-card" href="groupup/">
-          <span class="activity-media groupup-media">
+          <span class="activity-media groupup-media full-bleed-media">
             <img src="groupup/assets/groupup-splash.jpg" alt="Peggy's GroupUp classroom puzzle game graphic">
           </span>
           <span class="activity-copy">
@@ -452,7 +449,7 @@
         </a>
 
         <a class="activity-card lab-31-card" href="31lab/">
-          <span class="activity-media lab-31-media">
+          <span class="activity-media lab-31-media full-bleed-media">
             <img src="31lab/assets/31-lab-cover.png" alt="Colorful digital 31 Lab activity graphic">
           </span>
           <span class="activity-copy">
@@ -465,7 +462,7 @@
         </a>
 
         <a class="activity-card fruit-card" href="fruitidioms/">
-          <span class="activity-media fruit-media">
+          <span class="activity-media fruit-media full-bleed-media">
             <img src="fruitidioms/fruitsaladimage.jpg" alt="Colorful fruit salad activity graphic">
           </span>
           <span class="activity-copy">
@@ -478,7 +475,7 @@
         </a>
 
         <a class="activity-card slurpee-card" href="slurpee/">
-          <span class="activity-media slurpee-media">
+          <span class="activity-media slurpee-media full-bleed-media">
             <img src="slurpee/assets/slurpee-splash.jpg" alt="Frozen Favorite Match-Up frozen drink matching game graphic">
           </span>
           <span class="activity-copy">
@@ -491,7 +488,7 @@
         </a>
 
         <a class="activity-card breakout-card" href="breakouts/">
-          <span class="activity-media breakout-media">
+          <span class="activity-media breakout-media full-bleed-media">
             <img src="breakouts/assets/dbo-tile-graphic.png" alt="Digital Breakouts Pick a Path graphic">
           </span>
           <span class="activity-copy">
@@ -504,7 +501,7 @@
         </a>
 
         <a class="activity-card tech-graveyard-card" href="technology-graveyard/">
-          <span class="activity-media tech-graveyard-media">
+          <span class="activity-media tech-graveyard-media full-bleed-media">
             <img src="technology-graveyard/images/graveyard-scene.png" alt="Illustrated technology graveyard scene with outdated devices">
           </span>
           <span class="activity-copy">
