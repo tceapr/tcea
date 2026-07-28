@@ -119,8 +119,8 @@ const scoreCount = document.getElementById('scoreCount');
 const scoreStorageKey = 'the31LabScores';
 
 let activeMission = null;
-let selectedRomanTile = null;
-let romanSlots = ['', '', '', ''];
+let romanState = createRomanState();
+let romanDrag = null;
 let primeState = createPrimeState();
 let make31WrongChecks = 0;
 let make31Score = null;
@@ -156,6 +156,62 @@ function primePossibleScore(submittedAttempts) {
   return 0;
 }
 
+function createRomanState(saved = {}) {
+  const submittedAttempts = Number(saved.submittedAttempts || 0);
+  const placedTiles = Array.isArray(saved.placedTiles)
+    ? [0, 1, 2, 3].map(index => ['I', 'V', 'X'].includes(saved.placedTiles[index]) ? saved.placedTiles[index] : '')
+    : ['', '', '', ''];
+  return {
+    placedTiles,
+    submittedAttempts,
+    currentPossibleScore: Number.isFinite(Number(saved.currentPossibleScore))
+      ? Number(saved.currentPossibleScore)
+      : romanPossibleScore(submittedAttempts),
+    pointsEarned: Number(saved.pointsEarned || 0),
+    isCompleted: Boolean(saved.isCompleted),
+    hasAwardedPoints: Boolean(saved.hasAwardedPoints),
+    isReplay: Boolean(saved.isReplay)
+  };
+}
+
+function romanPossibleScore(submittedAttempts) {
+  if (submittedAttempts === 0) return 31;
+  if (submittedAttempts === 1) return 13;
+  return 0;
+}
+
+function submittedAttemptsFromScore(points) {
+  if (points === 31) return 1;
+  if (points === 13) return 2;
+  return 3;
+}
+
+function primeStateForStorage() {
+  if (primeState.isReplay && primeState.hasAwardedPoints) {
+    return {
+      ...primeState,
+      selectedNumbers: [1, 31],
+      submittedAttempts: submittedAttemptsFromScore(primeState.pointsEarned),
+      currentPossibleScore: primeState.pointsEarned,
+      isReplay: false
+    };
+  }
+  return { ...primeState, isReplay: false };
+}
+
+function romanStateForStorage() {
+  if (romanState.isReplay && romanState.hasAwardedPoints) {
+    return {
+      ...romanState,
+      placedTiles: ['X', 'X', 'X', 'I'],
+      submittedAttempts: submittedAttemptsFromScore(romanState.pointsEarned),
+      currentPossibleScore: romanState.pointsEarned,
+      isReplay: false
+    };
+  }
+  return { ...romanState, isReplay: false };
+}
+
 function loadScoreState() {
   try {
     const saved = JSON.parse(localStorage.getItem(scoreStorageKey) || '{}');
@@ -163,18 +219,38 @@ function loadScoreState() {
       ? saved.missionScores
       : {};
     primeState = createPrimeState(saved.prime);
+    romanState = createRomanState(saved.roman);
     if (primeState.hasAwardedPoints && !missionScores.prime) {
       missionScores.prime = {
         pointsEarned: primeState.pointsEarned,
         hasAwardedPoints: true
       };
     }
+    if (romanState.hasAwardedPoints && !missionScores.roman) {
+      missionScores.roman = {
+        pointsEarned: romanState.pointsEarned,
+        hasAwardedPoints: true
+      };
+    }
+    if (!romanState.hasAwardedPoints && missionScores.roman?.hasAwardedPoints) {
+      const savedPoints = Number(missionScores.roman.pointsEarned || 0);
+      romanState = createRomanState({
+        placedTiles: ['X', 'X', 'X', 'I'],
+        submittedAttempts: submittedAttemptsFromScore(savedPoints),
+        currentPossibleScore: savedPoints,
+        pointsEarned: savedPoints,
+        isCompleted: true,
+        hasAwardedPoints: true
+      });
+    }
     if (primeState.isCompleted) solved.add('prime');
+    if (romanState.isCompleted) solved.add('roman');
     Object.entries(missionScores).forEach(([missionId, score]) => {
       if (score?.hasAwardedPoints) solved.add(missionId);
     });
   } catch {
     primeState = createPrimeState();
+    romanState = createRomanState();
     missionScores = {};
   }
 }
@@ -182,7 +258,8 @@ function loadScoreState() {
 function saveScoreState() {
   try {
     localStorage.setItem(scoreStorageKey, JSON.stringify({
-      prime: { ...primeState, isReplay: false },
+      prime: primeStateForStorage(),
+      roman: romanStateForStorage(),
       missionScores
     }));
   } catch {
@@ -269,8 +346,7 @@ function challengeShell(mission, copy, body) {
 function renderChallenge(id) {
   activeMission = id;
   const mission = missionById(id);
-  selectedRomanTile = null;
-  romanSlots = ['', '', '', ''];
+  cleanupRomanDrag();
 
   if (id === 'prime') renderPrime(mission);
   if (id === 'binary') renderBinary(mission);
@@ -326,20 +402,48 @@ function renderBinary(mission) {
 }
 
 function renderRoman(mission) {
-  challengeShell(mission, 'Build 31 as a Roman numeral. Drag or tap the tiles into the four spaces in the correct order.', `
+  const isReplay = romanState.isCompleted;
+  if (isReplay) {
+    romanState = {
+      ...romanState,
+      placedTiles: ['', '', '', ''],
+      submittedAttempts: 0,
+      currentPossibleScore: 31,
+      isReplay: true
+    };
+  }
+  const isLocked = romanState.isCompleted && !romanState.isReplay;
+  const scoreLabel = isReplay ? 'Practice score' : isLocked ? 'Score earned' : 'Possible score';
+  const displayedScore = isLocked ? romanState.pointsEarned : romanState.currentPossibleScore;
+  challengeShell(mission, 'Build 31 as a Roman numeral. Drag the tiles into the four spaces in the correct order.', `
     <div class="tool-card roman-builder">
-      <div class="tile-bank" id="tileBank">
-        ${['I', 'X', 'X', 'X'].map((tile, index) => `<button class="roman-tile" type="button" draggable="true" data-tile-index="${index}" data-tile="${tile}">${tile}</button>`).join('')}
+      <div class="tile-bank roman-supply" id="tileBank" aria-label="Reusable Roman numeral tile bank">
+        ${['I', 'V', 'X'].map(tile => `<button class="roman-tile roman-stack" type="button" data-roman-bank-tile="${tile}" data-tile="${tile}" ${isLocked ? 'disabled' : ''} aria-label="Drag ${tile} tile from reusable stack">${tile}</button>`).join('')}
       </div>
       <div class="slot-row" id="slotRow">
-        ${[0, 1, 2, 3].map(index => `<button class="slot" type="button" data-slot="${index}" aria-label="Roman numeral slot ${index + 1}">?</button>`).join('')}
+        ${[0, 1, 2, 3].map(index => romanSlotMarkup(index, isLocked)).join('')}
       </div>
+      <div class="prime-score-row">
+        <div class="total-display" id="romanPossibleScore">${scoreLabel}: ${displayedScore} points</div>
+        <div class="total-display" id="romanAttemptCount">Submitted attempts: ${romanState.submittedAttempts}</div>
+      </div>
+      ${isReplay ? `<p class="machine-score-line">Practice replay. Your first Roman Numeral Builder score was ${romanState.pointsEarned} points, and no additional points will be awarded.</p>` : ''}
       <div class="tile-bank">
-        <button class="ghost-button" type="button" data-action="reset-roman">Reset tiles</button>
-        <button class="primary-button" type="button" data-action="check-roman">Check numeral</button>
+        <button class="ghost-button" type="button" data-action="reset-roman" ${isLocked ? 'disabled' : ''}>Reset Tiles</button>
+        <button class="primary-button" type="button" data-action="check-roman" ${isLocked || !romanState.placedTiles.every(Boolean) ? 'disabled' : ''}>Check Numeral</button>
       </div>
+      <p class="machine-score-line" id="romanResultScore" ${isLocked ? '' : 'hidden'}>${isLocked ? `Points earned: ${romanState.pointsEarned}` : ''}</p>
     </div>
   `);
+}
+
+function romanSlotMarkup(index, isLocked = false) {
+  const tile = romanState.placedTiles[index];
+  return `
+    <button class="slot ${tile ? 'filled' : ''}" type="button" data-slot="${index}" aria-label="Roman numeral slot ${index + 1}" ${isLocked ? 'disabled' : ''}>
+      ${tile ? `<span class="placed-roman-tile" data-placed-tile="${tile}" data-source-slot="${index}">${tile}</span>` : '?'}
+    </button>
+  `;
 }
 
 function renderMake31(mission) {
@@ -642,11 +746,92 @@ function updateBinary() {
 }
 
 function updateRomanSlots() {
-  challengeRoot.querySelectorAll('[data-slot]').forEach(slot => {
+  challengeRoot.querySelectorAll('button[data-slot]').forEach(slot => {
     const index = Number(slot.dataset.slot);
-    slot.textContent = romanSlots[index] || '?';
-    slot.classList.toggle('filled', Boolean(romanSlots[index]));
+    const tile = romanState.placedTiles[index];
+    slot.innerHTML = tile ? `<span class="placed-roman-tile" data-placed-tile="${tile}" data-source-slot="${index}">${tile}</span>` : '?';
+    slot.classList.toggle('filled', Boolean(tile));
   });
+  const checkButton = challengeRoot.querySelector('[data-action="check-roman"]');
+  if (checkButton) {
+    checkButton.disabled = Boolean(romanState.isCompleted && !romanState.isReplay) || !romanState.placedTiles.every(Boolean);
+  }
+}
+
+function updateRomanScoreboard() {
+  const possibleScoreDisplay = challengeRoot.querySelector('#romanPossibleScore');
+  const attemptDisplay = challengeRoot.querySelector('#romanAttemptCount');
+  if (possibleScoreDisplay) {
+    const label = romanState.isReplay ? 'Practice score' : romanState.isCompleted ? 'Score earned' : 'Possible score';
+    const score = romanState.isCompleted && !romanState.isReplay ? romanState.pointsEarned : romanState.currentPossibleScore;
+    possibleScoreDisplay.textContent = `${label}: ${score} points`;
+  }
+  if (attemptDisplay) attemptDisplay.textContent = `Submitted attempts: ${romanState.submittedAttempts}`;
+}
+
+function cleanupRomanDrag() {
+  if (romanDrag?.ghost) romanDrag.ghost.remove();
+  romanDrag = null;
+  document.body.classList.remove('roman-dragging');
+  challengeRoot.querySelectorAll('.roman-drop-target').forEach(element => {
+    element.classList.remove('roman-drop-target');
+  });
+}
+
+function startRomanDrag(source, sourceSlot, pointerEvent) {
+  if (romanState.isCompleted && !romanState.isReplay) return;
+  const value = source.dataset.tile || source.dataset.placedTile;
+  if (!value) return;
+  cleanupRomanDrag();
+  const ghost = document.createElement('div');
+  ghost.className = 'roman-drag-ghost';
+  ghost.textContent = value;
+  document.body.appendChild(ghost);
+  romanDrag = {
+    value,
+    sourceSlot,
+    ghost,
+    pointerId: pointerEvent.pointerId,
+    lastX: pointerEvent.clientX,
+    lastY: pointerEvent.clientY
+  };
+  document.body.classList.add('roman-dragging');
+  source.setPointerCapture?.(pointerEvent.pointerId);
+  moveRomanGhost(pointerEvent.clientX, pointerEvent.clientY);
+}
+
+function moveRomanGhost(clientX, clientY) {
+  if (!romanDrag) return;
+  romanDrag.lastX = clientX;
+  romanDrag.lastY = clientY;
+  romanDrag.ghost.style.transform = `translate(${clientX - 29}px, ${clientY - 29}px)`;
+  challengeRoot.querySelectorAll('.roman-drop-target').forEach(element => {
+    element.classList.remove('roman-drop-target');
+  });
+  const element = document.elementFromPoint(clientX, clientY);
+  const slot = element?.closest?.('button[data-slot]');
+  if (slot) slot.classList.add('roman-drop-target');
+}
+
+function finishRomanDrag(clientX, clientY) {
+  if (!romanDrag) return;
+  const element = document.elementFromPoint(clientX, clientY);
+  const targetSlot = element?.closest?.('button[data-slot]');
+  const droppedOnBank = Boolean(element?.closest?.('#tileBank'));
+  const sourceSlot = romanDrag.sourceSlot;
+  if (targetSlot) {
+    const targetIndex = Number(targetSlot.dataset.slot);
+    if (Number.isInteger(sourceSlot) && sourceSlot !== targetIndex) {
+      romanState.placedTiles[sourceSlot] = '';
+    }
+    romanState.placedTiles[targetIndex] = romanDrag.value;
+  } else if (Number.isInteger(sourceSlot) && (droppedOnBank || !targetSlot)) {
+    romanState.placedTiles[sourceSlot] = '';
+  }
+  cleanupRomanDrag();
+  updateRomanSlots();
+  updateRomanScoreboard();
+  if (!romanState.isReplay && !romanState.isCompleted) saveScoreState();
 }
 
 function updateMakeTotal() {
@@ -725,21 +910,6 @@ challengeRoot.addEventListener('click', event => {
     switchButton.setAttribute('aria-pressed', String(!pressed));
     switchButton.lastChild.textContent = pressed ? '0' : '1';
     updateBinary();
-  }
-
-  const tileButton = event.target.closest('[data-tile]');
-  if (tileButton) {
-    selectedRomanTile = tileButton;
-    challengeRoot.querySelectorAll('[data-tile]').forEach(tile => tile.classList.remove('selected'));
-    tileButton.classList.add('selected');
-  }
-
-  const slotButton = event.target.closest('[data-slot]');
-  if (slotButton && selectedRomanTile) {
-    romanSlots[Number(slotButton.dataset.slot)] = selectedRomanTile.dataset.tile;
-    selectedRomanTile.remove();
-    selectedRomanTile = null;
-    updateRomanSlots();
   }
 
   const numberTile = event.target.closest('[data-number-tile]');
@@ -929,12 +1099,57 @@ challengeRoot.addEventListener('click', event => {
     }
   }
 
-  if (action === 'reset-roman') renderRoman(missionById('roman'));
+  if (action === 'reset-roman') {
+    romanState.placedTiles = ['', '', '', ''];
+    updateRomanSlots();
+    updateRomanScoreboard();
+    setFeedback('');
+    if (!romanState.isReplay && !romanState.isCompleted) saveScoreState();
+  }
 
   if (action === 'check-roman') {
-    romanSlots.join('') === 'XXXI'
-      ? solveMission('roman', 'XXXI is Roman numeral 31. Section active.')
-      : setFeedback('Not yet. The three X tiles come before the I tile.');
+    if (!romanState.placedTiles.every(Boolean)) return;
+    const isCorrect = romanState.placedTiles.join('') === 'XXXI';
+    const pointsForAttempt = romanPossibleScore(romanState.submittedAttempts);
+    const possibleScoreDisplay = challengeRoot.querySelector('#romanPossibleScore');
+    const resultScore = challengeRoot.querySelector('#romanResultScore');
+    if (isCorrect) {
+      romanState.submittedAttempts += 1;
+      romanState.currentPossibleScore = pointsForAttempt;
+      challengeRoot.querySelectorAll('[data-roman-bank-tile], [data-action="reset-roman"], [data-action="check-roman"], [data-slot]').forEach(button => {
+        button.disabled = true;
+      });
+      if (romanState.isReplay || romanState.hasAwardedPoints || hasAwardedScore('roman')) {
+        const savedPoints = savedMissionScore('roman') || romanState.pointsEarned;
+        if (resultScore) {
+          resultScore.textContent = `Practice complete. Your saved Roman Numeral Builder score remains ${savedPoints} points.`;
+          resultScore.removeAttribute('hidden');
+        }
+        updateRomanScoreboard();
+        setFeedback('Number confirmed for practice. No additional points will be awarded.', true);
+        return;
+      }
+
+      romanState.pointsEarned = pointsForAttempt;
+      romanState.isCompleted = true;
+      romanState.hasAwardedPoints = true;
+      romanState.isReplay = false;
+      const awardedPoints = awardMissionScore('roman', pointsForAttempt);
+      romanState.pointsEarned = awardedPoints;
+      if (possibleScoreDisplay) possibleScoreDisplay.textContent = `Score earned: ${awardedPoints} points`;
+      updateRomanScoreboard();
+      if (resultScore) {
+        resultScore.textContent = `Points earned: ${awardedPoints} points`;
+        resultScore.removeAttribute('hidden');
+      }
+      solveMission('roman', `Number confirmed! XXXI is the Roman numeral for 31. Points earned: ${awardedPoints}.`);
+    } else {
+      romanState.submittedAttempts += 1;
+      romanState.currentPossibleScore = romanPossibleScore(romanState.submittedAttempts);
+      updateRomanScoreboard();
+      if (!romanState.isReplay && !romanState.isCompleted) saveScoreState();
+      setFeedback('That numeral does not equal 31. Check the order of your tiles and try again.');
+    }
   }
 
   if (action === 'check-make31') {
@@ -1065,25 +1280,32 @@ challengeRoot.addEventListener('input', event => {
   if (event.target.id === 'temperatureSlider') updateGallium();
 });
 
-challengeRoot.addEventListener('dragstart', event => {
-  const tile = event.target.closest('[data-tile]');
-  if (tile) event.dataTransfer.setData('text/plain', tile.dataset.tileIndex);
-});
-
-challengeRoot.addEventListener('dragover', event => {
-  if (event.target.closest('[data-slot]')) event.preventDefault();
-});
-
-challengeRoot.addEventListener('drop', event => {
-  const slot = event.target.closest('[data-slot]');
-  if (!slot) return;
+challengeRoot.addEventListener('pointerdown', event => {
+  if (activeMission !== 'roman') return;
+  const bankTile = event.target.closest('[data-roman-bank-tile]');
+  const placedTile = event.target.closest('[data-placed-tile]');
+  const draggableTile = bankTile || placedTile;
+  if (!draggableTile || draggableTile.disabled) return;
   event.preventDefault();
-  const tileIndex = event.dataTransfer.getData('text/plain');
-  const tile = challengeRoot.querySelector(`[data-tile-index="${tileIndex}"]`);
-  if (!tile) return;
-  romanSlots[Number(slot.dataset.slot)] = tile.dataset.tile;
-  tile.remove();
-  updateRomanSlots();
+  const sourceSlot = placedTile ? Number(placedTile.dataset.sourceSlot) : null;
+  startRomanDrag(draggableTile, sourceSlot, event);
+});
+
+challengeRoot.addEventListener('pointermove', event => {
+  if (!romanDrag || romanDrag.pointerId !== event.pointerId) return;
+  event.preventDefault();
+  moveRomanGhost(event.clientX, event.clientY);
+});
+
+challengeRoot.addEventListener('pointerup', event => {
+  if (!romanDrag || romanDrag.pointerId !== event.pointerId) return;
+  event.preventDefault();
+  finishRomanDrag(event.clientX, event.clientY);
+});
+
+challengeRoot.addEventListener('pointercancel', event => {
+  if (!romanDrag || romanDrag.pointerId !== event.pointerId) return;
+  cleanupRomanDrag();
 });
 
 document.getElementById('checkSortButton').addEventListener('click', () => {
