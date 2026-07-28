@@ -146,10 +146,19 @@ const stateRuledOut = new Set();
 let presidentScore = null;
 let missionScores = {};
 
+resetSavedLabOnOpen();
 loadScoreState();
 
 function missionById(id) {
   return missions.find(mission => mission.id === id);
+}
+
+function resetSavedLabOnOpen() {
+  try {
+    localStorage.removeItem(scoreStorageKey);
+  } catch {
+    // Local storage can be unavailable in some restricted browser modes.
+  }
 }
 
 function createPrimeState(saved = {}) {
