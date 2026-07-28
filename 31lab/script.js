@@ -118,6 +118,8 @@ const closeBadgeButton = document.getElementById('closeBadgeButton');
 let activeMission = null;
 let selectedRomanTile = null;
 let romanSlots = ['', '', '', ''];
+let make31WrongChecks = 0;
+let make31Score = null;
 let stateScore = null;
 const stateRuledOut = new Set();
 let presidentScore = null;
@@ -237,14 +239,23 @@ function renderRoman(mission) {
 }
 
 function renderMake31(mission) {
+  const isSolved = solved.has(mission.id);
+  const displayedScore = make31Score ?? Math.max(0, 60 - (make31WrongChecks * 20));
   challengeShell(mission, 'Choose the number tiles that add to 31. This machine wants the doubling pattern.', `
     <div class="tool-card">
       <div class="button-grid">
-        ${[1, 2, 3, 4, 7, 8, 10, 12, 16].map(number => `<button class="choice-button" type="button" data-number-tile="${number}">${number}</button>`).join('')}
+        ${[1, 2, 3, 4, 7, 8, 10, 12, 16].map(number => `<button class="choice-button" type="button" data-number-tile="${number}" ${isSolved ? 'disabled' : ''}>${number}</button>`).join('')}
       </div>
     </div>
-    <div class="total-display" id="makeTotal">Total: 0</div>
-    <button class="primary-button" type="button" data-action="check-make31">Check total</button>
+    <div class="make31-status">
+      <div class="total-display" id="makeTotal">Total: 0</div>
+      <div class="case-scoreboard" aria-live="polite">
+        <span>${isSolved ? 'Score earned' : 'Possible score'}</span>
+        <strong id="make31Score">${displayedScore} points</strong>
+      </div>
+    </div>
+    <button class="primary-button" type="button" data-action="check-make31" ${isSolved ? 'hidden' : ''}>Check total</button>
+    <p class="machine-score-line" id="make31ResultScore" ${isSolved ? '' : 'hidden'}>Score earned: ${displayedScore} points</p>
   `);
 }
 
@@ -768,9 +779,28 @@ challengeRoot.addEventListener('click', event => {
   if (action === 'check-make31') {
     const selected = [...challengeRoot.querySelectorAll('[data-number-tile].selected')].map(button => Number(button.dataset.numberTile)).sort((a, b) => a - b);
     const target = [1, 2, 4, 8, 16];
-    selected.length === target.length && selected.every((value, index) => value === target[index])
-      ? solveMission('make31', '1 + 2 + 4 + 8 + 16 = 31. Section active.')
-      : setFeedback('The lab wants the doubling pattern that totals 31.');
+    const isCorrect = selected.length === target.length && selected.every((value, index) => value === target[index]);
+    if (isCorrect) {
+      make31Score = Math.max(0, 60 - (make31WrongChecks * 20));
+      const scoreDisplay = challengeRoot.querySelector('#make31Score');
+      if (scoreDisplay) scoreDisplay.textContent = `${make31Score} points`;
+      const resultScore = challengeRoot.querySelector('#make31ResultScore');
+      if (resultScore) {
+        resultScore.textContent = `Score earned: ${make31Score} points`;
+        resultScore.removeAttribute('hidden');
+      }
+      challengeRoot.querySelectorAll('[data-number-tile]').forEach(button => {
+        button.disabled = true;
+      });
+      challengeRoot.querySelector('[data-action="check-make31"]')?.setAttribute('hidden', '');
+      solveMission('make31', `1 + 2 + 4 + 8 + 16 = 31. Score earned: ${make31Score} points.`);
+    } else {
+      make31WrongChecks += 1;
+      const remainingScore = Math.max(0, 60 - (make31WrongChecks * 20));
+      const scoreDisplay = challengeRoot.querySelector('#make31Score');
+      if (scoreDisplay) scoreDisplay.textContent = `${remainingScore} points`;
+      setFeedback(`The lab wants the doubling pattern that totals 31. ${remainingScore} points still possible.`);
+    }
   }
 
   if (action === 'oct-prev') updateOctober(octoberDay - 1);
