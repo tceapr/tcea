@@ -372,7 +372,12 @@ function renderPresident(mission, forceFresh = false) {
     'Before becoming president, he worked as an engineer and served as secretary of commerce.',
     'He was the only U.S. president born in Iowa.'
   ];
-  const candidates = ['Herbert Hoover', 'Woodrow Wilson', 'Theodore Roosevelt', 'Franklin D. Roosevelt'];
+  const candidates = [
+    { name: 'Herbert Hoover', image: 'assets/presidents/herbert-hoover.jpg' },
+    { name: 'Woodrow Wilson', image: 'assets/presidents/woodrow-wilson.jpg' },
+    { name: 'Theodore Roosevelt', image: 'assets/presidents/theodore-roosevelt.jpg' },
+    { name: 'Franklin D. Roosevelt', image: 'assets/presidents/franklin-d-roosevelt.jpg' }
+  ];
   challengeShell(mission, 'A president is missing from the historical timeline. Open the evidence files, study the clues, and identify the 31st president of the United States.', `
     <div class="president-case ${isSolved ? 'case-solved' : ''}">
       <div class="case-timeline" aria-label="Presidential timeline with president 31 missing">
@@ -411,10 +416,10 @@ function renderPresident(mission, forceFresh = false) {
       <div class="suspect-section" ${isSolved ? '' : 'hidden'}>
         <h3>Suspect cards</h3>
         <div class="suspect-grid">
-          ${candidates.map(name => `
-            <button class="suspect-card ${isSolved && name === 'Herbert Hoover' ? 'selected' : ''}" type="button" data-president-candidate="${name}">
-              <span class="portrait" aria-hidden="true"><span></span></span>
-              <span>${name}</span>
+          ${candidates.map(candidate => `
+            <button class="suspect-card ${isSolved && candidate.name === 'Herbert Hoover' ? 'selected' : ''}" type="button" data-president-candidate="${candidate.name}">
+              <img class="portrait" src="${candidate.image}" alt="" loading="lazy">
+              <span>${candidate.name}</span>
             </button>
           `).join('')}
         </div>
