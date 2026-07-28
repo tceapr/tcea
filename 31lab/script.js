@@ -127,6 +127,7 @@ let make31Score = null;
 let stateScore = null;
 const stateRuledOut = new Set();
 let presidentScore = null;
+let missionScores = {};
 
 loadScoreState();
 
@@ -158,17 +159,31 @@ function primePossibleScore(submittedAttempts) {
 function loadScoreState() {
   try {
     const saved = JSON.parse(localStorage.getItem(scoreStorageKey) || '{}');
+    missionScores = saved.missionScores && typeof saved.missionScores === 'object'
+      ? saved.missionScores
+      : {};
     primeState = createPrimeState(saved.prime);
+    if (primeState.hasAwardedPoints && !missionScores.prime) {
+      missionScores.prime = {
+        pointsEarned: primeState.pointsEarned,
+        hasAwardedPoints: true
+      };
+    }
     if (primeState.isCompleted) solved.add('prime');
+    Object.entries(missionScores).forEach(([missionId, score]) => {
+      if (score?.hasAwardedPoints) solved.add(missionId);
+    });
   } catch {
     primeState = createPrimeState();
+    missionScores = {};
   }
 }
 
 function saveScoreState() {
   try {
     localStorage.setItem(scoreStorageKey, JSON.stringify({
-      prime: { ...primeState, isReplay: false }
+      prime: { ...primeState, isReplay: false },
+      missionScores
     }));
   } catch {
     // Local storage can be unavailable in some restricted browser modes.
@@ -177,8 +192,28 @@ function saveScoreState() {
 
 function updateScoreCount() {
   if (!scoreCount) return;
-  const total = primeState.hasAwardedPoints ? primeState.pointsEarned : 0;
+  const total = Object.values(missionScores)
+    .reduce((sum, score) => sum + Number(score?.pointsEarned || 0), 0);
   scoreCount.textContent = `Lab score: ${total} points`;
+}
+
+function hasAwardedScore(id) {
+  return Boolean(missionScores[id]?.hasAwardedPoints);
+}
+
+function savedMissionScore(id) {
+  return Number(missionScores[id]?.pointsEarned || 0);
+}
+
+function awardMissionScore(id, points) {
+  if (hasAwardedScore(id)) return savedMissionScore(id);
+  missionScores[id] = {
+    pointsEarned: points,
+    hasAwardedPoints: true
+  };
+  saveScoreState();
+  updateScoreCount();
+  return points;
 }
 
 function renderMissionRing() {
@@ -309,7 +344,9 @@ function renderRoman(mission) {
 
 function renderMake31(mission) {
   const isSolved = solved.has(mission.id);
-  const displayedScore = make31Score ?? Math.max(0, 60 - (make31WrongChecks * 20));
+  const displayedScore = hasAwardedScore('make31')
+    ? savedMissionScore('make31')
+    : make31Score ?? Math.max(0, 60 - (make31WrongChecks * 20));
   challengeShell(mission, 'Choose the number tiles that add to 31. This machine wants the doubling pattern.', `
     <div class="tool-card">
       <div class="button-grid">
@@ -361,7 +398,7 @@ function renderHalloween(mission) {
 
 function renderState(mission) {
   const isSolved = solved.has(mission.id);
-  const displayedScore = stateScore ?? 80;
+  const displayedScore = hasAwardedScore('state') ? savedMissionScore('state') : stateScore ?? 80;
   const selectedClass = isSolved ? ' selected' : '';
   const ruledOutClass = (group, value) => stateRuledOut.has(`${group}:${value}`) ? ' ruled-out' : '';
   const clueDisabled = (group, value) => (isSolved || stateRuledOut.has(`${group}:${value}`)) ? 'disabled' : '';
@@ -459,7 +496,10 @@ function renderFlavor(mission) {
 
 function renderPresident(mission, forceFresh = false) {
   const isSolved = !forceFresh && solved.has(mission.id);
-  const displayedScore = presidentScore ?? 60;
+  const isPractice = forceFresh && hasAwardedScore('president');
+  const displayedScore = !forceFresh && hasAwardedScore('president')
+    ? savedMissionScore('president')
+    : presidentScore ?? 60;
   const evidence = [
     'He became president in 1929.',
     'The Great Depression began during his presidency.',
@@ -511,7 +551,7 @@ function renderPresident(mission, forceFresh = false) {
         <div class="suspect-header">
           <h3>Suspect cards</h3>
           <div class="case-scoreboard" aria-live="polite">
-            <span>${isSolved ? 'Score earned' : 'Possible score'}</span>
+            <span>${isSolved ? 'Score earned' : isPractice ? 'Practice score' : 'Possible score'}</span>
             <strong id="presidentScore">${displayedScore} points</strong>
           </div>
         </div>
@@ -767,17 +807,18 @@ challengeRoot.addEventListener('click', event => {
       const lock = challengeRoot.querySelector('.state-map-lock');
       if (lock) lock.setAttribute('aria-hidden', 'true');
       stateScore = stateScore ?? 80;
+      const earnedScore = awardMissionScore('state', stateScore);
       challengeRoot.querySelectorAll('[data-state-clue]').forEach(button => {
         button.disabled = true;
       });
       const scoreDisplay = challengeRoot.querySelector('#stateScore');
-      if (scoreDisplay) scoreDisplay.textContent = `${stateScore} points`;
+      if (scoreDisplay) scoreDisplay.textContent = `${earnedScore} points`;
       const resultScore = challengeRoot.querySelector('#stateResultScore');
       if (resultScore) {
-        resultScore.textContent = `Score earned: ${stateScore} points`;
+        resultScore.textContent = `Score earned: ${earnedScore} points`;
         resultScore.removeAttribute('hidden');
       }
-      solveMission('state', `The clues point to California, the 31st state. Score earned: ${stateScore} points.`);
+      solveMission('state', `The clues point to California, the 31st state. Score earned: ${earnedScore} points.`);
     } else {
       setFeedback('Good clue. Keep building the evidence file.');
     }
@@ -866,6 +907,7 @@ challengeRoot.addEventListener('click', event => {
         hasAwardedPoints: true,
         isReplay: false
       };
+      awardMissionScore('prime', pointsForAttempt);
       saveScoreState();
       updateScoreCount();
       if (possibleScoreDisplay) possibleScoreDisplay.textContent = `Score earned: ${pointsForAttempt} points`;
@@ -901,18 +943,19 @@ challengeRoot.addEventListener('click', event => {
     const isCorrect = selected.length === target.length && selected.every((value, index) => value === target[index]);
     if (isCorrect) {
       make31Score = Math.max(0, 60 - (make31WrongChecks * 20));
+      const earnedScore = awardMissionScore('make31', make31Score);
       const scoreDisplay = challengeRoot.querySelector('#make31Score');
-      if (scoreDisplay) scoreDisplay.textContent = `${make31Score} points`;
+      if (scoreDisplay) scoreDisplay.textContent = `${earnedScore} points`;
       const resultScore = challengeRoot.querySelector('#make31ResultScore');
       if (resultScore) {
-        resultScore.textContent = `Score earned: ${make31Score} points`;
+        resultScore.textContent = `Score earned: ${earnedScore} points`;
         resultScore.removeAttribute('hidden');
       }
       challengeRoot.querySelectorAll('[data-number-tile]').forEach(button => {
         button.disabled = true;
       });
       challengeRoot.querySelector('[data-action="check-make31"]')?.setAttribute('hidden', '');
-      solveMission('make31', `1 + 2 + 4 + 8 + 16 = 31. Score earned: ${make31Score} points.`);
+      solveMission('make31', `1 + 2 + 4 + 8 + 16 = 31. Score earned: ${earnedScore} points.`);
     } else {
       make31WrongChecks += 1;
       const remainingScore = Math.max(0, 60 - (make31WrongChecks * 20));
@@ -940,6 +983,8 @@ challengeRoot.addEventListener('click', event => {
     const wrongAttempts = challengeRoot.querySelectorAll('[data-president-candidate].ruled-out').length;
     if (selectedCandidate === 'Herbert Hoover') {
       presidentScore = Math.max(0, 60 - (wrongAttempts * 20));
+      const alreadyAwarded = hasAwardedScore('president');
+      const earnedScore = awardMissionScore('president', presidentScore);
       challengeRoot.querySelector('.president-case')?.classList.add('case-solved');
       challengeRoot.querySelector('.case-result')?.removeAttribute('hidden');
       challengeRoot.querySelector('.solve-case-button')?.setAttribute('hidden', '');
@@ -947,10 +992,13 @@ challengeRoot.addEventListener('click', event => {
         button.disabled = true;
       });
       const scoreDisplay = challengeRoot.querySelector('#presidentScore');
-      if (scoreDisplay) scoreDisplay.textContent = `${presidentScore} points`;
+      if (scoreDisplay) scoreDisplay.textContent = `${earnedScore} points`;
       const resultScore = challengeRoot.querySelector('#presidentResultScore');
-      if (resultScore) resultScore.textContent = `Score earned: ${presidentScore} points`;
-      solveMission('president', `Case solved. Herbert Hoover was president number 31. Score earned: ${presidentScore} points.`);
+      if (resultScore) resultScore.textContent = `Score earned: ${earnedScore} points`;
+      const feedback = !alreadyAwarded
+        ? `Case solved. Herbert Hoover was president number 31. Score earned: ${earnedScore} points.`
+        : `Practice complete. Your saved President score remains ${earnedScore} points.`;
+      solveMission('president', feedback);
     } else {
       selectedCard.classList.remove('selected');
       selectedCard.classList.add('ruled-out');
