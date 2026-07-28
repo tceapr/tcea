@@ -522,6 +522,38 @@ h3 {
   background: rgba(244, 189, 61, 0.22);
   font-size: 1.6rem;
   font-weight: 800;
+  touch-action: none;
+  user-select: none;
+}
+
+.roman-stack {
+  position: relative;
+  box-shadow:
+    4px 4px 0 #f9d878,
+    8px 8px 0 rgba(185, 133, 20, 0.25),
+    0 8px 16px rgba(23, 50, 77, 0.12);
+  cursor: grab;
+}
+
+.roman-stack:active,
+.placed-roman-tile:active {
+  cursor: grabbing;
+}
+
+.placed-roman-tile {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border: 1px solid rgba(23, 50, 77, 0.22);
+  border-radius: 8px;
+  color: var(--navy);
+  background: rgba(244, 189, 61, 0.28);
+  font-size: 1.6rem;
+  font-weight: 800;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
 }
 
 .slot {
@@ -531,6 +563,7 @@ h3 {
   height: 68px;
   border-style: dashed;
   color: var(--muted);
+  background: #ffffff;
   font-size: 1.7rem;
   font-weight: 800;
 }
@@ -540,6 +573,34 @@ h3 {
   border-color: var(--teal);
   color: var(--navy);
   background: rgba(22, 139, 135, 0.1);
+}
+
+.slot.roman-drop-target {
+  border-color: var(--gold);
+  background: rgba(244, 189, 61, 0.18);
+}
+
+.roman-drag-ghost {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  border: 1px solid rgba(23, 50, 77, 0.22);
+  border-radius: 8px;
+  color: var(--navy);
+  background: #fff3ce;
+  box-shadow: 0 16px 28px rgba(23, 50, 77, 0.22);
+  font-size: 1.6rem;
+  font-weight: 800;
+  pointer-events: none;
+}
+
+.roman-dragging {
+  cursor: grabbing;
 }
 
 .calendar-grid {
