@@ -167,7 +167,7 @@ h3 {
   border-radius: 8px;
   background:
     linear-gradient(rgba(12, 26, 42, 0.1), rgba(12, 26, 42, 0.18)),
-    url("assets/number-machine-bg.png") center / cover,
+    url("assets/number-machine-bg.png?v=main-graphic-20260728") center / cover,
     linear-gradient(145deg, #132a42, #244a62);
   overflow: hidden;
 }
