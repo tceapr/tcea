@@ -118,6 +118,7 @@ const closeBadgeButton = document.getElementById('closeBadgeButton');
 let activeMission = null;
 let selectedRomanTile = null;
 let romanSlots = ['', '', '', ''];
+let presidentScore = null;
 
 function missionById(id) {
   return missions.find(mission => mission.id === id);
@@ -366,6 +367,7 @@ function renderFlavor(mission) {
 
 function renderPresident(mission, forceFresh = false) {
   const isSolved = !forceFresh && solved.has(mission.id);
+  const displayedScore = presidentScore ?? 60;
   const evidence = [
     'He became president in 1929.',
     'The Great Depression began during his presidency.',
@@ -414,12 +416,19 @@ function renderPresident(mission, forceFresh = false) {
       </div>
 
       <div class="suspect-section" ${isSolved ? '' : 'hidden'}>
-        <h3>Suspect cards</h3>
+        <div class="suspect-header">
+          <h3>Suspect cards</h3>
+          <div class="case-scoreboard" aria-live="polite">
+            <span>${isSolved ? 'Score earned' : 'Possible score'}</span>
+            <strong id="presidentScore">${displayedScore} points</strong>
+          </div>
+        </div>
         <div class="suspect-grid">
           ${candidates.map(candidate => `
-            <button class="suspect-card ${isSolved && candidate.name === 'Herbert Hoover' ? 'selected' : ''}" type="button" data-president-candidate="${candidate.name}">
+            <button class="suspect-card ${isSolved && candidate.name === 'Herbert Hoover' ? 'selected' : ''}" type="button" data-president-candidate="${candidate.name}" ${isSolved ? 'disabled' : ''}>
               <img class="portrait" src="${candidate.image}" alt="" loading="lazy">
               <span>${candidate.name}</span>
+              <span class="ruled-out-label">Ruled out</span>
             </button>
           `).join('')}
         </div>
@@ -429,6 +438,7 @@ function renderPresident(mission, forceFresh = false) {
       <div class="case-result" ${isSolved ? '' : 'hidden'}>
         <h3>Case Solved!</h3>
         <p>Herbert Hoover was the 31st president of the United States. He served from 1929 to 1933.</p>
+        <p class="score-line" id="presidentResultScore">${isSolved ? `Score earned: ${displayedScore} points` : ''}</p>
         <p class="badge-line">Presidential Timeline Investigator Badge Earned</p>
         <ul>
           <li>He served between Calvin Coolidge and Franklin D. Roosevelt.</li>
@@ -674,6 +684,7 @@ challengeRoot.addEventListener('click', event => {
 
   const presidentCandidate = event.target.closest('[data-president-candidate]');
   if (presidentCandidate) {
+    if (presidentCandidate.disabled) return;
     challengeRoot.querySelectorAll('[data-president-candidate]').forEach(button => button.classList.remove('selected'));
     presidentCandidate.classList.add('selected');
   }
@@ -741,18 +752,34 @@ challengeRoot.addEventListener('click', event => {
   }
 
   if (action === 'solve-president') {
-    const selectedCandidate = challengeRoot.querySelector('[data-president-candidate].selected')?.dataset.presidentCandidate;
+    const selectedCard = challengeRoot.querySelector('[data-president-candidate].selected');
+    const selectedCandidate = selectedCard?.dataset.presidentCandidate;
     if (!selectedCandidate) {
       setFeedback('Choose a suspect card before you solve the case.');
       return;
     }
+    const wrongAttempts = challengeRoot.querySelectorAll('[data-president-candidate].ruled-out').length;
     if (selectedCandidate === 'Herbert Hoover') {
+      presidentScore = Math.max(0, 60 - (wrongAttempts * 20));
       challengeRoot.querySelector('.president-case')?.classList.add('case-solved');
       challengeRoot.querySelector('.case-result')?.removeAttribute('hidden');
       challengeRoot.querySelector('.solve-case-button')?.setAttribute('hidden', '');
-      solveMission('president', 'Case solved. Herbert Hoover was president number 31. Badge earned.');
+      challengeRoot.querySelectorAll('[data-president-candidate]').forEach(button => {
+        button.disabled = true;
+      });
+      const scoreDisplay = challengeRoot.querySelector('#presidentScore');
+      if (scoreDisplay) scoreDisplay.textContent = `${presidentScore} points`;
+      const resultScore = challengeRoot.querySelector('#presidentResultScore');
+      if (resultScore) resultScore.textContent = `Score earned: ${presidentScore} points`;
+      solveMission('president', `Case solved. Herbert Hoover was president number 31. Score earned: ${presidentScore} points.`);
     } else {
-      setFeedback('Not quite. Review the timeline and evidence, then try again.');
+      selectedCard.classList.remove('selected');
+      selectedCard.classList.add('ruled-out');
+      selectedCard.disabled = true;
+      const remainingScore = Math.max(0, 60 - ((wrongAttempts + 1) * 20));
+      const scoreDisplay = challengeRoot.querySelector('#presidentScore');
+      if (scoreDisplay) scoreDisplay.textContent = `${remainingScore} points`;
+      setFeedback(`Not quite. ${selectedCandidate} is ruled out. ${remainingScore} points still possible.`);
     }
   }
 
@@ -784,6 +811,7 @@ challengeRoot.addEventListener('click', event => {
   }
 
   if (action === 'reset-president') {
+    presidentScore = null;
     renderPresident(missionById('president'), true);
     setFeedback('Mission reset. Open the evidence files to replay the case.');
   }
