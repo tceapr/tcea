@@ -473,6 +473,19 @@ h3 {
   font-weight: 800;
 }
 
+.make31-status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 10px;
+}
+
+.machine-score-line {
+  margin: 0;
+  color: #8e640f;
+  font-weight: 900;
+}
+
 .roman-builder {
   display: grid;
   gap: 16px;
