@@ -380,6 +380,11 @@ h3 {
   font-weight: 800;
 }
 
+.month-button:focus-visible {
+  outline: 3px solid rgba(14, 128, 128, 0.45);
+  outline-offset: 3px;
+}
+
 .choice-button.selected,
 .month-button.selected,
 .timeline-button.selected,
@@ -389,10 +394,26 @@ h3 {
   background: rgba(22, 139, 135, 0.14);
 }
 
+.month-button.selected:disabled {
+  color: var(--ink);
+  background: rgba(22, 139, 135, 0.14);
+  opacity: 1;
+}
+
 .choice-button.wrong,
 .month-button.wrong,
 .map-region.wrong {
   animation: bounce 260ms ease;
+}
+
+.month-button.attempted {
+  color: rgba(23, 50, 77, 0.58);
+  background: #f4f0e8;
+  border-color: rgba(23, 50, 77, 0.18);
+  text-decoration: line-through;
+  text-decoration-thickness: 3px;
+  text-decoration-color: #8e640f;
+  opacity: 1;
 }
 
 .primary-button {
@@ -479,6 +500,33 @@ h3 {
 
 .true-false-button {
   min-height: 60px;
+  font-size: 1.15rem;
+}
+
+.calendar-status-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.calendar-results {
+  display: grid;
+  gap: 8px;
+  padding: 16px;
+  border: 1px solid rgba(14, 128, 128, 0.2);
+  border-radius: 8px;
+  background: #fbfdff;
+}
+
+.calendar-results h3,
+.calendar-results p {
+  margin: 0;
+}
+
+.calendar-results h3 {
+  color: var(--navy);
   font-size: 1.15rem;
 }
 
