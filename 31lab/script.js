@@ -118,6 +118,8 @@ const closeBadgeButton = document.getElementById('closeBadgeButton');
 let activeMission = null;
 let selectedRomanTile = null;
 let romanSlots = ['', '', '', ''];
+let stateScore = null;
+const stateRuledOut = new Set();
 let presidentScore = null;
 
 function missionById(id) {
@@ -279,19 +281,28 @@ function renderHalloween(mission) {
 
 function renderState(mission) {
   const isSolved = solved.has(mission.id);
+  const displayedScore = stateScore ?? 80;
   const selectedClass = isSolved ? ' selected' : '';
+  const ruledOutClass = (group, value) => stateRuledOut.has(`${group}:${value}`) ? ' ruled-out' : '';
+  const clueDisabled = (group, value) => (isSolved || stateRuledOut.has(`${group}:${value}`)) ? 'disabled' : '';
   challengeShell(mission, 'Choose the clues that point to the 31st state. When the evidence file is correct, the map will reveal the state.', `
     <div class="tool-card">
-      <h3>Evidence file</h3>
+      <div class="state-evidence-header">
+        <h3>Evidence file</h3>
+        <div class="case-scoreboard" aria-live="polite">
+          <span>${isSolved ? 'Score earned' : 'Possible score'}</span>
+          <strong id="stateScore">${displayedScore} points</strong>
+        </div>
+      </div>
       <div class="clue-grid">
-        <button class="choice-button${selectedClass}" type="button" data-state-clue="coast" data-clue-value="west">West Coast</button>
-        <button class="choice-button" type="button" data-state-clue="coast" data-clue-value="east">East Coast</button>
-        <button class="choice-button${selectedClass}" type="button" data-state-clue="event" data-clue-value="gold">Gold Rush</button>
-        <button class="choice-button" type="button" data-state-clue="event" data-clue-value="space">Space Coast</button>
-        <button class="choice-button${selectedClass}" type="button" data-state-clue="capital" data-clue-value="sacramento">Sacramento</button>
-        <button class="choice-button" type="button" data-state-clue="capital" data-clue-value="austin">Austin</button>
-        <button class="choice-button${selectedClass}" type="button" data-state-clue="date" data-clue-value="1850">Joined in 1850</button>
-        <button class="choice-button" type="button" data-state-clue="date" data-clue-value="1959">Joined in 1959</button>
+        <button class="choice-button${selectedClass}" type="button" data-state-clue="coast" data-clue-value="west" ${isSolved ? 'disabled' : ''}>West Coast</button>
+        <button class="choice-button${ruledOutClass('coast', 'east')}" type="button" data-state-clue="coast" data-clue-value="east" ${clueDisabled('coast', 'east')}>East Coast</button>
+        <button class="choice-button${selectedClass}" type="button" data-state-clue="event" data-clue-value="gold" ${isSolved ? 'disabled' : ''}>Gold Rush</button>
+        <button class="choice-button${ruledOutClass('event', 'space')}" type="button" data-state-clue="event" data-clue-value="space" ${clueDisabled('event', 'space')}>Space Coast</button>
+        <button class="choice-button${selectedClass}" type="button" data-state-clue="capital" data-clue-value="sacramento" ${isSolved ? 'disabled' : ''}>Sacramento</button>
+        <button class="choice-button${ruledOutClass('capital', 'austin')}" type="button" data-state-clue="capital" data-clue-value="austin" ${clueDisabled('capital', 'austin')}>Austin</button>
+        <button class="choice-button${selectedClass}" type="button" data-state-clue="date" data-clue-value="1850" ${isSolved ? 'disabled' : ''}>Joined in 1850</button>
+        <button class="choice-button${ruledOutClass('date', '1959')}" type="button" data-state-clue="date" data-clue-value="1959" ${clueDisabled('date', '1959')}>Joined in 1959</button>
       </div>
     </div>
     <div class="tool-card state-map-card${isSolved ? ' revealed' : ''}">
@@ -304,6 +315,7 @@ function renderState(mission) {
         <div class="california-callout" aria-hidden="${isSolved ? 'false' : 'true'}">California</div>
       </div>
       <p class="state-reveal" ${isSolved ? '' : 'hidden'}>The clues reveal California. It joined the United States in 1850 as the 31st state.</p>
+      <p class="state-score-line" id="stateResultScore" ${isSolved ? '' : 'hidden'}>Score earned: ${displayedScore} points</p>
     </div>
   `);
 }
@@ -632,6 +644,7 @@ challengeRoot.addEventListener('click', event => {
 
   const stateClue = event.target.closest('[data-state-clue]');
   if (stateClue) {
+    if (stateClue.disabled) return;
     const requiredClues = {
       coast: 'west',
       event: 'gold',
@@ -643,7 +656,13 @@ challengeRoot.addEventListener('click', event => {
     if (!isCorrect) {
       stateClue.classList.add('wrong');
       setTimeout(() => stateClue.classList.remove('wrong'), 320);
-      setFeedback('That clue points to another place. Try a clue that fits the 31st state.');
+      stateClue.classList.add('ruled-out');
+      stateClue.disabled = true;
+      stateRuledOut.add(`${group}:${stateClue.dataset.clueValue}`);
+      stateScore = Math.max(0, (stateScore ?? 80) - 10);
+      const scoreDisplay = challengeRoot.querySelector('#stateScore');
+      if (scoreDisplay) scoreDisplay.textContent = `${stateScore} points`;
+      setFeedback(`That clue points to another place. ${stateScore} points still possible.`);
       return;
     }
 
@@ -661,7 +680,18 @@ challengeRoot.addEventListener('click', event => {
       if (callout) callout.setAttribute('aria-hidden', 'false');
       const lock = challengeRoot.querySelector('.state-map-lock');
       if (lock) lock.setAttribute('aria-hidden', 'true');
-      solveMission('state', 'The clues point to California, the 31st state. Section active.');
+      stateScore = stateScore ?? 80;
+      challengeRoot.querySelectorAll('[data-state-clue]').forEach(button => {
+        button.disabled = true;
+      });
+      const scoreDisplay = challengeRoot.querySelector('#stateScore');
+      if (scoreDisplay) scoreDisplay.textContent = `${stateScore} points`;
+      const resultScore = challengeRoot.querySelector('#stateResultScore');
+      if (resultScore) {
+        resultScore.textContent = `Score earned: ${stateScore} points`;
+        resultScore.removeAttribute('hidden');
+      }
+      solveMission('state', `The clues point to California, the 31st state. Score earned: ${stateScore} points.`);
     } else {
       setFeedback('Good clue. Keep building the evidence file.');
     }

@@ -564,10 +564,37 @@ h3 {
   text-align: center;
 }
 
+.state-evidence-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.state-evidence-header h3 {
+  margin: 0;
+}
+
 .clue-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 10px;
+}
+
+.choice-button.ruled-out,
+.choice-button:disabled:not(.selected) {
+  color: rgba(23, 50, 77, 0.55);
+  background: #f4f0e8;
+  box-shadow: none;
+  opacity: 1;
+}
+
+.choice-button.ruled-out {
+  text-decoration: line-through;
+  text-decoration-thickness: 3px;
+  text-decoration-color: #8e640f;
 }
 
 .clue-list {
@@ -668,6 +695,12 @@ h3 {
   color: var(--teal-dark);
   font-weight: 900;
   line-height: 1.4;
+}
+
+.state-score-line {
+  margin: 0;
+  color: #8e640f;
+  font-weight: 900;
 }
 
 .president-case {
