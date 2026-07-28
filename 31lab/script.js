@@ -117,6 +117,7 @@ const closeBadgeButton = document.getElementById('closeBadgeButton');
 const scoreCount = document.getElementById('scoreCount');
 
 const scoreStorageKey = 'the31LabScores';
+const calendarCorrectMonths = ['January', 'March', 'May', 'July', 'August', 'October', 'December'];
 const netherlandsQuestions = [
   {
     prompt: 'Amsterdam is the capital of the Netherlands.',
@@ -136,6 +137,7 @@ let activeMission = null;
 let romanState = createRomanState();
 let romanDrag = null;
 let primeState = createPrimeState();
+let calendarState = createCalendarState();
 let phoneState = createPhoneState();
 let make31WrongChecks = 0;
 let make31Score = null;
@@ -268,6 +270,44 @@ function phoneStateForStorage() {
   return { ...phoneState, isReplay: false };
 }
 
+function createCalendarState(saved = {}) {
+  const selectedMonths = Array.isArray(saved.selectedMonths) ? saved.selectedMonths.filter(month => typeof month === 'string') : [];
+  const correctSelections = Array.isArray(saved.correctSelections)
+    ? saved.correctSelections.filter(month => calendarCorrectMonths.includes(month))
+    : selectedMonths.filter(month => calendarCorrectMonths.includes(month));
+  const incorrectSelections = Array.isArray(saved.incorrectSelections)
+    ? saved.incorrectSelections.filter(month => !calendarCorrectMonths.includes(month))
+    : selectedMonths.filter(month => !calendarCorrectMonths.includes(month));
+  const selectionCount = Math.min(7, correctSelections.length + incorrectSelections.length);
+  return {
+    selectedMonths: [...new Set([...correctSelections, ...incorrectSelections])].slice(0, 7),
+    correctSelections: [...new Set(correctSelections)].slice(0, 7),
+    incorrectSelections: [...new Set(incorrectSelections)].slice(0, 7),
+    selectionsRemaining: Math.max(0, 7 - selectionCount),
+    missionPoints: Number.isFinite(Number(saved.missionPoints)) ? Math.min(91, Number(saved.missionPoints)) : correctSelections.length * 13,
+    isCompleted: Boolean(saved.isCompleted),
+    hasAwardedPoints: Boolean(saved.hasAwardedPoints),
+    isReplay: Boolean(saved.isReplay)
+  };
+}
+
+function calendarStateForStorage() {
+  if (calendarState.isReplay && calendarState.hasAwardedPoints) {
+    const savedPoints = savedMissionScore('calendar') || calendarState.missionPoints;
+    const correctCount = Math.min(7, Math.floor(savedPoints / 13));
+    return createCalendarState({
+      selectedMonths: calendarCorrectMonths.slice(0, correctCount),
+      correctSelections: calendarCorrectMonths.slice(0, correctCount),
+      incorrectSelections: Array.from({ length: 7 - correctCount }, (_, index) => `Saved incorrect ${index + 1}`),
+      selectionsRemaining: 0,
+      missionPoints: savedPoints,
+      isCompleted: true,
+      hasAwardedPoints: true
+    });
+  }
+  return { ...calendarState, isReplay: false };
+}
+
 function loadScoreState() {
   try {
     const saved = JSON.parse(localStorage.getItem(scoreStorageKey) || '{}');
@@ -276,6 +316,7 @@ function loadScoreState() {
       : {};
     primeState = createPrimeState(saved.prime);
     romanState = createRomanState(saved.roman);
+    calendarState = createCalendarState(saved.calendar);
     phoneState = createPhoneState(saved.phone);
     if (primeState.hasAwardedPoints && !missionScores.prime) {
       missionScores.prime = {
@@ -296,6 +337,25 @@ function loadScoreState() {
         submittedAttempts: submittedAttemptsFromScore(savedPoints),
         currentPossibleScore: savedPoints,
         pointsEarned: savedPoints,
+        isCompleted: true,
+        hasAwardedPoints: true
+      });
+    }
+    if (calendarState.hasAwardedPoints && !missionScores.calendar) {
+      missionScores.calendar = {
+        pointsEarned: calendarState.missionPoints,
+        hasAwardedPoints: true
+      };
+    }
+    if (!calendarState.hasAwardedPoints && missionScores.calendar?.hasAwardedPoints) {
+      const savedPoints = Number(missionScores.calendar.pointsEarned || 0);
+      const correctCount = Math.min(7, Math.floor(savedPoints / 13));
+      calendarState = createCalendarState({
+        selectedMonths: calendarCorrectMonths.slice(0, correctCount),
+        correctSelections: calendarCorrectMonths.slice(0, correctCount),
+        incorrectSelections: Array.from({ length: 7 - correctCount }, (_, index) => `Saved incorrect ${index + 1}`),
+        selectionsRemaining: 0,
+        missionPoints: savedPoints,
         isCompleted: true,
         hasAwardedPoints: true
       });
@@ -321,6 +381,7 @@ function loadScoreState() {
     }
     if (primeState.isCompleted) solved.add('prime');
     if (romanState.isCompleted) solved.add('roman');
+    if (calendarState.isCompleted) solved.add('calendar');
     if (phoneState.isCompleted) solved.add('phone');
     Object.entries(missionScores).forEach(([missionId, score]) => {
       if (score?.hasAwardedPoints) solved.add(missionId);
@@ -328,6 +389,7 @@ function loadScoreState() {
   } catch {
     primeState = createPrimeState();
     romanState = createRomanState();
+    calendarState = createCalendarState();
     phoneState = createPhoneState();
     missionScores = {};
   }
@@ -338,6 +400,7 @@ function saveScoreState() {
     localStorage.setItem(scoreStorageKey, JSON.stringify({
       prime: primeStateForStorage(),
       roman: romanStateForStorage(),
+      calendar: calendarStateForStorage(),
       phone: phoneStateForStorage(),
       missionScores
     }));
@@ -549,13 +612,103 @@ function renderMake31(mission) {
 }
 
 function renderCalendar(mission) {
-  challengeShell(mission, 'Tap the seven months that contain 31 days. Incorrect months bounce back.', `
+  const savedScore = savedMissionScore('calendar');
+  const isReplay = calendarState.isCompleted;
+  if (isReplay) {
+    calendarState = {
+      selectedMonths: [],
+      correctSelections: [],
+      incorrectSelections: [],
+      selectionsRemaining: 7,
+      missionPoints: 0,
+      isCompleted: false,
+      hasAwardedPoints: true,
+      isReplay: true
+    };
+  }
+  const isLocked = calendarState.isCompleted && !calendarState.isReplay;
+  const scoreLabel = calendarState.isReplay ? 'Practice score' : isLocked ? 'Score earned' : 'Mission score';
+  const displayedScore = isLocked && hasAwardedScore('calendar') ? savedScore : calendarState.missionPoints;
+  challengeShell(mission, 'Choose exactly seven months. Each pick counts right away, and each correct 31-day month earns 13 points.', `
     <div class="tool-card">
+      <div class="calendar-status-row">
+        <div class="total-display" id="calendarRemaining">Selections Remaining: ${calendarState.selectionsRemaining}</div>
+        <div class="total-display" id="calendarScore">${scoreLabel}: ${displayedScore} / 91 points</div>
+      </div>
+      ${calendarState.isReplay ? `<p class="machine-score-line">Practice replay. Your first Calendar Hunt score was ${savedScore} points, and no additional points will be awarded.</p>` : ''}
       <div class="button-grid">
-        ${['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].map(month => `<button class="month-button" type="button" data-month="${month}">${month}</button>`).join('')}
+        ${['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].map(month => {
+          const isCorrectSelection = calendarState.correctSelections.includes(month);
+          const isIncorrectSelection = calendarState.incorrectSelections.includes(month);
+          const isDisabled = isLocked || calendarState.selectedMonths.includes(month);
+          return `<button class="month-button ${isCorrectSelection ? 'selected' : ''} ${isIncorrectSelection ? 'attempted' : ''}" type="button" data-month="${month}" ${isDisabled ? 'disabled' : ''}>${month}</button>`;
+        }).join('')}
       </div>
     </div>
+    <div class="calendar-results" id="calendarResults" ${calendarState.isCompleted ? '' : 'hidden'}>
+      ${calendarState.isCompleted ? renderCalendarResults() : ''}
+    </div>
   `);
+}
+
+function renderCalendarResults() {
+  const correctCount = calendarState.correctSelections.length;
+  const incorrectCount = calendarState.incorrectSelections.length;
+  const savedScore = hasAwardedScore('calendar') ? savedMissionScore('calendar') : calendarState.missionPoints;
+  const mainMessage = calendarState.isReplay
+    ? `Practice complete. Your saved Calendar Hunt score remains ${savedScore} points.`
+    : correctCount === 7
+      ? 'Calendar confirmed! You found all seven months with 31 days and earned 91 points.'
+      : `Calendar hunt complete! You found ${correctCount} of the seven months and earned ${calendarState.missionPoints} points.`;
+  return `
+    <h3>${mainMessage}</h3>
+    <p>Correct months selected: ${correctCount}</p>
+    <p>Incorrect months selected: ${incorrectCount}</p>
+    <p>Final points earned: ${calendarState.isReplay ? calendarState.missionPoints : savedScore} out of 91</p>
+    <p><strong>Correct list:</strong> January, March, May, July, August, October, and December</p>
+  `;
+}
+
+function updateCalendarStatus() {
+  const remaining = challengeRoot.querySelector('#calendarRemaining');
+  const score = challengeRoot.querySelector('#calendarScore');
+  if (remaining) remaining.textContent = `Selections Remaining: ${calendarState.selectionsRemaining}`;
+  if (score) {
+    const label = calendarState.isReplay ? 'Practice score' : calendarState.isCompleted ? 'Score earned' : 'Mission score';
+    const displayedScore = calendarState.isCompleted && !calendarState.isReplay && hasAwardedScore('calendar')
+      ? savedMissionScore('calendar')
+      : calendarState.missionPoints;
+    score.textContent = `${label}: ${displayedScore} / 91 points`;
+  }
+}
+
+function finishCalendarHunt() {
+  calendarState.isCompleted = true;
+  challengeRoot.querySelectorAll('[data-month]').forEach(button => {
+    button.disabled = true;
+  });
+  if (!calendarState.isReplay && !hasAwardedScore('calendar')) {
+    const awardedPoints = awardMissionScore('calendar', Math.min(91, calendarState.missionPoints));
+    calendarState.missionPoints = awardedPoints;
+    calendarState.hasAwardedPoints = true;
+    saveScoreState();
+  } else if (!calendarState.isReplay) {
+    calendarState.missionPoints = savedMissionScore('calendar');
+    calendarState.hasAwardedPoints = true;
+    saveScoreState();
+  }
+  const results = challengeRoot.querySelector('#calendarResults');
+  if (results) {
+    results.innerHTML = renderCalendarResults();
+    results.removeAttribute('hidden');
+  }
+  updateCalendarStatus();
+  const message = calendarState.isReplay
+    ? `Practice complete. Your saved Calendar Hunt score remains ${savedMissionScore('calendar')} points.`
+    : calendarState.correctSelections.length === 7
+      ? 'Calendar confirmed! You found all seven months with 31 days and earned 91 points.'
+      : `Calendar hunt complete! You found ${calendarState.correctSelections.length} of the seven months and earned ${calendarState.missionPoints} points.`;
+  solveMission('calendar', message);
 }
 
 function renderHalloween(mission) {
@@ -1110,18 +1263,31 @@ challengeRoot.addEventListener('click', event => {
 
   const monthButton = event.target.closest('[data-month]');
   if (monthButton) {
-    const correctMonths = ['January', 'March', 'May', 'July', 'August', 'October', 'December'];
-    if (!correctMonths.includes(monthButton.dataset.month)) {
-      monthButton.classList.add('wrong');
-      setTimeout(() => monthButton.classList.remove('wrong'), 320);
-      monthButton.classList.remove('selected');
-      setFeedback('That month does not have 31 days. It bounced back.');
-    } else {
+    const month = monthButton.dataset.month;
+    if (monthButton.disabled || calendarState.selectedMonths.includes(month) || calendarState.selectionsRemaining <= 0) return;
+    const isCorrectMonth = calendarCorrectMonths.includes(month);
+    calendarState.selectedMonths.push(month);
+    calendarState.selectionsRemaining = Math.max(0, 7 - calendarState.selectedMonths.length);
+    if (isCorrectMonth) {
+      calendarState.correctSelections.push(month);
+      calendarState.missionPoints = Math.min(91, calendarState.missionPoints + 13);
       monthButton.classList.add('selected');
-      const selected = [...challengeRoot.querySelectorAll('[data-month].selected')].map(button => button.dataset.month);
-      if (correctMonths.every(month => selected.includes(month))) {
-        solveMission('calendar', 'Seven 31-day months found. Section active.');
-      }
+      monthButton.disabled = true;
+      setFeedback('Correct! That month has 31 days. You earned 13 points.', true);
+    } else {
+      calendarState.incorrectSelections.push(month);
+      monthButton.classList.add('wrong');
+      setTimeout(() => {
+        monthButton.classList.remove('wrong');
+        monthButton.classList.add('attempted');
+        monthButton.disabled = true;
+      }, 320);
+      setFeedback('That month does not have 31 days. No points were earned for that selection.');
+    }
+    updateCalendarStatus();
+    if (!calendarState.isReplay && !calendarState.isCompleted) saveScoreState();
+    if (calendarState.selectionsRemaining === 0) {
+      finishCalendarHunt();
     }
   }
 
