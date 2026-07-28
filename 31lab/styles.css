@@ -428,6 +428,60 @@ h3 {
   color: var(--teal-dark);
 }
 
+.phone-console,
+.netherlands-panel,
+.netherlands-question,
+.phone-results {
+  display: grid;
+  gap: 14px;
+}
+
+.phone-feedback {
+  min-height: 24px;
+  margin: 0;
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.phone-feedback.success {
+  color: var(--teal-dark);
+}
+
+.netherlands-header,
+.phone-action-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.netherlands-header h3,
+.phone-results h3 {
+  margin: 0;
+  color: var(--navy);
+}
+
+.netherlands-question > p,
+.phone-results p {
+  margin: 0;
+  color: var(--ink);
+  font-size: 1.2rem;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.true-false-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(110px, 1fr));
+  gap: 10px;
+}
+
+.true-false-button {
+  min-height: 60px;
+  font-size: 1.15rem;
+}
+
 .switch-row {
   display: grid;
   grid-template-columns: repeat(5, minmax(48px, 1fr));
