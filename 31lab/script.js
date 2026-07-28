@@ -117,11 +117,26 @@ const closeBadgeButton = document.getElementById('closeBadgeButton');
 const scoreCount = document.getElementById('scoreCount');
 
 const scoreStorageKey = 'the31LabScores';
+const netherlandsQuestions = [
+  {
+    prompt: 'Amsterdam is the capital of the Netherlands.',
+    answer: true
+  },
+  {
+    prompt: 'The Netherlands is located in South America.',
+    answer: false
+  },
+  {
+    prompt: 'Bicycles are a popular form of transportation in the Netherlands.',
+    answer: true
+  }
+];
 
 let activeMission = null;
 let romanState = createRomanState();
 let romanDrag = null;
 let primeState = createPrimeState();
+let phoneState = createPhoneState();
 let make31WrongChecks = 0;
 let make31Score = null;
 let stateScore = null;
@@ -212,6 +227,47 @@ function romanStateForStorage() {
   return { ...romanState, isReplay: false };
 }
 
+function createPhoneState(saved = {}) {
+  const answers = Array.isArray(saved.answers)
+    ? netherlandsQuestions.map((question, index) => {
+      const savedAnswer = saved.answers[index] || {};
+      const selectedAnswer = typeof savedAnswer.selectedAnswer === 'boolean' ? savedAnswer.selectedAnswer : null;
+      const isChecked = Boolean(savedAnswer.isChecked);
+      const isCorrect = isChecked && selectedAnswer === question.answer;
+      return {
+        selectedAnswer,
+        isChecked,
+        isCorrect,
+        pointsEarned: isChecked && isCorrect ? 20 : 0
+      };
+    })
+    : netherlandsQuestions.map(() => ({
+      selectedAnswer: null,
+      isChecked: false,
+      isCorrect: false,
+      pointsEarned: 0
+    }));
+  const answeredCount = answers.filter(answer => answer.isChecked).length;
+  return {
+    dialed: typeof saved.dialed === 'string' ? saved.dialed.slice(0, 3) : '',
+    callConnected: Boolean(saved.callConnected),
+    currentQuestionIndex: Math.min(
+      netherlandsQuestions.length - 1,
+      Math.max(0, Number.isFinite(Number(saved.currentQuestionIndex)) ? Number(saved.currentQuestionIndex) : answeredCount)
+    ),
+    answers,
+    pointsEarned: answers.reduce((sum, answer) => sum + answer.pointsEarned, 0),
+    correctCount: answers.filter(answer => answer.isCorrect).length,
+    isCompleted: Boolean(saved.isCompleted),
+    hasAwardedPoints: Boolean(saved.hasAwardedPoints),
+    isReplay: Boolean(saved.isReplay)
+  };
+}
+
+function phoneStateForStorage() {
+  return { ...phoneState, isReplay: false };
+}
+
 function loadScoreState() {
   try {
     const saved = JSON.parse(localStorage.getItem(scoreStorageKey) || '{}');
@@ -220,6 +276,7 @@ function loadScoreState() {
       : {};
     primeState = createPrimeState(saved.prime);
     romanState = createRomanState(saved.roman);
+    phoneState = createPhoneState(saved.phone);
     if (primeState.hasAwardedPoints && !missionScores.prime) {
       missionScores.prime = {
         pointsEarned: primeState.pointsEarned,
@@ -243,14 +300,35 @@ function loadScoreState() {
         hasAwardedPoints: true
       });
     }
+    if (phoneState.hasAwardedPoints && !missionScores.phone) {
+      missionScores.phone = {
+        pointsEarned: phoneState.pointsEarned,
+        hasAwardedPoints: true
+      };
+    }
+    if (!phoneState.hasAwardedPoints && missionScores.phone?.hasAwardedPoints) {
+      const savedPoints = Number(missionScores.phone.pointsEarned || 0);
+      phoneState = createPhoneState({
+        callConnected: true,
+        answers: netherlandsQuestions.map((question, index) => ({
+          selectedAnswer: index < Math.round(savedPoints / 20) ? question.answer : !question.answer,
+          isChecked: true
+        })),
+        currentQuestionIndex: netherlandsQuestions.length - 1,
+        isCompleted: true,
+        hasAwardedPoints: true
+      });
+    }
     if (primeState.isCompleted) solved.add('prime');
     if (romanState.isCompleted) solved.add('roman');
+    if (phoneState.isCompleted) solved.add('phone');
     Object.entries(missionScores).forEach(([missionId, score]) => {
       if (score?.hasAwardedPoints) solved.add(missionId);
     });
   } catch {
     primeState = createPrimeState();
     romanState = createRomanState();
+    phoneState = createPhoneState();
     missionScores = {};
   }
 }
@@ -260,6 +338,7 @@ function saveScoreState() {
     localStorage.setItem(scoreStorageKey, JSON.stringify({
       prime: primeStateForStorage(),
       roman: romanStateForStorage(),
+      phone: phoneStateForStorage(),
       missionScores
     }));
   } catch {
@@ -689,13 +768,102 @@ function renderPresident(mission, forceFresh = false) {
 }
 
 function renderPhone(mission) {
-  dialed = '';
+  if (phoneState.isCompleted && hasAwardedScore('phone')) {
+    phoneState = {
+      ...phoneState,
+      callConnected: true,
+      pointsEarned: savedMissionScore('phone'),
+      hasAwardedPoints: true
+    };
+  }
+  const keypadLocked = phoneState.callConnected || phoneState.isCompleted;
   challengeShell(mission, 'Use the pretend telephone keypad to dial the country code +31.', `
-    <div class="dial-display" id="dialDisplay">Dial:</div>
-    <div class="keypad">
-      ${['+', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'Clear'].map(key => `<button class="key-button" type="button" data-key="${key}">${key}</button>`).join('')}
+    <div class="tool-card phone-console">
+      <div class="dial-display" id="dialDisplay">Dial: ${phoneState.dialed}</div>
+      <div class="keypad" ${keypadLocked ? 'hidden' : ''}>
+        ${['+', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'Clear'].map(key => `<button class="key-button" type="button" data-key="${key}">${key}</button>`).join('')}
+      </div>
+      <button class="primary-button" type="button" data-action="place-call" ${keypadLocked ? 'hidden' : ''}>Place Call</button>
+      <p class="phone-feedback" id="phoneCallFeedback" aria-live="polite">${phoneState.callConnected ? 'The call is going to the Netherlands!' : ''}</p>
     </div>
+    <section class="tool-card netherlands-panel" id="netherlandsPanel" ${phoneState.callConnected ? '' : 'hidden'}>
+      ${renderNetherlandsConnection()}
+    </section>
   `);
+}
+
+function renderNetherlandsConnection() {
+  if (phoneState.isCompleted) {
+    return renderPhoneFinalResults();
+  }
+  const index = phoneState.currentQuestionIndex;
+  const question = netherlandsQuestions[index];
+  const answer = phoneState.answers[index];
+  const checked = answer.isChecked;
+  const feedback = checked
+    ? answer.isCorrect
+      ? 'Correct! You earned 20 points.'
+      : `Not quite. The correct answer is ${question.answer ? 'True' : 'False'}.`
+    : '';
+  return `
+    <div class="netherlands-header">
+      <div>
+        <h3>Netherlands Connection</h3>
+        <p class="mission-copy">Question ${index + 1} of ${netherlandsQuestions.length}</p>
+      </div>
+      <div class="case-scoreboard" aria-live="polite">
+        <span>Mission score</span>
+        <strong id="phoneScore">${phoneState.pointsEarned} / 60</strong>
+      </div>
+    </div>
+    <div class="netherlands-question">
+      <p>${question.prompt}</p>
+      <div class="true-false-row">
+        ${[true, false].map(value => `
+          <button class="choice-button true-false-button ${answer.selectedAnswer === value ? 'selected' : ''}" type="button" data-phone-answer="${value}" ${checked ? 'disabled' : ''}>
+            ${value ? 'True' : 'False'}
+          </button>
+        `).join('')}
+      </div>
+      <div class="phone-action-row">
+        <button class="primary-button" type="button" data-action="check-phone-answer" ${checked || typeof answer.selectedAnswer !== 'boolean' ? 'disabled' : ''}>Check Answer</button>
+        ${checked && index < netherlandsQuestions.length - 1 ? '<button class="ghost-button" type="button" data-action="next-phone-question">Next Question</button>' : ''}
+      </div>
+      <p class="phone-feedback ${checked && answer.isCorrect ? 'success' : ''}" id="phoneQuestionFeedback" aria-live="polite">${feedback}</p>
+      ${checked ? `<p class="machine-score-line">Question points: ${answer.pointsEarned}</p>` : ''}
+    </div>
+  `;
+}
+
+function renderPhoneFinalResults() {
+  const savedScore = hasAwardedScore('phone') ? savedMissionScore('phone') : phoneState.pointsEarned;
+  return `
+    <div class="netherlands-header">
+      <div>
+        <h3>Netherlands Connection</h3>
+        <p class="mission-copy">Mission results</p>
+      </div>
+      <div class="case-scoreboard" aria-live="polite">
+        <span>Score earned</span>
+        <strong>${savedScore} / 60</strong>
+      </div>
+    </div>
+    <div class="phone-results">
+      <h3>International Call Complete</h3>
+      <p>You earned ${savedScore} out of 60 points.</p>
+      <p>You answered ${phoneState.correctCount} out of 3 questions correctly.</p>
+      <button class="primary-button" type="button" data-action="continue-phone">Continue Mission</button>
+    </div>
+  `;
+}
+
+function updateNetherlandsPanel() {
+  const panel = challengeRoot.querySelector('#netherlandsPanel');
+  if (!panel) return;
+  panel.hidden = !phoneState.callConnected;
+  if (phoneState.callConnected) {
+    panel.innerHTML = renderNetherlandsConnection();
+  }
 }
 
 function renderBunyan(mission) {
@@ -864,8 +1032,30 @@ function updateGallium() {
 let dialed = '';
 
 function updateDialDisplay() {
-  challengeRoot.querySelector('#dialDisplay').textContent = `Dial: ${dialed}`;
-  if (dialed === '+31') solveMission('phone', 'The call is going to the Netherlands. Section active.');
+  const display = challengeRoot.querySelector('#dialDisplay');
+  if (display) display.textContent = `Dial: ${phoneState.dialed}`;
+}
+
+function updatePhoneCallFeedback(message, success = false) {
+  const feedback = challengeRoot.querySelector('#phoneCallFeedback');
+  if (!feedback) return;
+  feedback.textContent = message;
+  feedback.classList.toggle('success', success);
+}
+
+function completePhoneMission() {
+  phoneState.pointsEarned = phoneState.answers.reduce((sum, answer) => sum + answer.pointsEarned, 0);
+  phoneState.correctCount = phoneState.answers.filter(answer => answer.isCorrect).length;
+  phoneState.isCompleted = true;
+  phoneState.hasAwardedPoints = true;
+  const earnedScore = awardMissionScore('phone', phoneState.pointsEarned);
+  phoneState.pointsEarned = earnedScore;
+  saveScoreState();
+  if (!solved.has('phone')) {
+    solved.add('phone');
+    renderMissionRing();
+    updateProgress();
+  }
 }
 
 let stack = [];
@@ -1018,12 +1208,29 @@ challengeRoot.addEventListener('click', event => {
 
   const keyButton = event.target.closest('[data-key]');
   if (keyButton) {
+    if (phoneState.callConnected || phoneState.isCompleted) return;
     if (keyButton.dataset.key === 'Clear') {
-      dialed = '';
-    } else if (dialed.length < 3) {
-      dialed += keyButton.dataset.key;
+      phoneState.dialed = '';
+    } else if (phoneState.dialed.length < 3) {
+      phoneState.dialed += keyButton.dataset.key;
     }
     updateDialDisplay();
+    updatePhoneCallFeedback('');
+    saveScoreState();
+  }
+
+  const phoneAnswer = event.target.closest('[data-phone-answer]');
+  if (phoneAnswer) {
+    const index = phoneState.currentQuestionIndex;
+    const answer = phoneState.answers[index];
+    if (answer.isChecked || phoneState.isCompleted) return;
+    answer.selectedAnswer = phoneAnswer.dataset.phoneAnswer === 'true';
+    challengeRoot.querySelectorAll('[data-phone-answer]').forEach(button => {
+      button.classList.toggle('selected', button === phoneAnswer);
+    });
+    const checkButton = challengeRoot.querySelector('[data-action="check-phone-answer"]');
+    if (checkButton) checkButton.disabled = false;
+    saveScoreState();
   }
 
   const objectButton = event.target.closest('[data-object]');
@@ -1046,6 +1253,48 @@ challengeRoot.addEventListener('click', event => {
 
   const action = event.target.closest('[data-action]')?.dataset.action;
   if (!action) return;
+
+  if (action === 'place-call') {
+    if (phoneState.dialed !== '+31') {
+      updatePhoneCallFeedback('That call did not connect. Check the country code and try again.');
+      return;
+    }
+    phoneState.callConnected = true;
+    updatePhoneCallFeedback('The call is going to the Netherlands!', true);
+    challengeRoot.querySelector('.keypad')?.setAttribute('hidden', '');
+    challengeRoot.querySelector('[data-action="place-call"]')?.setAttribute('hidden', '');
+    updateNetherlandsPanel();
+    saveScoreState();
+  }
+
+  if (action === 'check-phone-answer') {
+    const index = phoneState.currentQuestionIndex;
+    const question = netherlandsQuestions[index];
+    const answer = phoneState.answers[index];
+    if (answer.isChecked || typeof answer.selectedAnswer !== 'boolean') return;
+    answer.isChecked = true;
+    answer.isCorrect = answer.selectedAnswer === question.answer;
+    answer.pointsEarned = answer.isCorrect ? 20 : 0;
+    phoneState.pointsEarned = phoneState.answers.reduce((sum, answer) => sum + answer.pointsEarned, 0);
+    phoneState.correctCount = phoneState.answers.filter(answer => answer.isCorrect).length;
+    if (index === netherlandsQuestions.length - 1) {
+      completePhoneMission();
+    } else {
+      saveScoreState();
+    }
+    updateNetherlandsPanel();
+  }
+
+  if (action === 'next-phone-question') {
+    if (!phoneState.answers[phoneState.currentQuestionIndex].isChecked) return;
+    phoneState.currentQuestionIndex = Math.min(netherlandsQuestions.length - 1, phoneState.currentQuestionIndex + 1);
+    updateNetherlandsPanel();
+    saveScoreState();
+  }
+
+  if (action === 'continue-phone') {
+    updateNetherlandsPanel();
+  }
 
   if (action === 'check-prime') {
     const selected = [...challengeRoot.querySelectorAll('[data-divisor].selected')].map(button => Number(button.dataset.divisor)).sort((a, b) => a - b);
