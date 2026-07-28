@@ -123,6 +123,12 @@ h3 {
   font-weight: 800;
 }
 
+.score-count {
+  display: block;
+  margin-top: 10px;
+  color: var(--teal-dark);
+}
+
 .progress-track {
   height: 16px;
   margin-top: 12px;
@@ -474,6 +480,13 @@ h3 {
 }
 
 .make31-status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 10px;
+}
+
+.prime-score-row {
   display: flex;
   flex-wrap: wrap;
   align-items: stretch;
