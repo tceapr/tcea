@@ -114,18 +114,71 @@ const sortRoot = document.getElementById('sortRoot');
 const sortFeedback = document.getElementById('sortFeedback');
 const badgeDialog = document.getElementById('badgeDialog');
 const closeBadgeButton = document.getElementById('closeBadgeButton');
+const scoreCount = document.getElementById('scoreCount');
+
+const scoreStorageKey = 'the31LabScores';
 
 let activeMission = null;
 let selectedRomanTile = null;
 let romanSlots = ['', '', '', ''];
+let primeState = createPrimeState();
 let make31WrongChecks = 0;
 let make31Score = null;
 let stateScore = null;
 const stateRuledOut = new Set();
 let presidentScore = null;
 
+loadScoreState();
+
 function missionById(id) {
   return missions.find(mission => mission.id === id);
+}
+
+function createPrimeState(saved = {}) {
+  const submittedAttempts = Number(saved.submittedAttempts || 0);
+  return {
+    selectedNumbers: Array.isArray(saved.selectedNumbers) ? saved.selectedNumbers : [],
+    submittedAttempts,
+    currentPossibleScore: Number.isFinite(Number(saved.currentPossibleScore))
+      ? Number(saved.currentPossibleScore)
+      : primePossibleScore(submittedAttempts),
+    pointsEarned: Number(saved.pointsEarned || 0),
+    isCompleted: Boolean(saved.isCompleted),
+    hasAwardedPoints: Boolean(saved.hasAwardedPoints),
+    isReplay: Boolean(saved.isReplay)
+  };
+}
+
+function primePossibleScore(submittedAttempts) {
+  if (submittedAttempts === 0) return 31;
+  if (submittedAttempts === 1) return 13;
+  return 0;
+}
+
+function loadScoreState() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(scoreStorageKey) || '{}');
+    primeState = createPrimeState(saved.prime);
+    if (primeState.isCompleted) solved.add('prime');
+  } catch {
+    primeState = createPrimeState();
+  }
+}
+
+function saveScoreState() {
+  try {
+    localStorage.setItem(scoreStorageKey, JSON.stringify({
+      prime: { ...primeState, isReplay: false }
+    }));
+  } catch {
+    // Local storage can be unavailable in some restricted browser modes.
+  }
+}
+
+function updateScoreCount() {
+  if (!scoreCount) return;
+  const total = primeState.hasAwardedPoints ? primeState.pointsEarned : 0;
+  scoreCount.textContent = `Lab score: ${total} points`;
 }
 
 function renderMissionRing() {
@@ -200,13 +253,29 @@ function renderChallenge(id) {
 }
 
 function renderPrime(mission) {
+  const isReplay = primeState.isCompleted;
+  if (isReplay) {
+    primeState = {
+      ...primeState,
+      selectedNumbers: [],
+      submittedAttempts: 0,
+      currentPossibleScore: 31,
+      isReplay: true
+    };
+  }
   challengeShell(mission, 'Select every number that divides evenly into 31. The scanner only powers up when every divisor is marked.', `
     <div class="tool-card">
       <div class="button-grid">
-        ${[1, 2, 3, 4, 5, 6, 31].map(number => `<button class="choice-button" type="button" data-divisor="${number}">${number}</button>`).join('')}
+        ${[1, 2, 3, 4, 5, 6, 31].map(number => `<button class="choice-button ${primeState.selectedNumbers.includes(number) ? 'selected' : ''}" type="button" data-divisor="${number}">${number}</button>`).join('')}
       </div>
     </div>
-    <button class="primary-button" type="button" data-action="check-prime">Scan divisors</button>
+    <div class="prime-score-row">
+      <div class="total-display" id="primePossibleScore">${isReplay ? 'Practice score' : 'Possible score'}: ${primeState.currentPossibleScore} points</div>
+      <div class="total-display" id="primeAttemptCount">Submitted attempts: ${primeState.submittedAttempts}</div>
+    </div>
+    ${isReplay ? `<p class="machine-score-line">Practice replay. Your first score was ${primeState.pointsEarned} points, and no additional points will be awarded.</p>` : ''}
+    <button class="primary-button" type="button" data-action="check-prime">Submit Your Divisors</button>
+    <p class="machine-score-line" id="primeResultScore" hidden></p>
   `);
 }
 
@@ -602,7 +671,13 @@ missionRing.addEventListener('click', event => {
 
 challengeRoot.addEventListener('click', event => {
   const divisor = event.target.closest('[data-divisor]');
-  if (divisor) divisor.classList.toggle('selected');
+  if (divisor) {
+    divisor.classList.toggle('selected');
+    primeState.selectedNumbers = [...challengeRoot.querySelectorAll('[data-divisor].selected')]
+      .map(button => Number(button.dataset.divisor))
+      .sort((a, b) => a - b);
+    if (!primeState.isReplay && !primeState.isCompleted) saveScoreState();
+  }
 
   const switchButton = event.target.closest('[data-switch]');
   if (switchButton) {
@@ -763,9 +838,53 @@ challengeRoot.addEventListener('click', event => {
 
   if (action === 'check-prime') {
     const selected = [...challengeRoot.querySelectorAll('[data-divisor].selected')].map(button => Number(button.dataset.divisor)).sort((a, b) => a - b);
-    selected.length === 2 && selected[0] === 1 && selected[1] === 31
-      ? solveMission('prime', 'The scanner found only 1 and 31. Section active.')
-      : setFeedback('Not quite. A divisor must split 31 with no remainder.');
+    const isCorrect = selected.length === 2 && selected[0] === 1 && selected[1] === 31;
+    const possibleScoreDisplay = challengeRoot.querySelector('#primePossibleScore');
+    const attemptDisplay = challengeRoot.querySelector('#primeAttemptCount');
+    const resultScore = challengeRoot.querySelector('#primeResultScore');
+    if (isCorrect) {
+      const pointsForAttempt = primePossibleScore(primeState.submittedAttempts);
+      challengeRoot.querySelectorAll('[data-divisor]').forEach(button => {
+        button.disabled = true;
+      });
+      challengeRoot.querySelector('[data-action="check-prime"]')?.setAttribute('disabled', '');
+      if (primeState.isReplay || primeState.hasAwardedPoints) {
+        if (resultScore) {
+          resultScore.textContent = `Practice complete. Your saved Prime Scanner score remains ${primeState.pointsEarned} points.`;
+          resultScore.removeAttribute('hidden');
+        }
+        setFeedback('Scanner activated for practice. No additional points will be awarded.', true);
+        return;
+      }
+
+      primeState = {
+        selectedNumbers: selected,
+        submittedAttempts: primeState.submittedAttempts + 1,
+        currentPossibleScore: pointsForAttempt,
+        pointsEarned: pointsForAttempt,
+        isCompleted: true,
+        hasAwardedPoints: true,
+        isReplay: false
+      };
+      saveScoreState();
+      updateScoreCount();
+      if (possibleScoreDisplay) possibleScoreDisplay.textContent = `Score earned: ${pointsForAttempt} points`;
+      if (attemptDisplay) attemptDisplay.textContent = `Submitted attempts: ${primeState.submittedAttempts}`;
+      if (resultScore) {
+        resultScore.textContent = `Points earned: ${pointsForAttempt}`;
+        resultScore.removeAttribute('hidden');
+      }
+      solveMission('prime', 'Scanner activated! The only divisors of 31 are 1 and 31.');
+    } else {
+      primeState.submittedAttempts += 1;
+      primeState.currentPossibleScore = primePossibleScore(primeState.submittedAttempts);
+      primeState.selectedNumbers = [];
+      if (!primeState.isReplay && !primeState.isCompleted) saveScoreState();
+      challengeRoot.querySelectorAll('[data-divisor].selected').forEach(button => button.classList.remove('selected'));
+      if (possibleScoreDisplay) possibleScoreDisplay.textContent = `${primeState.isReplay ? 'Practice score' : 'Possible score'}: ${primeState.currentPossibleScore} points`;
+      if (attemptDisplay) attemptDisplay.textContent = `Submitted attempts: ${primeState.submittedAttempts}`;
+      setFeedback('That set does not include exactly all the divisors of 31. Try again.');
+    }
   }
 
   if (action === 'reset-roman') renderRoman(missionById('roman'));
@@ -938,3 +1057,4 @@ closeBadgeButton.addEventListener('click', () => badgeDialog.close());
 
 renderMissionRing();
 updateProgress();
+updateScoreCount();
