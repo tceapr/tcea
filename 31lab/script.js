@@ -73,7 +73,7 @@ const missions = [
   },
   {
     id: 'president',
-    title: 'Presidential Timeline Case',
+    title: 'The Mystery of President 31',
     symbol: 'H',
     category: 'History',
     fact: 'Herbert Hoover was the 31st U.S. president.'
@@ -364,31 +364,75 @@ function renderFlavor(mission) {
   `);
 }
 
-function renderPresident(mission) {
-  challengeShell(mission, 'Use the timeline clues to identify the president who belongs in the #31 slot.', `
-    <div class="tool-card">
-      <h3>Timeline window</h3>
-      <div class="president-timeline" aria-label="Presidents 29 through 33">
-        <div><strong>29</strong><span>Warren G. Harding</span></div>
-        <div><strong>30</strong><span>Calvin Coolidge</span></div>
-        <div class="mystery-slot"><strong>31</strong><span>?</span></div>
-        <div><strong>32</strong><span>Franklin D. Roosevelt</span></div>
-        <div><strong>33</strong><span>Harry S. Truman</span></div>
+function renderPresident(mission, forceFresh = false) {
+  const isSolved = !forceFresh && solved.has(mission.id);
+  const evidence = [
+    'He became president in 1929.',
+    'The Great Depression began during his presidency.',
+    'Before becoming president, he worked as an engineer and served as secretary of commerce.',
+    'He was the only U.S. president born in Iowa.'
+  ];
+  const candidates = ['Herbert Hoover', 'Woodrow Wilson', 'Theodore Roosevelt', 'Franklin D. Roosevelt'];
+  challengeShell(mission, 'A president is missing from the historical timeline. Open the evidence files, study the clues, and identify the 31st president of the United States.', `
+    <div class="president-case ${isSolved ? 'case-solved' : ''}">
+      <div class="case-timeline" aria-label="Presidential timeline with president 31 missing">
+        <div class="timeline-case-card">
+          <strong>29</strong>
+          <span>Warren G. Harding</span>
+        </div>
+        <div class="timeline-case-card">
+          <strong>30</strong>
+          <span>Calvin Coolidge</span>
+        </div>
+        <div class="timeline-case-card missing">
+          <span class="magnifier" aria-hidden="true"></span>
+          <strong>31</strong>
+          <span>MISSING</span>
+        </div>
+        <div class="timeline-case-card">
+          <strong>32</strong>
+          <span>Franklin D. Roosevelt</span>
+        </div>
       </div>
-    </div>
-    <div class="tool-card">
-      <h3>Clues</h3>
-      <div class="clue-list">
-        <span>He served after Calvin Coolidge.</span>
-        <span>Franklin D. Roosevelt came next.</span>
-        <span>The Great Depression began during his presidency.</span>
+
+      <div class="case-evidence-header">
+        <h3>Evidence files</h3>
+        <span id="presidentEvidenceCount">Evidence Found ${isSolved ? 4 : 0} of 4</span>
       </div>
-    </div>
-    <div class="tool-card">
-      <h3>Choose the missing president</h3>
-      <div class="button-grid">
-        ${['Warren G. Harding', 'Calvin Coolidge', 'Herbert Hoover', 'Franklin D. Roosevelt', 'Harry S. Truman'].map(name => `<button class="timeline-button" type="button" data-president-name="${name}">${name}</button>`).join('')}
+      <div class="evidence-folder-grid">
+        ${evidence.map((clue, index) => `
+          <button class="evidence-folder ${isSolved ? 'opened' : ''}" type="button" aria-expanded="${isSolved ? 'true' : 'false'}" data-president-evidence="${index}">
+            <span class="folder-tab">Evidence ${index + 1}</span>
+            <span class="folder-clue">${clue}</span>
+          </button>
+        `).join('')}
       </div>
+
+      <div class="suspect-section" ${isSolved ? '' : 'hidden'}>
+        <h3>Suspect cards</h3>
+        <div class="suspect-grid">
+          ${candidates.map(name => `
+            <button class="suspect-card ${isSolved && name === 'Herbert Hoover' ? 'selected' : ''}" type="button" data-president-candidate="${name}">
+              <span class="portrait" aria-hidden="true"><span></span></span>
+              <span>${name}</span>
+            </button>
+          `).join('')}
+        </div>
+        <button class="primary-button solve-case-button" type="button" data-action="solve-president" ${isSolved ? 'hidden' : ''}>Solve the Case</button>
+      </div>
+
+      <div class="case-result" ${isSolved ? '' : 'hidden'}>
+        <h3>Case Solved!</h3>
+        <p>Herbert Hoover was the 31st president of the United States. He served from 1929 to 1933.</p>
+        <p class="badge-line">Presidential Timeline Investigator Badge Earned</p>
+        <ul>
+          <li>He served between Calvin Coolidge and Franklin D. Roosevelt.</li>
+          <li>He became president in 1929.</li>
+          <li>The Great Depression began during his presidency.</li>
+        </ul>
+      </div>
+
+      <button class="ghost-button reset-case-button" type="button" data-action="reset-president">Reset Mission</button>
     </div>
   `);
 }
@@ -608,17 +652,25 @@ challengeRoot.addEventListener('click', event => {
     }
   }
 
-  const presidentButton = event.target.closest('[data-president-name]');
-  if (presidentButton) {
-    challengeRoot.querySelectorAll('[data-president-name]').forEach(button => button.classList.remove('selected'));
-    presidentButton.classList.add('selected');
-    if (presidentButton.dataset.presidentName === 'Herbert Hoover') {
-      const mysterySlot = challengeRoot.querySelector('.mystery-slot span');
-      if (mysterySlot) mysterySlot.textContent = 'Herbert Hoover';
-      solveMission('president', 'The #31 slot belongs to Herbert Hoover. Section active.');
+  const presidentEvidence = event.target.closest('[data-president-evidence]');
+  if (presidentEvidence) {
+    presidentEvidence.classList.add('opened');
+    presidentEvidence.setAttribute('aria-expanded', 'true');
+    const openedEvidence = challengeRoot.querySelectorAll('[data-president-evidence].opened').length;
+    const evidenceCount = challengeRoot.querySelector('#presidentEvidenceCount');
+    if (evidenceCount) evidenceCount.textContent = `Evidence Found ${openedEvidence} of 4`;
+    if (openedEvidence === 4) {
+      challengeRoot.querySelector('.suspect-section')?.removeAttribute('hidden');
+      setFeedback('All evidence files are open. Choose a suspect and solve the case.');
     } else {
-      setFeedback('Not that person. Use the presidents before and after #31.');
+      setFeedback('Evidence file opened. Keep investigating.');
     }
+  }
+
+  const presidentCandidate = event.target.closest('[data-president-candidate]');
+  if (presidentCandidate) {
+    challengeRoot.querySelectorAll('[data-president-candidate]').forEach(button => button.classList.remove('selected'));
+    presidentCandidate.classList.add('selected');
   }
 
   const keyButton = event.target.closest('[data-key]');
@@ -683,6 +735,22 @@ challengeRoot.addEventListener('click', event => {
       : setFeedback('Move your calendar marker to October 31 first.');
   }
 
+  if (action === 'solve-president') {
+    const selectedCandidate = challengeRoot.querySelector('[data-president-candidate].selected')?.dataset.presidentCandidate;
+    if (!selectedCandidate) {
+      setFeedback('Choose a suspect card before you solve the case.');
+      return;
+    }
+    if (selectedCandidate === 'Herbert Hoover') {
+      challengeRoot.querySelector('.president-case')?.classList.add('case-solved');
+      challengeRoot.querySelector('.case-result')?.removeAttribute('hidden');
+      challengeRoot.querySelector('.solve-case-button')?.setAttribute('hidden', '');
+      solveMission('president', 'Case solved. Herbert Hoover was president number 31. Badge earned.');
+    } else {
+      setFeedback('Not quite. Review the timeline and evidence, then try again.');
+    }
+  }
+
   if (action === 'check-gallium') {
     const value = Number(challengeRoot.querySelector('#temperatureSlider').value);
     const selected = [...challengeRoot.querySelectorAll('[data-gallium-item]:checked')].map(input => input.dataset.galliumItem).sort();
@@ -708,6 +776,11 @@ challengeRoot.addEventListener('click', event => {
     stack = [];
     updateStack();
     setFeedback('Stack reset.');
+  }
+
+  if (action === 'reset-president') {
+    renderPresident(missionById('president'), true);
+    setFeedback('Mission reset. Open the evidence files to replay the case.');
   }
 
   if (action === 'check-stack') {
