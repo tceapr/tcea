@@ -277,31 +277,32 @@ function renderHalloween(mission) {
 }
 
 function renderState(mission) {
-  challengeShell(mission, 'Build the evidence file for the 31st state, then choose the matching state on the map.', `
+  const isSolved = solved.has(mission.id);
+  const selectedClass = isSolved ? ' selected' : '';
+  challengeShell(mission, 'Choose the clues that point to the 31st state. When the evidence file is correct, the map will reveal the state.', `
     <div class="tool-card">
       <h3>Evidence file</h3>
       <div class="clue-grid">
-        <button class="choice-button" type="button" data-state-clue="coast" data-clue-value="west">West Coast</button>
+        <button class="choice-button${selectedClass}" type="button" data-state-clue="coast" data-clue-value="west">West Coast</button>
         <button class="choice-button" type="button" data-state-clue="coast" data-clue-value="east">East Coast</button>
-        <button class="choice-button" type="button" data-state-clue="event" data-clue-value="gold">Gold Rush</button>
+        <button class="choice-button${selectedClass}" type="button" data-state-clue="event" data-clue-value="gold">Gold Rush</button>
         <button class="choice-button" type="button" data-state-clue="event" data-clue-value="space">Space Coast</button>
-        <button class="choice-button" type="button" data-state-clue="capital" data-clue-value="sacramento">Sacramento</button>
+        <button class="choice-button${selectedClass}" type="button" data-state-clue="capital" data-clue-value="sacramento">Sacramento</button>
         <button class="choice-button" type="button" data-state-clue="capital" data-clue-value="austin">Austin</button>
-        <button class="choice-button" type="button" data-state-clue="date" data-clue-value="1850">Joined in 1850</button>
+        <button class="choice-button${selectedClass}" type="button" data-state-clue="date" data-clue-value="1850">Joined in 1850</button>
         <button class="choice-button" type="button" data-state-clue="date" data-clue-value="1959">Joined in 1959</button>
       </div>
     </div>
-    <div class="tool-card map-wrap">
-      <div class="map-board" aria-label="Simplified United States map with clickable state targets">
-        <div class="map-shape" aria-hidden="true"></div>
-        <button class="map-region northwest" type="button" data-state="not-ca">State B</button>
-        <button class="map-region ca" type="button" data-state="ca">State A</button>
-        <button class="map-region southwest" type="button" data-state="not-ca">State C</button>
-        <button class="map-region plains" type="button" data-state="not-ca">State D</button>
-        <button class="map-region midwest" type="button" data-state="not-ca">State E</button>
-        <button class="map-region southeast" type="button" data-state="not-ca">State F</button>
-        <button class="map-region northeast" type="button" data-state="not-ca">State G</button>
+    <div class="tool-card state-map-card${isSolved ? ' revealed' : ''}">
+      <div class="state-map-frame">
+        <img src="assets/state-map-west.png" alt="Western United States map with California highlighted in yellow">
+        <div class="state-map-lock" aria-hidden="${isSolved ? 'true' : 'false'}">
+          <span>Map locked</span>
+          <small>Build the evidence file.</small>
+        </div>
+        <div class="california-callout" aria-hidden="${isSolved ? 'false' : 'true'}">California</div>
       </div>
+      <p class="state-reveal" ${isSolved ? '' : 'hidden'}>The clues reveal California. It joined the United States in 1850 as the 31st state.</p>
     </div>
   `);
 }
@@ -572,35 +573,38 @@ challengeRoot.addEventListener('click', event => {
 
   const stateClue = event.target.closest('[data-state-clue]');
   if (stateClue) {
-    challengeRoot.querySelectorAll(`[data-state-clue="${stateClue.dataset.stateClue}"]`).forEach(button => button.classList.remove('selected'));
-    stateClue.classList.add('selected');
-  }
-
-  const mapRegion = event.target.closest('[data-state]');
-  if (mapRegion) {
     const requiredClues = {
       coast: 'west',
       event: 'gold',
       capital: 'sacramento',
       date: '1850'
     };
+    const group = stateClue.dataset.stateClue;
+    const isCorrect = requiredClues[group] === stateClue.dataset.clueValue;
+    if (!isCorrect) {
+      stateClue.classList.add('wrong');
+      setTimeout(() => stateClue.classList.remove('wrong'), 320);
+      setFeedback('That clue points to another place. Try a clue that fits the 31st state.');
+      return;
+    }
+
+    challengeRoot.querySelectorAll(`[data-state-clue="${group}"]`).forEach(button => button.classList.remove('selected'));
+    stateClue.classList.add('selected');
     const selectedClues = [...challengeRoot.querySelectorAll('[data-state-clue].selected')];
     const evidenceReady = Object.entries(requiredClues).every(([group, value]) => (
       selectedClues.some(button => button.dataset.stateClue === group && button.dataset.clueValue === value)
     ));
 
-    if (!evidenceReady) {
-      setFeedback('Choose the evidence that points to the 31st state first.');
-      return;
-    }
-
-    if (mapRegion.dataset.state === 'ca') {
-      mapRegion.classList.add('correct');
+    if (evidenceReady) {
+      challengeRoot.querySelector('.state-map-card')?.classList.add('revealed');
+      challengeRoot.querySelector('.state-reveal')?.removeAttribute('hidden');
+      const callout = challengeRoot.querySelector('.california-callout');
+      if (callout) callout.setAttribute('aria-hidden', 'false');
+      const lock = challengeRoot.querySelector('.state-map-lock');
+      if (lock) lock.setAttribute('aria-hidden', 'true');
       solveMission('state', 'The clues point to California, the 31st state. Section active.');
     } else {
-      mapRegion.classList.add('wrong');
-      setTimeout(() => mapRegion.classList.remove('wrong'), 320);
-      setFeedback('That state does not match all four clues. Check the west-coast target.');
+      setFeedback('Good clue. Keep building the evidence file.');
     }
   }
 

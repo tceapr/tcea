@@ -581,52 +581,90 @@ h3 {
   font-weight: 800;
 }
 
-.map-board {
+.state-map-card {
+  display: grid;
+  gap: 12px;
+}
+
+.state-map-frame {
   position: relative;
-  min-height: 330px;
-}
-
-.map-shape {
-  position: absolute;
-  inset: 8% 4% 5% 4%;
-  clip-path: polygon(11% 15%, 34% 20%, 46% 15%, 74% 22%, 92% 30%, 84% 48%, 95% 76%, 84% 88%, 67% 75%, 42% 78%, 28% 88%, 16% 67%, 6% 43%);
-  border: 1px solid rgba(23, 50, 77, 0.18);
+  overflow: hidden;
+  border: 1px solid rgba(23, 50, 77, 0.12);
   border-radius: 8px;
-  background:
-    linear-gradient(90deg, rgba(23, 50, 77, 0.1) 1px, transparent 1px),
-    linear-gradient(180deg, rgba(23, 50, 77, 0.1) 1px, transparent 1px),
-    #d8e5eb;
-  background-size: 44px 44px;
+  background: #edf3f6;
+  aspect-ratio: 4 / 3;
 }
 
-.map-region {
+.state-map-frame img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  filter: blur(8px) grayscale(0.55) opacity(0.58);
+  transform: scale(1.04);
+  transition: filter 240ms ease, transform 240ms ease;
+}
+
+.state-map-card.revealed .state-map-frame img {
+  filter: none;
+  transform: scale(1);
+}
+
+.state-map-lock {
   position: absolute;
-  min-height: 42px;
-  padding: 8px 10px;
-  font-weight: 800;
-  box-shadow: var(--soft-shadow);
-  transition: background 160ms ease, transform 160ms ease;
-}
-
-.map-region:hover,
-.map-region:focus-visible {
-  background: rgba(244, 189, 61, 0.72);
-  transform: translateY(-2px);
-}
-
-.map-region.correct {
-  border-color: var(--teal);
-  background: rgba(22, 139, 135, 0.72);
+  inset: 0;
+  display: grid;
+  place-content: center;
+  gap: 6px;
   color: #ffffff;
+  text-align: center;
+  background: rgba(23, 50, 77, 0.46);
+  transition: opacity 180ms ease;
 }
 
-.northwest { left: 16%; top: 18%; }
-.ca { left: 8%; top: 48%; }
-.southwest { left: 23%; top: 61%; }
-.plains { left: 38%; top: 42%; }
-.midwest { left: 56%; top: 31%; }
-.southeast { left: 62%; top: 66%; }
-.northeast { right: 8%; top: 34%; }
+.state-map-lock span {
+  font-size: clamp(1.6rem, 4vw, 2.6rem);
+  font-weight: 900;
+}
+
+.state-map-lock small {
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.state-map-card.revealed .state-map-lock {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.california-callout {
+  position: absolute;
+  left: 7%;
+  top: 57%;
+  padding: 8px 12px;
+  color: #ffffff;
+  background: var(--teal-dark);
+  border: 3px solid #ffffff;
+  border-radius: 8px;
+  box-shadow: var(--soft-shadow);
+  font-size: clamp(1rem, 2.6vw, 1.55rem);
+  font-weight: 900;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.state-map-card.revealed .california-callout {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.state-reveal {
+  margin: 0;
+  color: var(--teal-dark);
+  font-weight: 900;
+  line-height: 1.4;
+}
 
 .president-timeline {
   display: grid;
