@@ -66,10 +66,10 @@ const missions = [
   },
   {
     id: 'flavor',
-    title: 'Flavor Factory',
+    title: 'Flavor Formula 31',
     symbol: 'F',
-    category: 'Popular culture',
-    fact: 'A fictional 31st flavor can be invented from a base, mix-in, and topping.'
+    category: 'Math',
+    fact: 'Robot Raspberry, Sprinkle Sparks, and Cherry Pop total 31.'
   },
   {
     id: 'president',
@@ -125,6 +125,28 @@ const halloweenMoves = [
   { id: 'forward10', label: 'Move forward 10 days' }
 ];
 const halloweenCorrectRoute = ['nextFriday', 'forward10', 'nextMonday', 'forward12'];
+const flavorOptions = {
+  base: [
+    { id: 'moonbeamVanilla', name: 'Moonbeam Vanilla', value: 11 },
+    { id: 'robotRaspberry', name: 'Robot Raspberry', value: 14 },
+    { id: 'confettiChocolate', name: 'Confetti Chocolate', value: 17 }
+  ],
+  mixIn: [
+    { id: 'cometCrunch', name: 'Comet Crunch', value: 4 },
+    { id: 'brownieBits', name: 'Brownie Bits', value: 7 },
+    { id: 'sprinkleSparks', name: 'Sprinkle Sparks', value: 9 }
+  ],
+  topping: [
+    { id: 'caramelSwirl', name: 'Caramel Swirl', value: 3 },
+    { id: 'whippedCloud', name: 'Whipped Cloud', value: 6 },
+    { id: 'cherryPop', name: 'Cherry Pop', value: 8 }
+  ]
+};
+const flavorCorrectFormula = {
+  base: 'robotRaspberry',
+  mixIn: 'sprinkleSparks',
+  topping: 'cherryPop'
+};
 const netherlandsQuestions = [
   {
     prompt: 'Amsterdam is the capital of the Netherlands.',
@@ -149,6 +171,7 @@ let halloweenState = createHalloweenState();
 let halloweenDrag = null;
 let halloweenRouteAnimating = false;
 let phoneState = createPhoneState();
+let flavorState = createFlavorState();
 let make31WrongChecks = 0;
 let make31Score = null;
 let stateScore = null;
@@ -378,6 +401,69 @@ function halloweenStateForStorage() {
   return { ...halloweenState, isReplay: false };
 }
 
+function flavorOptionById(group, id) {
+  return flavorOptions[group]?.find(option => option.id === id);
+}
+
+function selectedFlavorValues(state = flavorState) {
+  return [
+    flavorOptionById('base', state.selectedBase),
+    flavorOptionById('mixIn', state.selectedMixIn),
+    flavorOptionById('topping', state.selectedTopping)
+  ].filter(Boolean).map(option => option.value);
+}
+
+function flavorFormulaTotal(state = flavorState) {
+  const values = selectedFlavorValues(state);
+  return values.length === 3 ? values.reduce((sum, value) => sum + value, 0) : 0;
+}
+
+function createFlavorState(saved = {}) {
+  const selectedBase = flavorOptionById('base', saved.selectedBase) ? saved.selectedBase : '';
+  const selectedMixIn = flavorOptionById('mixIn', saved.selectedMixIn) ? saved.selectedMixIn : '';
+  const selectedTopping = flavorOptionById('topping', saved.selectedTopping) ? saved.selectedTopping : '';
+  const submittedAttempts = Number(saved.submittedAttempts || 0);
+  const draftState = { selectedBase, selectedMixIn, selectedTopping };
+  return {
+    selectedBase,
+    selectedMixIn,
+    selectedTopping,
+    formulaTotal: Number.isFinite(Number(saved.formulaTotal)) ? Number(saved.formulaTotal) : flavorFormulaTotal(draftState),
+    submittedAttempts,
+    currentPossibleScore: Number.isFinite(Number(saved.currentPossibleScore))
+      ? Number(saved.currentPossibleScore)
+      : flavorPossibleScore(submittedAttempts),
+    pointsEarned: Number(saved.pointsEarned || 0),
+    isCompleted: Boolean(saved.isCompleted),
+    hasAwardedPoints: Boolean(saved.hasAwardedPoints),
+    isReplay: Boolean(saved.isReplay)
+  };
+}
+
+function flavorPossibleScore(submittedAttempts) {
+  if (submittedAttempts === 0) return 31;
+  if (submittedAttempts === 1) return 13;
+  return 0;
+}
+
+function flavorStateForStorage() {
+  if (flavorState.isReplay && flavorState.hasAwardedPoints) {
+    const savedPoints = hasAwardedScore('flavor') ? savedMissionScore('flavor') : flavorState.pointsEarned;
+    return createFlavorState({
+      selectedBase: flavorCorrectFormula.base,
+      selectedMixIn: flavorCorrectFormula.mixIn,
+      selectedTopping: flavorCorrectFormula.topping,
+      formulaTotal: 31,
+      submittedAttempts: submittedAttemptsFromScore(savedPoints),
+      currentPossibleScore: savedPoints,
+      pointsEarned: savedPoints,
+      isCompleted: true,
+      hasAwardedPoints: true
+    });
+  }
+  return { ...flavorState, isReplay: false };
+}
+
 function loadScoreState() {
   try {
     const saved = JSON.parse(localStorage.getItem(scoreStorageKey) || '{}');
@@ -389,6 +475,7 @@ function loadScoreState() {
     calendarState = createCalendarState(saved.calendar);
     halloweenState = createHalloweenState(saved.halloween);
     phoneState = createPhoneState(saved.phone);
+    flavorState = createFlavorState(saved.flavor);
     if (primeState.hasAwardedPoints && !missionScores.prime) {
       missionScores.prime = {
         pointsEarned: primeState.pointsEarned,
@@ -451,6 +538,26 @@ function loadScoreState() {
         hasAwardedPoints: true
       });
     }
+    if (flavorState.hasAwardedPoints && !missionScores.flavor) {
+      missionScores.flavor = {
+        pointsEarned: flavorState.pointsEarned,
+        hasAwardedPoints: true
+      };
+    }
+    if (!flavorState.hasAwardedPoints && missionScores.flavor?.hasAwardedPoints) {
+      const savedPoints = Number(missionScores.flavor.pointsEarned || 0);
+      flavorState = createFlavorState({
+        selectedBase: flavorCorrectFormula.base,
+        selectedMixIn: flavorCorrectFormula.mixIn,
+        selectedTopping: flavorCorrectFormula.topping,
+        formulaTotal: 31,
+        submittedAttempts: submittedAttemptsFromScore(savedPoints),
+        currentPossibleScore: savedPoints,
+        pointsEarned: savedPoints,
+        isCompleted: true,
+        hasAwardedPoints: true
+      });
+    }
     if (phoneState.hasAwardedPoints && !missionScores.phone) {
       missionScores.phone = {
         pointsEarned: phoneState.pointsEarned,
@@ -474,6 +581,7 @@ function loadScoreState() {
     if (romanState.isCompleted) solved.add('roman');
     if (calendarState.isCompleted) solved.add('calendar');
     if (halloweenState.isCompleted) solved.add('halloween');
+    if (flavorState.isCompleted) solved.add('flavor');
     if (phoneState.isCompleted) solved.add('phone');
     Object.entries(missionScores).forEach(([missionId, score]) => {
       if (score?.hasAwardedPoints) solved.add(missionId);
@@ -484,6 +592,7 @@ function loadScoreState() {
     calendarState = createCalendarState();
     halloweenState = createHalloweenState();
     phoneState = createPhoneState();
+    flavorState = createFlavorState();
     missionScores = {};
   }
 }
@@ -496,6 +605,7 @@ function saveScoreState() {
       calendar: calendarStateForStorage(),
       halloween: halloweenStateForStorage(),
       phone: phoneStateForStorage(),
+      flavor: flavorStateForStorage(),
       missionScores
     }));
   } catch {
@@ -958,36 +1068,144 @@ function renderGallium(mission) {
 }
 
 function renderFlavor(mission) {
-  challengeShell(mission, 'Invent a fictional 31st ice cream flavor by choosing a base, mix-in, and topping.', `
+  const isReplay = flavorState.isCompleted;
+  if (isReplay) {
+    flavorState = createFlavorState({
+      hasAwardedPoints: true,
+      isReplay: true
+    });
+  }
+  const isLocked = flavorState.isCompleted;
+  const displayedScore = hasAwardedScore('flavor') && !flavorState.isReplay
+    ? savedMissionScore('flavor')
+    : flavorState.currentPossibleScore;
+  challengeShell(mission, 'Choose one base, one mix-in, and one topping. Find the flavor formula that totals exactly 31.', `
     <div class="tool-card select-grid">
       <label>Base
-        <select id="baseSelect">
+        <select id="baseSelect" data-flavor-select="base" ${isLocked ? 'disabled' : ''}>
           <option value="">Choose a base</option>
-          <option>Moonbeam Vanilla</option>
-          <option>Robot Raspberry</option>
-          <option>Confetti Chocolate</option>
+          ${renderFlavorOptions('base', flavorState.selectedBase)}
         </select>
       </label>
       <label>Mix-in
-        <select id="mixSelect">
+        <select id="mixSelect" data-flavor-select="mixIn" ${isLocked ? 'disabled' : ''}>
           <option value="">Choose a mix-in</option>
-          <option>Comet Crunch</option>
-          <option>Waffle Sparks</option>
-          <option>Cookie Meteors</option>
+          ${renderFlavorOptions('mixIn', flavorState.selectedMixIn)}
         </select>
       </label>
       <label>Topping
-        <select id="topSelect">
+        <select id="topSelect" data-flavor-select="topping" ${isLocked ? 'disabled' : ''}>
           <option value="">Choose a topping</option>
-          <option>Rainbow Drizzle</option>
-          <option>Marshmallow Bolts</option>
-          <option>Caramel Buttons</option>
+          ${renderFlavorOptions('topping', flavorState.selectedTopping)}
         </select>
       </label>
     </div>
-    <div class="flavor-name" id="flavorName">Flavor name waiting...</div>
-    <button class="primary-button" type="button" data-action="make-flavor">Make flavor</button>
+    <div class="flavor-name" id="flavorName">${renderFlavorDisplay()}</div>
+    <div class="flavor-actions">
+      <div class="case-scoreboard" aria-live="polite">
+        <span>${isLocked && !flavorState.isReplay ? 'Score earned' : 'Possible score'}</span>
+        <strong id="flavorScore">${displayedScore} points</strong>
+      </div>
+      <button class="ghost-button" type="button" data-action="reset-flavor" ${isLocked ? 'disabled' : ''}>Reset Recipe</button>
+      <button class="primary-button" type="button" data-action="test-flavor" ${isLocked || !flavorSelectionsComplete() ? 'disabled' : ''}>Test Flavor Formula</button>
+    </div>
+    ${flavorState.isReplay ? `<p class="machine-score-line">Practice replay. Your first Flavor Formula 31 score was ${savedMissionScore('flavor')} points, and no additional points will be awarded.</p>` : ''}
+    <p class="machine-score-line" id="flavorResultScore" ${flavorState.isCompleted ? '' : 'hidden'}>${flavorState.isCompleted ? `Points earned: ${flavorState.pointsEarned} points` : ''}</p>
   `);
+}
+
+function renderFlavorOptions(group, selectedId) {
+  return flavorOptions[group].map(option => `
+    <option value="${option.id}" ${option.id === selectedId ? 'selected' : ''}>${option.name} • ${option.value}</option>
+  `).join('');
+}
+
+function flavorSelectionsComplete() {
+  return Boolean(flavorState.selectedBase && flavorState.selectedMixIn && flavorState.selectedTopping);
+}
+
+function currentFlavorEquation() {
+  if (!flavorSelectionsComplete()) return '';
+  const values = selectedFlavorValues();
+  return `${values.join(' + ')} = ${flavorState.formulaTotal}`;
+}
+
+function renderFlavorDisplay() {
+  if (flavorState.isCompleted) return '<span>14 + 9 + 8 = 31</span> <strong>Robot Raspberry Sprinkle Pop</strong>';
+  return flavorSelectionsComplete() ? currentFlavorEquation() : 'Flavor name waiting...';
+}
+
+function updateFlavorFormulaDisplay() {
+  flavorState.formulaTotal = flavorFormulaTotal();
+  const display = challengeRoot.querySelector('#flavorName');
+  const testButton = challengeRoot.querySelector('[data-action="test-flavor"]');
+  if (display) display.innerHTML = renderFlavorDisplay();
+  if (testButton) testButton.disabled = flavorState.isCompleted || !flavorSelectionsComplete();
+}
+
+function updateFlavorScoreDisplay() {
+  const score = challengeRoot.querySelector('#flavorScore');
+  const resultScore = challengeRoot.querySelector('#flavorResultScore');
+  if (score) {
+    const scoreboard = score.closest('.case-scoreboard');
+    const label = scoreboard?.querySelector('span');
+    if (label) label.textContent = flavorState.isCompleted && !flavorState.isReplay ? 'Score earned' : 'Possible score';
+    score.textContent = `${flavorState.isCompleted && !flavorState.isReplay ? flavorState.pointsEarned : flavorState.currentPossibleScore} points`;
+  }
+  if (resultScore) {
+    if (flavorState.isCompleted) {
+      resultScore.textContent = flavorState.isReplay
+        ? `Practice complete. Your saved Flavor Formula 31 score remains ${savedMissionScore('flavor')} points.`
+        : `Points earned: ${flavorState.pointsEarned} points`;
+      resultScore.removeAttribute('hidden');
+    } else {
+      resultScore.textContent = '';
+      resultScore.setAttribute('hidden', '');
+    }
+  }
+}
+
+function resetFlavorRecipe() {
+  if (flavorState.isCompleted) return;
+  flavorState.selectedBase = '';
+  flavorState.selectedMixIn = '';
+  flavorState.selectedTopping = '';
+  flavorState.formulaTotal = 0;
+  challengeRoot.querySelectorAll('[data-flavor-select]').forEach(select => {
+    select.value = '';
+  });
+  updateFlavorFormulaDisplay();
+  setFeedback('');
+  if (!flavorState.isReplay) saveScoreState();
+}
+
+function completeFlavorFormula(pointsForAttempt) {
+  flavorState.pointsEarned = pointsForAttempt;
+  flavorState.currentPossibleScore = pointsForAttempt;
+  flavorState.formulaTotal = 31;
+  flavorState.isCompleted = true;
+  challengeRoot.querySelectorAll('[data-flavor-select], [data-action="reset-flavor"], [data-action="test-flavor"]').forEach(control => {
+    control.disabled = true;
+  });
+  const display = challengeRoot.querySelector('#flavorName');
+  if (display) display.innerHTML = renderFlavorDisplay();
+  if (flavorState.isReplay || flavorState.hasAwardedPoints || hasAwardedScore('flavor')) {
+    const savedPoints = hasAwardedScore('flavor') ? savedMissionScore('flavor') : flavorState.pointsEarned;
+    flavorState.pointsEarned = savedPoints;
+    flavorState.hasAwardedPoints = true;
+    updateFlavorScoreDisplay();
+    setFeedback('Flavor confirmed for practice. No additional points will be awarded.', true);
+    return;
+  }
+  const awardedPoints = awardMissionScore('flavor', pointsForAttempt);
+  flavorState.pointsEarned = awardedPoints;
+  flavorState.hasAwardedPoints = true;
+  updateFlavorScoreDisplay();
+  saveScoreState();
+  const message = awardedPoints > 0
+    ? `Flavor confirmed! Your recipe totals exactly 31. Points earned: ${awardedPoints} points.`
+    : 'Flavor confirmed! Your recipe totals exactly 31. Mission complete.';
+  solveMission('flavor', message);
 }
 
 function renderPresident(mission, forceFresh = false) {
@@ -2044,16 +2262,23 @@ challengeRoot.addEventListener('click', async event => {
       : setFeedback('Set the slider to 85.6 degrees F and choose the gallium-based technology items.');
   }
 
-  if (action === 'make-flavor') {
-    const base = challengeRoot.querySelector('#baseSelect').value;
-    const mix = challengeRoot.querySelector('#mixSelect').value;
-    const topping = challengeRoot.querySelector('#topSelect').value;
-    if (!base || !mix || !topping) {
-      setFeedback('Choose one base, one mix-in, and one topping.');
-      return;
+  if (action === 'reset-flavor') {
+    resetFlavorRecipe();
+  }
+
+  if (action === 'test-flavor') {
+    if (!flavorSelectionsComplete() || flavorState.isCompleted) return;
+    const pointsForAttempt = flavorPossibleScore(flavorState.submittedAttempts);
+    flavorState.submittedAttempts += 1;
+    flavorState.formulaTotal = flavorFormulaTotal();
+    if (flavorState.formulaTotal === 31) {
+      completeFlavorFormula(pointsForAttempt);
+    } else {
+      flavorState.currentPossibleScore = flavorPossibleScore(flavorState.submittedAttempts);
+      updateFlavorScoreDisplay();
+      setFeedback(`Your flavor formula totals ${flavorState.formulaTotal}. Adjust the ingredients and try to make exactly 31.`);
+      if (!flavorState.isReplay) saveScoreState();
     }
-    challengeRoot.querySelector('#flavorName').textContent = `${base} ${mix} with ${topping}: the 31st Scoop`;
-    solveMission('flavor', 'Flavor invented. Section active.');
   }
 
   if (action === 'reset-stack') {
@@ -2088,6 +2313,18 @@ challengeRoot.addEventListener('click', async event => {
 
 challengeRoot.addEventListener('input', event => {
   if (event.target.id === 'temperatureSlider') updateGallium();
+});
+
+challengeRoot.addEventListener('change', event => {
+  const flavorSelect = event.target.closest('[data-flavor-select]');
+  if (!flavorSelect || flavorState.isCompleted) return;
+  const group = flavorSelect.dataset.flavorSelect;
+  if (group === 'base') flavorState.selectedBase = flavorSelect.value;
+  if (group === 'mixIn') flavorState.selectedMixIn = flavorSelect.value;
+  if (group === 'topping') flavorState.selectedTopping = flavorSelect.value;
+  updateFlavorFormulaDisplay();
+  setFeedback('');
+  if (!flavorState.isReplay) saveScoreState();
 });
 
 challengeRoot.addEventListener('pointerdown', event => {

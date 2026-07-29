@@ -1382,6 +1382,7 @@ h3 {
   min-height: 62px;
   display: grid;
   place-items: center;
+  gap: 4px;
   border: 1px solid var(--line);
   border-radius: 8px;
   color: var(--navy);
@@ -1389,6 +1390,21 @@ h3 {
   font-size: 1.25rem;
   font-weight: 800;
   text-align: center;
+}
+
+.flavor-name span {
+  font-size: 1.05rem;
+}
+
+.flavor-name strong {
+  display: block;
+}
+
+.flavor-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
 }
 
 .keypad {
