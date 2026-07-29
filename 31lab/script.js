@@ -119,13 +119,12 @@ const scoreCount = document.getElementById('scoreCount');
 const scoreStorageKey = 'the31LabScores';
 const calendarCorrectMonths = ['January', 'March', 'May', 'July', 'August', 'October', 'December'];
 const halloweenMoves = [
-  { id: 'nextMonday', label: 'Move to the next Monday' },
-  { id: 'forward12', label: 'Move forward 12 days' },
-  { id: 'forward3', label: 'Move forward 3 days' },
   { id: 'nextFriday', label: 'Move to the next Friday' },
-  { id: 'forward1', label: 'Move forward 1 day' }
+  { id: 'forward12', label: 'Move forward 12 days' },
+  { id: 'nextMonday', label: 'Move to the next Monday' },
+  { id: 'forward10', label: 'Move forward 10 days' }
 ];
-const halloweenCorrectRoute = ['forward1', 'nextFriday', 'forward3', 'nextMonday', 'forward12'];
+const halloweenCorrectRoute = ['nextFriday', 'forward10', 'nextMonday', 'forward12'];
 const netherlandsQuestions = [
   {
     prompt: 'Amsterdam is the capital of the Netherlands.',
@@ -332,13 +331,13 @@ function createHalloweenState(saved = {}) {
   const allowedCards = new Set(halloweenMoves.map(move => move.id));
   const usedCards = new Set();
   const cardOrder = Array.isArray(saved.cardOrder)
-    ? [0, 1, 2, 3, 4].map(index => {
+    ? halloweenCorrectRoute.map((_, index) => {
       const card = saved.cardOrder[index];
       if (!allowedCards.has(card) || usedCards.has(card)) return '';
       usedCards.add(card);
       return card;
     })
-    : ['', '', '', '', ''];
+    : halloweenCorrectRoute.map(() => '');
   const submittedAttempts = Number(saved.submittedAttempts || 0);
   return {
     cardOrder,
@@ -810,7 +809,7 @@ function renderHalloween(mission) {
   const isReplay = halloweenState.isCompleted;
   if (isReplay) {
     halloweenState = {
-      cardOrder: ['', '', '', '', ''],
+      cardOrder: halloweenCorrectRoute.map(() => ''),
       markerDate: 1,
       submittedAttempts: 0,
       currentPossibleScore: 31,
@@ -825,7 +824,7 @@ function renderHalloween(mission) {
   const isLocked = halloweenState.routeSolved || halloweenState.doorOpened;
   halloweenState.markerDate = halloweenState.routeSolved || halloweenState.doorOpened ? 31 : 1;
   const days = Array.from({ length: 31 }, (_, index) => index + 1);
-  challengeShell(mission, 'Arrange the five movement cards in the correct order. Test your route and open the door when your marker reaches October 31.', `
+  challengeShell(mission, 'Arrange the four movement cards in the correct order. Test your route and open the door when your marker reaches October 31.', `
     <div class="tool-card">
       <div class="tile-bank">
         <div class="calendar-display" id="octDisplay">October ${halloweenState.markerDate}</div>
@@ -1398,7 +1397,7 @@ function updateHalloweenRouteUI() {
 
 function resetHalloweenRoute() {
   if (halloweenState.routeSolved || halloweenState.doorOpened || halloweenRouteAnimating) return;
-  halloweenState.cardOrder = ['', '', '', '', ''];
+  halloweenState.cardOrder = halloweenCorrectRoute.map(() => '');
   halloweenState.markerDate = 1;
   updateHalloweenMarker(1);
   updateHalloweenRouteUI();
@@ -1417,8 +1416,7 @@ function nextHalloweenWeekday(day, weekday) {
 }
 
 function applyHalloweenMove(day, moveId) {
-  if (moveId === 'forward1') return day + 1;
-  if (moveId === 'forward3') return day + 3;
+  if (moveId === 'forward10') return day + 10;
   if (moveId === 'forward12') return day + 12;
   if (moveId === 'nextFriday') return nextHalloweenWeekday(day, 5);
   if (moveId === 'nextMonday') return nextHalloweenWeekday(day, 1);
