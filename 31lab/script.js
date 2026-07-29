@@ -172,11 +172,11 @@ let halloweenDrag = null;
 let halloweenRouteAnimating = false;
 let phoneState = createPhoneState();
 let flavorState = createFlavorState();
+let presidentState = createPresidentState();
 let make31WrongChecks = 0;
 let make31Score = null;
 let stateScore = null;
 const stateRuledOut = new Set();
-let presidentScore = null;
 let missionScores = {};
 
 resetSavedLabOnOpen();
@@ -464,6 +464,48 @@ function flavorStateForStorage() {
   return { ...flavorState, isReplay: false };
 }
 
+function createPresidentState(saved = {}) {
+  const candidates = ['Herbert Hoover', 'Woodrow Wilson', 'Theodore Roosevelt', 'Franklin D. Roosevelt'];
+  const ruledOutCandidates = Array.isArray(saved.ruledOutCandidates)
+    ? [...new Set(saved.ruledOutCandidates.filter(candidate => candidates.includes(candidate) && candidate !== 'Herbert Hoover'))]
+    : [];
+  const submittedAttempts = Number.isFinite(Number(saved.submittedAttempts))
+    ? Math.max(0, Number(saved.submittedAttempts))
+    : ruledOutCandidates.length;
+  return {
+    selectedCandidate: candidates.includes(saved.selectedCandidate) ? saved.selectedCandidate : '',
+    ruledOutCandidates,
+    submittedAttempts,
+    currentPossibleScore: Number.isFinite(Number(saved.currentPossibleScore))
+      ? Math.max(0, Number(saved.currentPossibleScore))
+      : presidentPossibleScore(submittedAttempts),
+    pointsEarned: Number(saved.pointsEarned || 0),
+    isCompleted: Boolean(saved.isCompleted),
+    hasAwardedPoints: Boolean(saved.hasAwardedPoints),
+    isReplay: Boolean(saved.isReplay)
+  };
+}
+
+function presidentPossibleScore(submittedAttempts) {
+  return Math.max(0, 60 - (submittedAttempts * 20));
+}
+
+function presidentStateForStorage() {
+  if (presidentState.isReplay && presidentState.hasAwardedPoints) {
+    const savedPoints = hasAwardedScore('president') ? savedMissionScore('president') : presidentState.pointsEarned;
+    return createPresidentState({
+      selectedCandidate: 'Herbert Hoover',
+      ruledOutCandidates: [],
+      submittedAttempts: savedPoints === 60 ? 1 : savedPoints === 40 ? 2 : savedPoints === 20 ? 3 : 4,
+      currentPossibleScore: savedPoints,
+      pointsEarned: savedPoints,
+      isCompleted: true,
+      hasAwardedPoints: true
+    });
+  }
+  return { ...presidentState, isReplay: false };
+}
+
 function loadScoreState() {
   try {
     const saved = JSON.parse(localStorage.getItem(scoreStorageKey) || '{}');
@@ -476,6 +518,7 @@ function loadScoreState() {
     halloweenState = createHalloweenState(saved.halloween);
     phoneState = createPhoneState(saved.phone);
     flavorState = createFlavorState(saved.flavor);
+    presidentState = createPresidentState(saved.president);
     if (primeState.hasAwardedPoints && !missionScores.prime) {
       missionScores.prime = {
         pointsEarned: primeState.pointsEarned,
@@ -577,11 +620,29 @@ function loadScoreState() {
         hasAwardedPoints: true
       });
     }
+    if (presidentState.hasAwardedPoints && !missionScores.president) {
+      missionScores.president = {
+        pointsEarned: presidentState.pointsEarned,
+        hasAwardedPoints: true
+      };
+    }
+    if (!presidentState.hasAwardedPoints && missionScores.president?.hasAwardedPoints) {
+      const savedPoints = Number(missionScores.president.pointsEarned || 0);
+      presidentState = createPresidentState({
+        selectedCandidate: 'Herbert Hoover',
+        submittedAttempts: savedPoints === 60 ? 1 : savedPoints === 40 ? 2 : savedPoints === 20 ? 3 : 4,
+        currentPossibleScore: savedPoints,
+        pointsEarned: savedPoints,
+        isCompleted: true,
+        hasAwardedPoints: true
+      });
+    }
     if (primeState.isCompleted) solved.add('prime');
     if (romanState.isCompleted) solved.add('roman');
     if (calendarState.isCompleted) solved.add('calendar');
     if (halloweenState.isCompleted) solved.add('halloween');
     if (flavorState.isCompleted) solved.add('flavor');
+    if (presidentState.isCompleted) solved.add('president');
     if (phoneState.isCompleted) solved.add('phone');
     Object.entries(missionScores).forEach(([missionId, score]) => {
       if (score?.hasAwardedPoints) solved.add(missionId);
@@ -593,6 +654,7 @@ function loadScoreState() {
     halloweenState = createHalloweenState();
     phoneState = createPhoneState();
     flavorState = createFlavorState();
+    presidentState = createPresidentState();
     missionScores = {};
   }
 }
@@ -606,6 +668,7 @@ function saveScoreState() {
       halloween: halloweenStateForStorage(),
       phone: phoneStateForStorage(),
       flavor: flavorStateForStorage(),
+      president: presidentStateForStorage(),
       missionScores
     }));
   } catch {
@@ -1209,11 +1272,17 @@ function completeFlavorFormula(pointsForAttempt) {
 }
 
 function renderPresident(mission, forceFresh = false) {
-  const isSolved = !forceFresh && solved.has(mission.id);
-  const isPractice = forceFresh && hasAwardedScore('president');
-  const displayedScore = !forceFresh && hasAwardedScore('president')
+  if (forceFresh && hasAwardedScore('president')) {
+    presidentState = createPresidentState({
+      hasAwardedPoints: true,
+      isReplay: true
+    });
+  }
+  const isSolved = !presidentState.isReplay && presidentState.isCompleted;
+  const isPractice = presidentState.isReplay;
+  const displayedScore = isSolved && hasAwardedScore('president')
     ? savedMissionScore('president')
-    : presidentScore ?? 60;
+    : presidentState.currentPossibleScore;
   const evidence = [
     'He became president in 1929.',
     'The Great Depression began during his presidency.',
@@ -1238,7 +1307,6 @@ function renderPresident(mission, forceFresh = false) {
           <span>Calvin Coolidge</span>
         </div>
         <div class="timeline-case-card missing">
-          <span class="magnifier" aria-hidden="true"></span>
           <strong>31</strong>
           <span>MISSING</span>
         </div>
@@ -1271,7 +1339,7 @@ function renderPresident(mission, forceFresh = false) {
         </div>
         <div class="suspect-grid">
           ${candidates.map(candidate => `
-            <button class="suspect-card ${isSolved && candidate.name === 'Herbert Hoover' ? 'selected' : ''}" type="button" data-president-candidate="${candidate.name}" ${isSolved ? 'disabled' : ''}>
+            <button class="suspect-card ${(isSolved && candidate.name === 'Herbert Hoover') || presidentState.selectedCandidate === candidate.name ? 'selected' : ''} ${presidentState.ruledOutCandidates.includes(candidate.name) ? 'ruled-out' : ''}" type="button" data-president-candidate="${candidate.name}" ${isSolved || presidentState.ruledOutCandidates.includes(candidate.name) ? 'disabled' : ''}>
               <img class="portrait" src="${candidate.image}" alt="" loading="lazy">
               <span>${candidate.name}</span>
               <span class="ruled-out-label">Ruled out</span>
@@ -1985,6 +2053,8 @@ challengeRoot.addEventListener('click', async event => {
     if (presidentCandidate.disabled) return;
     challengeRoot.querySelectorAll('[data-president-candidate]').forEach(button => button.classList.remove('selected'));
     presidentCandidate.classList.add('selected');
+    presidentState.selectedCandidate = presidentCandidate.dataset.presidentCandidate;
+    if (!presidentState.isReplay && !presidentState.isCompleted) saveScoreState();
   }
 
   const keyButton = event.target.closest('[data-key]');
@@ -2218,16 +2288,24 @@ challengeRoot.addEventListener('click', async event => {
 
   if (action === 'solve-president') {
     const selectedCard = challengeRoot.querySelector('[data-president-candidate].selected');
-    const selectedCandidate = selectedCard?.dataset.presidentCandidate;
+    const selectedCandidate = selectedCard?.dataset.presidentCandidate || presidentState.selectedCandidate;
     if (!selectedCandidate) {
       setFeedback('Choose a suspect card before you solve the case.');
       return;
     }
-    const wrongAttempts = challengeRoot.querySelectorAll('[data-president-candidate].ruled-out').length;
+    const pointsForAttempt = presidentPossibleScore(presidentState.submittedAttempts);
     if (selectedCandidate === 'Herbert Hoover') {
-      presidentScore = Math.max(0, 60 - (wrongAttempts * 20));
-      const alreadyAwarded = hasAwardedScore('president');
-      const earnedScore = awardMissionScore('president', presidentScore);
+      const alreadyAwarded = presidentState.isReplay || presidentState.hasAwardedPoints || hasAwardedScore('president');
+      presidentState.submittedAttempts += 1;
+      presidentState.currentPossibleScore = pointsForAttempt;
+      presidentState.pointsEarned = alreadyAwarded
+        ? hasAwardedScore('president') ? savedMissionScore('president') : presidentState.pointsEarned
+        : pointsForAttempt;
+      presidentState.selectedCandidate = 'Herbert Hoover';
+      presidentState.isCompleted = true;
+      presidentState.hasAwardedPoints = true;
+      const earnedScore = alreadyAwarded ? presidentState.pointsEarned : awardMissionScore('president', pointsForAttempt);
+      presidentState.pointsEarned = earnedScore;
       challengeRoot.querySelector('.president-case')?.classList.add('case-solved');
       challengeRoot.querySelector('.case-result')?.removeAttribute('hidden');
       challengeRoot.querySelector('.solve-case-button')?.setAttribute('hidden', '');
@@ -2241,15 +2319,22 @@ challengeRoot.addEventListener('click', async event => {
       const feedback = !alreadyAwarded
         ? `Case solved. Herbert Hoover was president number 31. Score earned: ${earnedScore} points.`
         : `Practice complete. Your saved President score remains ${earnedScore} points.`;
+      saveScoreState();
       solveMission('president', feedback);
     } else {
+      presidentState.submittedAttempts += 1;
+      presidentState.currentPossibleScore = presidentPossibleScore(presidentState.submittedAttempts);
+      presidentState.selectedCandidate = '';
+      if (!presidentState.ruledOutCandidates.includes(selectedCandidate)) {
+        presidentState.ruledOutCandidates.push(selectedCandidate);
+      }
       selectedCard.classList.remove('selected');
       selectedCard.classList.add('ruled-out');
       selectedCard.disabled = true;
-      const remainingScore = Math.max(0, 60 - ((wrongAttempts + 1) * 20));
       const scoreDisplay = challengeRoot.querySelector('#presidentScore');
-      if (scoreDisplay) scoreDisplay.textContent = `${remainingScore} points`;
-      setFeedback(`Not quite. ${selectedCandidate} is ruled out. ${remainingScore} points still possible.`);
+      if (scoreDisplay) scoreDisplay.textContent = `${presidentState.currentPossibleScore} points`;
+      if (!presidentState.isReplay && !presidentState.isCompleted) saveScoreState();
+      setFeedback(`Not quite. ${selectedCandidate} is ruled out. ${presidentState.currentPossibleScore} points still possible.`);
     }
   }
 
@@ -2288,9 +2373,18 @@ challengeRoot.addEventListener('click', async event => {
   }
 
   if (action === 'reset-president') {
-    presidentScore = null;
-    renderPresident(missionById('president'), true);
-    setFeedback('Mission reset. Open the evidence files to replay the case.');
+    const hadGuesses = presidentState.submittedAttempts > 0 && !presidentState.isCompleted;
+    if (presidentState.isCompleted || hasAwardedScore('president')) {
+      renderPresident(missionById('president'), true);
+      setFeedback('Practice replay. Your first President score is saved, and no additional points will be awarded.');
+    } else {
+      presidentState.selectedCandidate = '';
+      renderPresident(missionById('president'));
+      setFeedback(hadGuesses
+        ? `Mission reset. Your used guesses stay ruled out, and ${presidentState.currentPossibleScore} points are still possible.`
+        : 'Mission reset. Open the evidence files to replay the case.');
+      saveScoreState();
+    }
   }
 
   if (action === 'check-stack') {
