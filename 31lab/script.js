@@ -118,6 +118,14 @@ const scoreCount = document.getElementById('scoreCount');
 
 const scoreStorageKey = 'the31LabScores';
 const calendarCorrectMonths = ['January', 'March', 'May', 'July', 'August', 'October', 'December'];
+const halloweenMoves = [
+  { id: 'nextMonday', label: 'Move to the next Monday' },
+  { id: 'forward12', label: 'Move forward 12 days' },
+  { id: 'forward3', label: 'Move forward 3 days' },
+  { id: 'nextFriday', label: 'Move to the next Friday' },
+  { id: 'forward1', label: 'Move forward 1 day' }
+];
+const halloweenCorrectRoute = ['forward1', 'nextFriday', 'forward3', 'nextMonday', 'forward12'];
 const netherlandsQuestions = [
   {
     prompt: 'Amsterdam is the capital of the Netherlands.',
@@ -138,6 +146,9 @@ let romanState = createRomanState();
 let romanDrag = null;
 let primeState = createPrimeState();
 let calendarState = createCalendarState();
+let halloweenState = createHalloweenState();
+let halloweenDrag = null;
+let halloweenRouteAnimating = false;
 let phoneState = createPhoneState();
 let make31WrongChecks = 0;
 let make31Score = null;
@@ -317,6 +328,57 @@ function calendarStateForStorage() {
   return { ...calendarState, isReplay: false };
 }
 
+function createHalloweenState(saved = {}) {
+  const allowedCards = new Set(halloweenMoves.map(move => move.id));
+  const usedCards = new Set();
+  const cardOrder = Array.isArray(saved.cardOrder)
+    ? [0, 1, 2, 3, 4].map(index => {
+      const card = saved.cardOrder[index];
+      if (!allowedCards.has(card) || usedCards.has(card)) return '';
+      usedCards.add(card);
+      return card;
+    })
+    : ['', '', '', '', ''];
+  const submittedAttempts = Number(saved.submittedAttempts || 0);
+  return {
+    cardOrder,
+    markerDate: Number.isFinite(Number(saved.markerDate)) ? Number(saved.markerDate) : 1,
+    submittedAttempts,
+    currentPossibleScore: Number.isFinite(Number(saved.currentPossibleScore))
+      ? Number(saved.currentPossibleScore)
+      : halloweenPossibleScore(submittedAttempts),
+    routeSolved: Boolean(saved.routeSolved),
+    pointsEarned: Number(saved.pointsEarned || 0),
+    doorOpened: Boolean(saved.doorOpened),
+    isCompleted: Boolean(saved.isCompleted),
+    hasAwardedPoints: Boolean(saved.hasAwardedPoints),
+    isReplay: Boolean(saved.isReplay)
+  };
+}
+
+function halloweenPossibleScore(submittedAttempts) {
+  if (submittedAttempts === 0) return 31;
+  if (submittedAttempts === 1) return 13;
+  return 0;
+}
+
+function halloweenStateForStorage() {
+  if (halloweenState.isReplay && halloweenState.hasAwardedPoints) {
+    return createHalloweenState({
+      cardOrder: halloweenCorrectRoute,
+      markerDate: 31,
+      submittedAttempts: submittedAttemptsFromScore(savedMissionScore('halloween') || halloweenState.pointsEarned),
+      currentPossibleScore: savedMissionScore('halloween') || halloweenState.pointsEarned,
+      routeSolved: true,
+      pointsEarned: savedMissionScore('halloween') || halloweenState.pointsEarned,
+      doorOpened: true,
+      isCompleted: true,
+      hasAwardedPoints: true
+    });
+  }
+  return { ...halloweenState, isReplay: false };
+}
+
 function loadScoreState() {
   try {
     const saved = JSON.parse(localStorage.getItem(scoreStorageKey) || '{}');
@@ -326,6 +388,7 @@ function loadScoreState() {
     primeState = createPrimeState(saved.prime);
     romanState = createRomanState(saved.roman);
     calendarState = createCalendarState(saved.calendar);
+    halloweenState = createHalloweenState(saved.halloween);
     phoneState = createPhoneState(saved.phone);
     if (primeState.hasAwardedPoints && !missionScores.prime) {
       missionScores.prime = {
@@ -369,6 +432,26 @@ function loadScoreState() {
         hasAwardedPoints: true
       });
     }
+    if (halloweenState.hasAwardedPoints && !missionScores.halloween) {
+      missionScores.halloween = {
+        pointsEarned: halloweenState.pointsEarned,
+        hasAwardedPoints: true
+      };
+    }
+    if (!halloweenState.hasAwardedPoints && missionScores.halloween?.hasAwardedPoints) {
+      const savedPoints = Number(missionScores.halloween.pointsEarned || 0);
+      halloweenState = createHalloweenState({
+        cardOrder: halloweenCorrectRoute,
+        markerDate: 31,
+        submittedAttempts: submittedAttemptsFromScore(savedPoints),
+        currentPossibleScore: savedPoints,
+        routeSolved: true,
+        pointsEarned: savedPoints,
+        doorOpened: true,
+        isCompleted: true,
+        hasAwardedPoints: true
+      });
+    }
     if (phoneState.hasAwardedPoints && !missionScores.phone) {
       missionScores.phone = {
         pointsEarned: phoneState.pointsEarned,
@@ -391,6 +474,7 @@ function loadScoreState() {
     if (primeState.isCompleted) solved.add('prime');
     if (romanState.isCompleted) solved.add('roman');
     if (calendarState.isCompleted) solved.add('calendar');
+    if (halloweenState.isCompleted) solved.add('halloween');
     if (phoneState.isCompleted) solved.add('phone');
     Object.entries(missionScores).forEach(([missionId, score]) => {
       if (score?.hasAwardedPoints) solved.add(missionId);
@@ -399,6 +483,7 @@ function loadScoreState() {
     primeState = createPrimeState();
     romanState = createRomanState();
     calendarState = createCalendarState();
+    halloweenState = createHalloweenState();
     phoneState = createPhoneState();
     missionScores = {};
   }
@@ -410,6 +495,7 @@ function saveScoreState() {
       prime: primeStateForStorage(),
       roman: romanStateForStorage(),
       calendar: calendarStateForStorage(),
+      halloween: halloweenStateForStorage(),
       phone: phoneStateForStorage(),
       missionScores
     }));
@@ -721,24 +807,90 @@ function finishCalendarHunt() {
 }
 
 function renderHalloween(mission) {
-  octoberDay = 1;
+  const isReplay = halloweenState.isCompleted;
+  if (isReplay) {
+    halloweenState = {
+      cardOrder: ['', '', '', '', ''],
+      markerDate: 1,
+      submittedAttempts: 0,
+      currentPossibleScore: 31,
+      routeSolved: false,
+      pointsEarned: 0,
+      doorOpened: false,
+      isCompleted: false,
+      hasAwardedPoints: true,
+      isReplay: true
+    };
+  }
+  const isLocked = halloweenState.routeSolved || halloweenState.doorOpened;
+  halloweenState.markerDate = halloweenState.routeSolved || halloweenState.doorOpened ? 31 : 1;
   const days = Array.from({ length: 31 }, (_, index) => index + 1);
-  challengeShell(mission, 'Move across the October calendar and open the door when your marker reaches October 31.', `
+  challengeShell(mission, 'Arrange the five movement cards in the correct order. Test your route and open the door when your marker reaches October 31.', `
     <div class="tool-card">
       <div class="tile-bank">
-        <button class="ghost-button" type="button" data-action="oct-prev">Back one day</button>
-        <div class="calendar-display" id="octDisplay">October 1</div>
-        <button class="ghost-button" type="button" data-action="oct-next">Forward one day</button>
+        <div class="calendar-display" id="octDisplay">October ${halloweenState.markerDate}</div>
+        <div class="case-scoreboard" aria-live="polite">
+          <span>${halloweenState.routeSolved && !halloweenState.isReplay ? 'Score earned' : 'Possible score'}</span>
+          <strong id="halloweenScore">${halloweenState.routeSolved && !halloweenState.isReplay ? halloweenState.pointsEarned : halloweenState.currentPossibleScore} points</strong>
+        </div>
       </div>
       <div class="calendar-grid" id="octGrid">
         ${['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => `<span>${day}</span>`).join('')}
         ${Array.from({ length: 4 }, () => '<span></span>').join('')}
-        ${days.map(day => `<button class="day-button ${day === 1 ? 'current' : ''}" type="button" data-oct-day="${day}">${day}</button>`).join('')}
+        ${days.map(day => `<span class="day-button ${day === halloweenState.markerDate ? 'current' : ''} ${day === 31 ? 'target' : ''}" data-oct-day="${day}">${day}</span>`).join('')}
       </div>
     </div>
-    <div class="door" id="halloweenDoor">October 31 door locked</div>
-    <button class="primary-button" type="button" data-action="open-halloween">Open door</button>
+    <div class="tool-card halloween-route-builder">
+      <div>
+        <h3>Movement Cards</h3>
+        <div class="route-card-bank" id="halloweenCardBank">
+          ${renderHalloweenCardBank(isLocked)}
+        </div>
+      </div>
+      <div>
+        <h3>Route Spaces</h3>
+        <div class="route-space-row" id="halloweenRouteSpaces">
+          ${halloweenState.cardOrder.map((cardId, index) => renderHalloweenRouteSpace(index, cardId, isLocked)).join('')}
+        </div>
+      </div>
+      <div class="route-control-row">
+        <button class="ghost-button" type="button" data-action="reset-halloween-route" ${isLocked ? 'disabled' : ''}>Reset Route</button>
+        <button class="primary-button" type="button" data-action="test-halloween-route" ${isLocked || !halloweenState.cardOrder.every(Boolean) ? 'disabled' : ''}>Test Route</button>
+        <button class="primary-button" type="button" data-action="open-halloween" ${halloweenState.routeSolved && !halloweenState.doorOpened ? '' : 'disabled'}>Open Door</button>
+      </div>
+      ${halloweenState.isReplay ? `<p class="machine-score-line">Practice replay. Your first Halloween Door score was ${savedMissionScore('halloween')} points, and no additional points will be awarded.</p>` : ''}
+    </div>
+    <div class="door ${halloweenState.doorOpened ? 'open' : ''}" id="halloweenDoor">${halloweenState.doorOpened ? 'October 31 door open' : halloweenState.routeSolved ? 'October 31 door ready' : 'October 31 door locked'}</div>
+    <p class="machine-score-line" id="halloweenResultScore" ${halloweenState.routeSolved || halloweenState.doorOpened ? '' : 'hidden'}>${halloweenState.routeSolved ? `Points earned: ${halloweenState.pointsEarned}` : ''}</p>
   `);
+}
+
+function halloweenMoveById(id) {
+  return halloweenMoves.find(move => move.id === id);
+}
+
+function renderHalloweenCardBank(isLocked = false) {
+  const placed = new Set(halloweenState.cardOrder.filter(Boolean));
+  return halloweenMoves
+    .filter(move => !placed.has(move.id))
+    .map(move => renderHalloweenMoveCard(move.id, null, isLocked))
+    .join('');
+}
+
+function renderHalloweenMoveCard(cardId, sourceSlot = null, isLocked = false) {
+  const move = halloweenMoveById(cardId);
+  if (!move) return '';
+  const source = Number.isInteger(sourceSlot) ? `data-route-source-slot="${sourceSlot}"` : '';
+  return `<button class="route-card" type="button" data-halloween-card="${cardId}" ${source} ${isLocked ? 'disabled' : ''}>${move.label}</button>`;
+}
+
+function renderHalloweenRouteSpace(index, cardId, isLocked = false) {
+  return `
+    <div class="route-space ${cardId ? 'filled' : ''}" data-route-slot="${index}" role="group" aria-label="Route space ${index + 1}">
+      <span class="route-space-number">${index + 1}</span>
+      ${cardId ? renderHalloweenMoveCard(cardId, index, isLocked) : '<span class="route-placeholder">Drop card here</span>'}
+    </div>
+  `;
 }
 
 function renderState(mission) {
@@ -1183,6 +1335,247 @@ function updateOctober(day) {
     : 'October 31 door locked';
 }
 
+function updateHalloweenMarker(day, visitedDays = []) {
+  halloweenState.markerDate = day;
+  const display = challengeRoot.querySelector('#octDisplay');
+  if (display) {
+    display.textContent = day >= 1 && day <= 31 ? `October ${day}` : 'Outside October';
+  }
+  const visited = new Set(visitedDays);
+  challengeRoot.querySelectorAll('[data-oct-day]').forEach(date => {
+    const dateNumber = Number(date.dataset.octDay);
+    date.classList.toggle('current', dateNumber === day);
+    date.classList.toggle('visited', visited.has(dateNumber) && dateNumber !== day);
+  });
+}
+
+function updateHalloweenRouteUI() {
+  const isLocked = halloweenState.routeSolved || halloweenState.doorOpened;
+  const bank = challengeRoot.querySelector('#halloweenCardBank');
+  const spaces = challengeRoot.querySelector('#halloweenRouteSpaces');
+  const score = challengeRoot.querySelector('#halloweenScore');
+  const testButton = challengeRoot.querySelector('[data-action="test-halloween-route"]');
+  const resetButton = challengeRoot.querySelector('[data-action="reset-halloween-route"]');
+  const openButton = challengeRoot.querySelector('[data-action="open-halloween"]');
+  const resultScore = challengeRoot.querySelector('#halloweenResultScore');
+  const door = challengeRoot.querySelector('#halloweenDoor');
+  if (bank) bank.innerHTML = renderHalloweenCardBank(isLocked);
+  if (spaces) {
+    spaces.innerHTML = halloweenState.cardOrder
+      .map((cardId, index) => renderHalloweenRouteSpace(index, cardId, isLocked))
+      .join('');
+  }
+  if (score) {
+    const label = halloweenState.routeSolved && !halloweenState.isReplay ? 'Score earned' : 'Possible score';
+    const wrapper = score.closest('.case-scoreboard');
+    const labelElement = wrapper?.querySelector('span');
+    if (labelElement) labelElement.textContent = label;
+    score.textContent = `${halloweenState.routeSolved && !halloweenState.isReplay ? halloweenState.pointsEarned : halloweenState.currentPossibleScore} points`;
+  }
+  if (testButton) testButton.disabled = isLocked || halloweenRouteAnimating || !halloweenState.cardOrder.every(Boolean);
+  if (resetButton) resetButton.disabled = isLocked || halloweenRouteAnimating;
+  if (openButton) openButton.disabled = !halloweenState.routeSolved || halloweenState.doorOpened;
+  if (door) {
+    door.classList.toggle('open', halloweenState.doorOpened);
+    door.textContent = halloweenState.doorOpened
+      ? 'October 31 door open'
+      : halloweenState.routeSolved
+        ? 'October 31 door ready'
+        : 'October 31 door locked';
+  }
+  if (resultScore) {
+    if (halloweenState.routeSolved || halloweenState.doorOpened) {
+      resultScore.textContent = halloweenState.isReplay
+        ? `Practice route solved. Your saved Halloween Door score remains ${savedMissionScore('halloween')} points.`
+        : `Points earned: ${halloweenState.pointsEarned} points`;
+      resultScore.removeAttribute('hidden');
+    } else {
+      resultScore.setAttribute('hidden', '');
+      resultScore.textContent = '';
+    }
+  }
+}
+
+function resetHalloweenRoute() {
+  if (halloweenState.routeSolved || halloweenState.doorOpened || halloweenRouteAnimating) return;
+  halloweenState.cardOrder = ['', '', '', '', ''];
+  halloweenState.markerDate = 1;
+  updateHalloweenMarker(1);
+  updateHalloweenRouteUI();
+  setFeedback('');
+  if (!halloweenState.isReplay && !halloweenState.isCompleted) saveScoreState();
+}
+
+function halloweenDayOfWeek(day) {
+  return (day + 3) % 7;
+}
+
+function nextHalloweenWeekday(day, weekday) {
+  let daysToMove = (weekday - halloweenDayOfWeek(day) + 7) % 7;
+  if (daysToMove === 0) daysToMove = 7;
+  return day + daysToMove;
+}
+
+function applyHalloweenMove(day, moveId) {
+  if (moveId === 'forward1') return day + 1;
+  if (moveId === 'forward3') return day + 3;
+  if (moveId === 'forward12') return day + 12;
+  if (moveId === 'nextFriday') return nextHalloweenWeekday(day, 5);
+  if (moveId === 'nextMonday') return nextHalloweenWeekday(day, 1);
+  return day;
+}
+
+function wait(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function testHalloweenRoute() {
+  if (halloweenRouteAnimating || halloweenState.routeSolved || !halloweenState.cardOrder.every(Boolean)) return;
+  halloweenRouteAnimating = true;
+  updateHalloweenRouteUI();
+  let day = 1;
+  const visitedDays = [1];
+  updateHalloweenMarker(day, visitedDays);
+  setFeedback('Testing your route...');
+  await wait(350);
+
+  for (const moveId of halloweenState.cardOrder) {
+    day = applyHalloweenMove(day, moveId);
+    if (day < 1 || day > 31) {
+      halloweenState.submittedAttempts += 1;
+      halloweenState.currentPossibleScore = halloweenPossibleScore(halloweenState.submittedAttempts);
+      halloweenState.markerDate = 1;
+      halloweenRouteAnimating = false;
+      updateHalloweenMarker(1);
+      updateHalloweenRouteUI();
+      setFeedback('Your route moved outside the October calendar. Rearrange the movement cards and try again.');
+      if (!halloweenState.isReplay && !halloweenState.isCompleted) saveScoreState();
+      return;
+    }
+    visitedDays.push(day);
+    updateHalloweenMarker(day, visitedDays);
+    await wait(550);
+  }
+
+  halloweenState.submittedAttempts += 1;
+  const isCorrectRoute = day === 31;
+  if (isCorrectRoute) {
+    halloweenState.routeSolved = true;
+    halloweenState.pointsEarned = halloweenPossibleScore(halloweenState.submittedAttempts - 1);
+    halloweenState.currentPossibleScore = halloweenState.pointsEarned;
+    halloweenState.markerDate = 31;
+    halloweenRouteAnimating = false;
+    updateHalloweenMarker(31, visitedDays);
+    updateHalloweenRouteUI();
+    setFeedback('Path confirmed! Your marker reached October 31.', true);
+    if (!halloweenState.isReplay && !halloweenState.isCompleted) saveScoreState();
+    return;
+  }
+
+  halloweenState.currentPossibleScore = halloweenPossibleScore(halloweenState.submittedAttempts);
+  halloweenState.markerDate = 1;
+  halloweenRouteAnimating = false;
+  updateHalloweenMarker(1);
+  updateHalloweenRouteUI();
+  setFeedback(`Your marker landed on October ${day}. Rearrange the movement cards and try again.`);
+  if (!halloweenState.isReplay && !halloweenState.isCompleted) saveScoreState();
+}
+
+function openHalloweenDoor() {
+  if (!halloweenState.routeSolved || halloweenState.doorOpened) return;
+  const savedScore = savedMissionScore('halloween');
+  const pointsToShow = halloweenState.isReplay || hasAwardedScore('halloween')
+    ? savedScore
+    : halloweenState.pointsEarned;
+  halloweenState.doorOpened = true;
+  halloweenState.isCompleted = true;
+  halloweenState.markerDate = 31;
+  const door = challengeRoot.querySelector('#halloweenDoor');
+  if (door) {
+    door.classList.add('open');
+    door.textContent = 'October 31 door open';
+  }
+  updateHalloweenMarker(31);
+  if (!halloweenState.isReplay && !halloweenState.hasAwardedPoints && !hasAwardedScore('halloween')) {
+    const awardedPoints = awardMissionScore('halloween', halloweenState.pointsEarned);
+    halloweenState.pointsEarned = awardedPoints;
+    halloweenState.hasAwardedPoints = true;
+  } else {
+    halloweenState.pointsEarned = pointsToShow;
+    halloweenState.hasAwardedPoints = true;
+  }
+  updateHalloweenRouteUI();
+  saveScoreState();
+  const message = halloweenState.isReplay
+    ? `Practice complete. Your saved Halloween Door score remains ${savedMissionScore('halloween')} points.`
+    : halloweenState.pointsEarned > 0
+      ? `The October 31 door is open! You earned ${halloweenState.pointsEarned} points.`
+      : 'The October 31 door is open! Mission complete.';
+  solveMission('halloween', message);
+}
+
+function cleanupHalloweenDrag() {
+  if (!halloweenDrag) return;
+  halloweenDrag.source.classList.remove('route-dragging');
+  halloweenDrag.ghost.remove();
+  halloweenDrag = null;
+  challengeRoot.querySelectorAll('.route-drop-target').forEach(slot => slot.classList.remove('route-drop-target'));
+}
+
+function startHalloweenDrag(card, sourceSlot, event) {
+  if (halloweenState.routeSolved || halloweenState.doorOpened || halloweenRouteAnimating) return;
+  const rect = card.getBoundingClientRect();
+  const ghost = card.cloneNode(true);
+  ghost.classList.add('route-drag-ghost');
+  ghost.style.width = `${rect.width}px`;
+  ghost.style.left = `${event.clientX - (rect.width / 2)}px`;
+  ghost.style.top = `${event.clientY - (rect.height / 2)}px`;
+  document.body.appendChild(ghost);
+  card.classList.add('route-dragging');
+  halloweenDrag = {
+    cardId: card.dataset.halloweenCard,
+    sourceSlot,
+    pointerId: event.pointerId,
+    source: card,
+    ghost
+  };
+  card.setPointerCapture?.(event.pointerId);
+}
+
+function moveHalloweenGhost(clientX, clientY) {
+  if (!halloweenDrag) return;
+  halloweenDrag.ghost.style.left = `${clientX - (halloweenDrag.ghost.offsetWidth / 2)}px`;
+  halloweenDrag.ghost.style.top = `${clientY - (halloweenDrag.ghost.offsetHeight / 2)}px`;
+  challengeRoot.querySelectorAll('[data-route-slot]').forEach(slot => {
+    const rect = slot.getBoundingClientRect();
+    slot.classList.toggle(
+      'route-drop-target',
+      clientX >= rect.left && clientX <= rect.right && clientY >= rect.top && clientY <= rect.bottom
+    );
+  });
+}
+
+function finishHalloweenDrag(clientX, clientY) {
+  if (!halloweenDrag) return;
+  const element = document.elementFromPoint(clientX, clientY);
+  const targetSlot = element?.closest?.('[data-route-slot]');
+  const droppedOnBank = Boolean(element?.closest?.('#halloweenCardBank'));
+  const sourceSlot = halloweenDrag.sourceSlot;
+  if (targetSlot) {
+    const targetIndex = Number(targetSlot.dataset.routeSlot);
+    const replacedCard = halloweenState.cardOrder[targetIndex];
+    if (Number.isInteger(sourceSlot)) {
+      halloweenState.cardOrder[sourceSlot] = replacedCard || '';
+    }
+    halloweenState.cardOrder[targetIndex] = halloweenDrag.cardId;
+  } else if (Number.isInteger(sourceSlot) && (droppedOnBank || !targetSlot)) {
+    halloweenState.cardOrder[sourceSlot] = '';
+  }
+  cleanupHalloweenDrag();
+  updateHalloweenRouteUI();
+  if (!halloweenState.isReplay && !halloweenState.isCompleted) saveScoreState();
+}
+
 function updateGallium() {
   const value = Number(challengeRoot.querySelector('#temperatureSlider').value);
   challengeRoot.querySelector('#temperatureDisplay').textContent = `${value.toFixed(1)} degrees F`;
@@ -1246,7 +1639,7 @@ missionRing.addEventListener('click', event => {
   renderChallenge(button.dataset.mission);
 });
 
-challengeRoot.addEventListener('click', event => {
+challengeRoot.addEventListener('click', async event => {
   const divisor = event.target.closest('[data-divisor]');
   if (divisor) {
     divisor.classList.toggle('selected');
@@ -1299,9 +1692,6 @@ challengeRoot.addEventListener('click', event => {
       finishCalendarHunt();
     }
   }
-
-  const octDay = event.target.closest('[data-oct-day]');
-  if (octDay) updateOctober(Number(octDay.dataset.octDay));
 
   const stateClue = event.target.closest('[data-state-clue]');
   if (stateClue) {
@@ -1604,12 +1994,10 @@ challengeRoot.addEventListener('click', event => {
     }
   }
 
-  if (action === 'oct-prev') updateOctober(octoberDay - 1);
-  if (action === 'oct-next') updateOctober(octoberDay + 1);
+  if (action === 'reset-halloween-route') resetHalloweenRoute();
+  if (action === 'test-halloween-route') await testHalloweenRoute();
   if (action === 'open-halloween') {
-    octoberDay === 31
-      ? solveMission('halloween', 'The October 31 door opened. Section active.')
-      : setFeedback('Move your calendar marker to October 31 first.');
+    openHalloweenDoor();
   }
 
   if (action === 'solve-president') {
@@ -1705,6 +2093,15 @@ challengeRoot.addEventListener('input', event => {
 });
 
 challengeRoot.addEventListener('pointerdown', event => {
+  if (activeMission === 'halloween') {
+    const card = event.target.closest('[data-halloween-card]');
+    if (!card || card.disabled) return;
+    event.preventDefault();
+    const sourceSlot = card.dataset.routeSourceSlot === undefined ? null : Number(card.dataset.routeSourceSlot);
+    startHalloweenDrag(card, sourceSlot, event);
+    return;
+  }
+
   if (activeMission !== 'roman') return;
   const bankTile = event.target.closest('[data-roman-bank-tile]');
   const placedTile = event.target.closest('[data-placed-tile]');
@@ -1716,18 +2113,35 @@ challengeRoot.addEventListener('pointerdown', event => {
 });
 
 challengeRoot.addEventListener('pointermove', event => {
+  if (halloweenDrag && halloweenDrag.pointerId === event.pointerId) {
+    event.preventDefault();
+    moveHalloweenGhost(event.clientX, event.clientY);
+    return;
+  }
+
   if (!romanDrag || romanDrag.pointerId !== event.pointerId) return;
   event.preventDefault();
   moveRomanGhost(event.clientX, event.clientY);
 });
 
 challengeRoot.addEventListener('pointerup', event => {
+  if (halloweenDrag && halloweenDrag.pointerId === event.pointerId) {
+    event.preventDefault();
+    finishHalloweenDrag(event.clientX, event.clientY);
+    return;
+  }
+
   if (!romanDrag || romanDrag.pointerId !== event.pointerId) return;
   event.preventDefault();
   finishRomanDrag(event.clientX, event.clientY);
 });
 
 challengeRoot.addEventListener('pointercancel', event => {
+  if (halloweenDrag && halloweenDrag.pointerId === event.pointerId) {
+    cleanupHalloweenDrag();
+    return;
+  }
+
   if (!romanDrag || romanDrag.pointerId !== event.pointerId) return;
   cleanupRomanDrag();
 });
