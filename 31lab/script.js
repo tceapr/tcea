@@ -94,10 +94,10 @@ const missions = [
   },
   {
     id: 'history',
-    title: 'History Timeline',
+    title: 'The 13th Amendment Timeline',
     symbol: '1865',
     category: 'History',
-    fact: 'On January 31, 1865, Congress passed the 13th Amendment, which abolished slavery in the United States.'
+    fact: 'Congress approved the 13th Amendment before states ratified it on December 6, 1865.'
   }
 ];
 
@@ -161,6 +161,30 @@ const netherlandsQuestions = [
     answer: true
   }
 ];
+const historyEvents = [
+  {
+    id: 'ratified',
+    date: 'December 6, 1865',
+    text: 'Enough states ratified the amendment for it to become part of the Constitution.'
+  },
+  {
+    id: 'senate',
+    date: 'April 8, 1864',
+    text: 'The Senate approved the proposed 13th Amendment.'
+  },
+  {
+    id: 'house',
+    date: 'January 31, 1865',
+    text: 'The House approved the amendment, completing congressional passage and sending it to the states.'
+  }
+];
+const historyCorrectOrder = ['senate', 'house', 'ratified'];
+const historyMeaningChoices = [
+  { id: 'speech', text: 'Protected freedom of speech' },
+  { id: 'slavery', text: 'Abolished slavery and involuntary servitude, except as punishment for a crime' },
+  { id: 'womenVote', text: 'Gave women the right to vote' },
+  { id: 'citizenship', text: 'Established citizenship for everyone born in the United States' }
+];
 
 let activeMission = null;
 let romanState = createRomanState();
@@ -173,11 +197,13 @@ let halloweenRouteAnimating = false;
 let phoneState = createPhoneState();
 let flavorState = createFlavorState();
 let presidentState = createPresidentState();
+let historyState = createHistoryState();
 let make31WrongChecks = 0;
 let make31Score = null;
 let stateScore = null;
 const stateRuledOut = new Set();
 let missionScores = {};
+let historyDrag = null;
 
 resetSavedLabOnOpen();
 loadScoreState();
@@ -506,6 +532,56 @@ function presidentStateForStorage() {
   return { ...presidentState, isReplay: false };
 }
 
+function createHistoryState(saved = {}) {
+  const allowedEvents = new Set(historyEvents.map(event => event.id));
+  const usedEvents = new Set();
+  const eventCardOrder = Array.isArray(saved.eventCardOrder)
+    ? historyCorrectOrder.map((_, index) => {
+      const eventId = saved.eventCardOrder[index];
+      if (!allowedEvents.has(eventId) || usedEvents.has(eventId)) return '';
+      usedEvents.add(eventId);
+      return eventId;
+    })
+    : historyCorrectOrder.map(() => '');
+  const submittedAttempts = Number.isFinite(Number(saved.submittedAttempts))
+    ? Math.max(0, Number(saved.submittedAttempts))
+    : 0;
+  return {
+    eventCardOrder,
+    selectedMeaningAnswer: historyMeaningChoices.some(choice => choice.id === saved.selectedMeaningAnswer) ? saved.selectedMeaningAnswer : '',
+    submittedAttempts,
+    currentPossibleScore: Number.isFinite(Number(saved.currentPossibleScore))
+      ? Math.max(0, Number(saved.currentPossibleScore))
+      : historyPossibleScore(submittedAttempts),
+    pointsEarned: Number(saved.pointsEarned || 0),
+    isCompleted: Boolean(saved.isCompleted),
+    hasAwardedPoints: Boolean(saved.hasAwardedPoints),
+    isReplay: Boolean(saved.isReplay)
+  };
+}
+
+function historyPossibleScore(submittedAttempts) {
+  if (submittedAttempts === 0) return 31;
+  if (submittedAttempts === 1) return 13;
+  return 0;
+}
+
+function historyStateForStorage() {
+  if (historyState.isReplay && historyState.hasAwardedPoints) {
+    const savedPoints = hasAwardedScore('history') ? savedMissionScore('history') : historyState.pointsEarned;
+    return createHistoryState({
+      eventCardOrder: historyCorrectOrder,
+      selectedMeaningAnswer: 'slavery',
+      submittedAttempts: submittedAttemptsFromScore(savedPoints),
+      currentPossibleScore: savedPoints,
+      pointsEarned: savedPoints,
+      isCompleted: true,
+      hasAwardedPoints: true
+    });
+  }
+  return { ...historyState, isReplay: false };
+}
+
 function loadScoreState() {
   try {
     const saved = JSON.parse(localStorage.getItem(scoreStorageKey) || '{}');
@@ -519,6 +595,7 @@ function loadScoreState() {
     phoneState = createPhoneState(saved.phone);
     flavorState = createFlavorState(saved.flavor);
     presidentState = createPresidentState(saved.president);
+    historyState = createHistoryState(saved.history);
     if (primeState.hasAwardedPoints && !missionScores.prime) {
       missionScores.prime = {
         pointsEarned: primeState.pointsEarned,
@@ -637,12 +714,31 @@ function loadScoreState() {
         hasAwardedPoints: true
       });
     }
+    if (historyState.hasAwardedPoints && !missionScores.history) {
+      missionScores.history = {
+        pointsEarned: historyState.pointsEarned,
+        hasAwardedPoints: true
+      };
+    }
+    if (!historyState.hasAwardedPoints && missionScores.history?.hasAwardedPoints) {
+      const savedPoints = Number(missionScores.history.pointsEarned || 0);
+      historyState = createHistoryState({
+        eventCardOrder: historyCorrectOrder,
+        selectedMeaningAnswer: 'slavery',
+        submittedAttempts: submittedAttemptsFromScore(savedPoints),
+        currentPossibleScore: savedPoints,
+        pointsEarned: savedPoints,
+        isCompleted: true,
+        hasAwardedPoints: true
+      });
+    }
     if (primeState.isCompleted) solved.add('prime');
     if (romanState.isCompleted) solved.add('roman');
     if (calendarState.isCompleted) solved.add('calendar');
     if (halloweenState.isCompleted) solved.add('halloween');
     if (flavorState.isCompleted) solved.add('flavor');
     if (presidentState.isCompleted) solved.add('president');
+    if (historyState.isCompleted) solved.add('history');
     if (phoneState.isCompleted) solved.add('phone');
     Object.entries(missionScores).forEach(([missionId, score]) => {
       if (score?.hasAwardedPoints) solved.add(missionId);
@@ -655,6 +751,7 @@ function loadScoreState() {
     phoneState = createPhoneState();
     flavorState = createFlavorState();
     presidentState = createPresidentState();
+    historyState = createHistoryState();
     missionScores = {};
   }
 }
@@ -669,6 +766,7 @@ function saveScoreState() {
       phone: phoneStateForStorage(),
       flavor: flavorStateForStorage(),
       president: presidentStateForStorage(),
+      history: historyStateForStorage(),
       missionScores
     }));
   } catch {
@@ -1486,22 +1584,157 @@ function renderBunyan(mission) {
 }
 
 function renderHistory(mission) {
-  challengeShell(mission, 'Place January 31, 1865, on the timeline. Then finish the sentence about what the 13th Amendment did.', `
-    <div class="tool-card history-row">
-      <button class="timeline-button" type="button" data-history-place="before">Before April 8, 1864</button>
-      <button class="timeline-button" type="button" data-history-place="middle">Between April 8, 1864, and December 6, 1865</button>
-      <button class="timeline-button" type="button" data-history-place="after">After December 6, 1865</button>
-    </div>
-    <div class="tool-card">
-      <p class="mission-copy">Congress passed the 13th Amendment, which...</p>
-      <div class="button-grid">
-        <button class="choice-button" type="button" data-history-phrase="speech">protected free speech.</button>
-        <button class="choice-button" type="button" data-history-phrase="slavery">abolished slavery in the United States.</button>
-        <button class="choice-button" type="button" data-history-phrase="vote">gave women the right to vote.</button>
+  const isReplay = historyState.isCompleted;
+  if (isReplay) {
+    historyState = createHistoryState({
+      hasAwardedPoints: true,
+      isReplay: true
+    });
+  }
+  const isLocked = historyState.isCompleted && !historyState.isReplay;
+  const scoreLabel = isLocked ? 'Score earned' : historyState.isReplay ? 'Practice score' : 'Possible score';
+  const scoreValue = isLocked && hasAwardedScore('history') ? savedMissionScore('history') : historyState.currentPossibleScore;
+  challengeShell(mission, 'Arrange the three events in order from earliest to latest. Then choose the statement that correctly explains the 13th Amendment.', `
+    <div class="tool-card history-timeline-builder">
+      <div class="history-panel-heading">
+        <h3>Event Cards</h3>
+        <div class="case-scoreboard" aria-live="polite">
+          <span>${scoreLabel}</span>
+          <strong id="historyScore">${scoreValue} points</strong>
+        </div>
+      </div>
+      <div class="route-card-bank history-event-bank" id="historyEventBank">
+        ${renderHistoryCardBank(isLocked)}
+      </div>
+      <h3>Timeline Spaces</h3>
+      <div class="route-space-row history-space-row" id="historyTimelineSpaces">
+        ${historyState.eventCardOrder.map((eventId, index) => renderHistoryTimelineSpace(index, eventId, isLocked)).join('')}
       </div>
     </div>
-    <button class="primary-button" type="button" data-action="check-history">Check timeline</button>
+    <div class="tool-card history-meaning-card">
+      <h3>What did the 13th Amendment do?</h3>
+      <div class="button-grid history-meaning-grid">
+        ${historyMeaningChoices.map(choice => `
+          <button class="choice-button ${historyState.selectedMeaningAnswer === choice.id ? 'selected' : ''}" type="button" data-history-meaning="${choice.id}" ${isLocked ? 'disabled' : ''}>${choice.text}</button>
+        `).join('')}
+      </div>
+    </div>
+    <div class="route-control-row">
+      <button class="ghost-button" type="button" data-action="reset-history" ${isLocked ? 'disabled' : ''}>Reset Timeline</button>
+      <button class="primary-button" type="button" data-action="check-history" ${isLocked || !historyResponseComplete() ? 'disabled' : ''}>Check Timeline</button>
+    </div>
+    <p class="machine-score-line" id="historyResultScore" ${isLocked ? '' : 'hidden'}>${isLocked ? `Points earned: ${scoreValue} points` : ''}</p>
+    <div class="history-explanation" id="historyExplanation" ${isLocked ? '' : 'hidden'}>
+      <h3>Timeline complete!</h3>
+      <p>Congress approved the proposed 13th Amendment on January 31, 1865. The states ratified it on December 6, 1865, making it part of the Constitution.</p>
+      <p>The 13th Amendment made slavery illegal throughout the United States. Its text includes an exception for punishment after a criminal conviction.</p>
+    </div>
+    ${historyState.isReplay ? `<p class="machine-score-line">Practice replay. Your first 13th Amendment Timeline score was ${savedMissionScore('history')} points, and no additional points will be awarded.</p>` : ''}
   `);
+}
+
+function historyEventById(id) {
+  return historyEvents.find(event => event.id === id);
+}
+
+function renderHistoryCardBank(isLocked = false) {
+  const placed = new Set(historyState.eventCardOrder.filter(Boolean));
+  return historyEvents
+    .filter(event => !placed.has(event.id))
+    .map(event => renderHistoryEventCard(event.id, null, isLocked))
+    .join('');
+}
+
+function renderHistoryEventCard(eventId, sourceSlot = null, isLocked = false) {
+  const event = historyEventById(eventId);
+  if (!event) return '';
+  const source = Number.isInteger(sourceSlot) ? `data-history-source-slot="${sourceSlot}"` : '';
+  return `
+    <button class="route-card history-event-card" type="button" data-history-event-card="${eventId}" ${source} ${isLocked ? 'disabled' : ''}>
+      <strong>${event.date}</strong>
+      <span>${event.text}</span>
+    </button>
+  `;
+}
+
+function renderHistoryTimelineSpace(index, eventId, isLocked = false) {
+  const labels = ['Earliest', 'Next', 'Latest'];
+  return `
+    <div class="route-space history-space ${eventId ? 'filled' : ''}" data-history-slot="${index}" role="group" aria-label="${labels[index]} timeline space">
+      <span class="route-space-number">${index + 1}. ${labels[index]}</span>
+      ${eventId ? renderHistoryEventCard(eventId, index, isLocked) : '<span class="route-placeholder">Drop event here</span>'}
+    </div>
+  `;
+}
+
+function historyResponseComplete() {
+  return historyState.eventCardOrder.every(Boolean) && Boolean(historyState.selectedMeaningAnswer);
+}
+
+function updateHistoryUI() {
+  const isLocked = historyState.isCompleted && !historyState.isReplay;
+  const bank = challengeRoot.querySelector('#historyEventBank');
+  const spaces = challengeRoot.querySelector('#historyTimelineSpaces');
+  const score = challengeRoot.querySelector('#historyScore');
+  const checkButton = challengeRoot.querySelector('[data-action="check-history"]');
+  const resetButton = challengeRoot.querySelector('[data-action="reset-history"]');
+  if (bank) bank.innerHTML = renderHistoryCardBank(isLocked);
+  if (spaces) {
+    spaces.innerHTML = historyState.eventCardOrder
+      .map((eventId, index) => renderHistoryTimelineSpace(index, eventId, isLocked))
+      .join('');
+  }
+  if (score) {
+    const label = isLocked ? 'Score earned' : historyState.isReplay ? 'Practice score' : 'Possible score';
+    const wrapper = score.closest('.case-scoreboard');
+    const labelElement = wrapper?.querySelector('span');
+    if (labelElement) labelElement.textContent = label;
+    score.textContent = `${isLocked && hasAwardedScore('history') ? savedMissionScore('history') : historyState.currentPossibleScore} points`;
+  }
+  if (checkButton) checkButton.disabled = isLocked || !historyResponseComplete();
+  if (resetButton) resetButton.disabled = isLocked;
+}
+
+function resetHistoryTimeline() {
+  if (historyState.isCompleted && !historyState.isReplay) return;
+  historyState.eventCardOrder = historyCorrectOrder.map(() => '');
+  historyState.selectedMeaningAnswer = '';
+  challengeRoot.querySelectorAll('[data-history-meaning]').forEach(button => button.classList.remove('selected'));
+  updateHistoryUI();
+  setFeedback('');
+  if (!historyState.isReplay && !historyState.isCompleted) saveScoreState();
+}
+
+function completeHistoryTimeline(pointsForAttempt) {
+  const alreadyAwarded = historyState.isReplay || historyState.hasAwardedPoints || hasAwardedScore('history');
+  historyState.submittedAttempts += 1;
+  historyState.currentPossibleScore = pointsForAttempt;
+  historyState.pointsEarned = alreadyAwarded
+    ? hasAwardedScore('history') ? savedMissionScore('history') : historyState.pointsEarned
+    : pointsForAttempt;
+  historyState.isCompleted = true;
+  historyState.hasAwardedPoints = true;
+  const earnedScore = alreadyAwarded ? historyState.pointsEarned : awardMissionScore('history', pointsForAttempt);
+  historyState.pointsEarned = earnedScore;
+  updateHistoryUI();
+  challengeRoot.querySelectorAll('[data-history-event-card], [data-history-meaning], [data-action="reset-history"], [data-action="check-history"]').forEach(control => {
+    control.disabled = true;
+  });
+  const resultScore = challengeRoot.querySelector('#historyResultScore');
+  if (resultScore) {
+    resultScore.textContent = alreadyAwarded
+      ? `Practice complete. Saved score: ${earnedScore} points`
+      : `Points earned: ${earnedScore} points`;
+    resultScore.removeAttribute('hidden');
+  }
+  challengeRoot.querySelector('#historyExplanation')?.removeAttribute('hidden');
+  saveScoreState();
+  const message = alreadyAwarded
+    ? `Practice complete. Your saved 13th Amendment Timeline score remains ${earnedScore} points.`
+    : earnedScore > 0
+      ? `Timeline complete! Congress approved the proposed 13th Amendment on January 31, 1865. The states ratified it on December 6, 1865, making it part of the Constitution. Score earned: ${earnedScore} points.`
+      : 'Timeline complete! The 13th Amendment is in place. Mission complete.';
+  solveMission('history', message);
 }
 
 function updateBinary() {
@@ -1860,6 +2093,69 @@ function finishHalloweenDrag(clientX, clientY) {
   if (!halloweenState.isReplay && !halloweenState.isCompleted) saveScoreState();
 }
 
+function cleanupHistoryDrag() {
+  if (!historyDrag) return;
+  historyDrag.source.classList.remove('route-dragging');
+  historyDrag.ghost.remove();
+  historyDrag = null;
+  challengeRoot.querySelectorAll('.route-drop-target').forEach(slot => slot.classList.remove('route-drop-target'));
+}
+
+function startHistoryDrag(card, sourceSlot, event) {
+  if (historyState.isCompleted && !historyState.isReplay) return;
+  const rect = card.getBoundingClientRect();
+  const ghost = card.cloneNode(true);
+  ghost.classList.add('route-drag-ghost');
+  ghost.style.width = `${rect.width}px`;
+  ghost.style.left = `${event.clientX - (rect.width / 2)}px`;
+  ghost.style.top = `${event.clientY - (rect.height / 2)}px`;
+  document.body.appendChild(ghost);
+  card.classList.add('route-dragging');
+  historyDrag = {
+    eventId: card.dataset.historyEventCard,
+    sourceSlot,
+    pointerId: event.pointerId,
+    source: card,
+    ghost
+  };
+  card.setPointerCapture?.(event.pointerId);
+}
+
+function moveHistoryGhost(clientX, clientY) {
+  if (!historyDrag) return;
+  historyDrag.ghost.style.left = `${clientX - (historyDrag.ghost.offsetWidth / 2)}px`;
+  historyDrag.ghost.style.top = `${clientY - (historyDrag.ghost.offsetHeight / 2)}px`;
+  challengeRoot.querySelectorAll('[data-history-slot]').forEach(slot => {
+    const rect = slot.getBoundingClientRect();
+    slot.classList.toggle(
+      'route-drop-target',
+      clientX >= rect.left && clientX <= rect.right && clientY >= rect.top && clientY <= rect.bottom
+    );
+  });
+}
+
+function finishHistoryDrag(clientX, clientY) {
+  if (!historyDrag) return;
+  const element = document.elementFromPoint(clientX, clientY);
+  const targetSlot = element?.closest?.('[data-history-slot]');
+  const droppedOnBank = Boolean(element?.closest?.('#historyEventBank'));
+  const sourceSlot = historyDrag.sourceSlot;
+  if (targetSlot) {
+    const targetIndex = Number(targetSlot.dataset.historySlot);
+    const replacedCard = historyState.eventCardOrder[targetIndex];
+    if (Number.isInteger(sourceSlot)) {
+      historyState.eventCardOrder[sourceSlot] = replacedCard || '';
+    }
+    historyState.eventCardOrder[targetIndex] = historyDrag.eventId;
+  } else if (Number.isInteger(sourceSlot) && (droppedOnBank || !targetSlot)) {
+    historyState.eventCardOrder[sourceSlot] = '';
+  }
+  cleanupHistoryDrag();
+  updateHistoryUI();
+  setFeedback('');
+  if (!historyState.isReplay && !historyState.isCompleted) saveScoreState();
+}
+
 function updateGallium() {
   const value = Number(challengeRoot.querySelector('#temperatureSlider').value);
   challengeRoot.querySelector('#temperatureDisplay').textContent = `${value.toFixed(1)} degrees F`;
@@ -2090,16 +2386,15 @@ challengeRoot.addEventListener('click', async event => {
     updateStack();
   }
 
-  const historyPlace = event.target.closest('[data-history-place]');
-  if (historyPlace) {
-    challengeRoot.querySelectorAll('[data-history-place]').forEach(button => button.classList.remove('selected'));
-    historyPlace.classList.add('selected');
-  }
-
-  const historyPhrase = event.target.closest('[data-history-phrase]');
-  if (historyPhrase) {
-    challengeRoot.querySelectorAll('[data-history-phrase]').forEach(button => button.classList.remove('selected'));
-    historyPhrase.classList.add('selected');
+  const historyMeaning = event.target.closest('[data-history-meaning]');
+  if (historyMeaning) {
+    if (historyMeaning.disabled || (historyState.isCompleted && !historyState.isReplay)) return;
+    challengeRoot.querySelectorAll('[data-history-meaning]').forEach(button => button.classList.remove('selected'));
+    historyMeaning.classList.add('selected');
+    historyState.selectedMeaningAnswer = historyMeaning.dataset.historyMeaning;
+    updateHistoryUI();
+    setFeedback('');
+    if (!historyState.isReplay && !historyState.isCompleted) saveScoreState();
   }
 
   const action = event.target.closest('[data-action]')?.dataset.action;
@@ -2396,12 +2691,24 @@ challengeRoot.addEventListener('click', async event => {
       : setFeedback('Try three 10-foot basketball hoops and one extra foot.');
   }
 
+  if (action === 'reset-history') {
+    resetHistoryTimeline();
+  }
+
   if (action === 'check-history') {
-    const place = challengeRoot.querySelector('[data-history-place].selected')?.dataset.historyPlace;
-    const phrase = challengeRoot.querySelector('[data-history-phrase].selected')?.dataset.historyPhrase;
-    place === 'middle' && phrase === 'slavery'
-      ? solveMission('history', 'January 31, 1865, and the 13th Amendment are in place. Section active.')
-      : setFeedback('Check both the timeline position and the amendment sentence.');
+    if (!historyResponseComplete() || (historyState.isCompleted && !historyState.isReplay)) return;
+    const pointsForAttempt = historyPossibleScore(historyState.submittedAttempts);
+    const orderCorrect = historyState.eventCardOrder.every((eventId, index) => eventId === historyCorrectOrder[index]);
+    const meaningCorrect = historyState.selectedMeaningAnswer === 'slavery';
+    if (orderCorrect && meaningCorrect) {
+      completeHistoryTimeline(pointsForAttempt);
+    } else {
+      historyState.submittedAttempts += 1;
+      historyState.currentPossibleScore = historyPossibleScore(historyState.submittedAttempts);
+      updateHistoryUI();
+      if (!historyState.isReplay && !historyState.isCompleted) saveScoreState();
+      setFeedback('Something is not yet in place. Check the event order and the meaning of the amendment.');
+    }
   }
 });
 
@@ -2422,6 +2729,15 @@ challengeRoot.addEventListener('change', event => {
 });
 
 challengeRoot.addEventListener('pointerdown', event => {
+  if (activeMission === 'history') {
+    const card = event.target.closest('[data-history-event-card]');
+    if (!card || card.disabled) return;
+    event.preventDefault();
+    const sourceSlot = card.dataset.historySourceSlot === undefined ? null : Number(card.dataset.historySourceSlot);
+    startHistoryDrag(card, sourceSlot, event);
+    return;
+  }
+
   if (activeMission === 'halloween') {
     const card = event.target.closest('[data-halloween-card]');
     if (!card || card.disabled) return;
@@ -2442,6 +2758,12 @@ challengeRoot.addEventListener('pointerdown', event => {
 });
 
 challengeRoot.addEventListener('pointermove', event => {
+  if (historyDrag && historyDrag.pointerId === event.pointerId) {
+    event.preventDefault();
+    moveHistoryGhost(event.clientX, event.clientY);
+    return;
+  }
+
   if (halloweenDrag && halloweenDrag.pointerId === event.pointerId) {
     event.preventDefault();
     moveHalloweenGhost(event.clientX, event.clientY);
@@ -2454,6 +2776,12 @@ challengeRoot.addEventListener('pointermove', event => {
 });
 
 challengeRoot.addEventListener('pointerup', event => {
+  if (historyDrag && historyDrag.pointerId === event.pointerId) {
+    event.preventDefault();
+    finishHistoryDrag(event.clientX, event.clientY);
+    return;
+  }
+
   if (halloweenDrag && halloweenDrag.pointerId === event.pointerId) {
     event.preventDefault();
     finishHalloweenDrag(event.clientX, event.clientY);
@@ -2466,6 +2794,11 @@ challengeRoot.addEventListener('pointerup', event => {
 });
 
 challengeRoot.addEventListener('pointercancel', event => {
+  if (historyDrag && historyDrag.pointerId === event.pointerId) {
+    cleanupHistoryDrag();
+    return;
+  }
+
   if (halloweenDrag && halloweenDrag.pointerId === event.pointerId) {
     cleanupHalloweenDrag();
     return;
