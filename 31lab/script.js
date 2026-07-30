@@ -87,10 +87,10 @@ const missions = [
   },
   {
     id: 'bunyan',
-    title: 'Paul Bunyan Measuring Challenge',
+    title: 'Paul Bunyan Fact Builder',
     symbol: 'FT',
     category: 'Popular culture',
-    fact: 'Three 10-foot basketball hoops plus one foot make 31 feet.'
+    fact: 'The Paul Bunyan statue in Bangor, Maine is 31 feet tall.'
   },
   {
     id: 'history',
@@ -187,6 +187,23 @@ const historyMeaningChoices = [
   { id: 'citizenship', text: 'Established citizenship for everyone born in the United States' }
 ];
 const galliumCorrectItems = ['Computer', 'LED light', 'Phone', 'Solar panel'];
+const bunyanChoices = {
+  selectedLocation: ['Bangor, Maine', 'Detroit, Michigan', 'Duluth, Minnesota', 'Portland, Oregon'],
+  selectedHeight: ['21 feet', '31 feet', '41 feet', '51 feet'],
+  selectedYear: ['1931', '1959', '1976', '1984'],
+  selectedReason: [
+    "To celebrate Bangor's lumber history",
+    'To honor basketball history',
+    'To mark a state fair opening',
+    'To celebrate a winter carnival'
+  ]
+};
+const bunyanCorrectFacts = {
+  selectedLocation: 'Bangor, Maine',
+  selectedHeight: '31 feet',
+  selectedYear: '1959',
+  selectedReason: "To celebrate Bangor's lumber history"
+};
 
 let activeMission = null;
 let romanState = createRomanState();
@@ -201,6 +218,7 @@ let galliumState = createGalliumState();
 let phoneState = createPhoneState();
 let flavorState = createFlavorState();
 let presidentState = createPresidentState();
+let bunyanState = createBunyanState();
 let historyState = createHistoryState();
 let make31WrongChecks = 0;
 let make31Score = null;
@@ -636,6 +654,51 @@ function presidentStateForStorage() {
   return { ...presidentState, isReplay: false };
 }
 
+function createBunyanState(saved = {}) {
+  const submittedAttempts = Number.isFinite(Number(saved.submittedAttempts))
+    ? Math.max(0, Number(saved.submittedAttempts))
+    : 0;
+  const selectedLocation = bunyanChoices.selectedLocation.includes(saved.selectedLocation) ? saved.selectedLocation : '';
+  const selectedHeight = bunyanChoices.selectedHeight.includes(saved.selectedHeight) ? saved.selectedHeight : '';
+  const selectedYear = bunyanChoices.selectedYear.includes(saved.selectedYear) ? saved.selectedYear : '';
+  const selectedReason = bunyanChoices.selectedReason.includes(saved.selectedReason) ? saved.selectedReason : '';
+  return {
+    selectedLocation,
+    selectedHeight,
+    selectedYear,
+    selectedReason,
+    submittedAttempts,
+    currentPossibleScore: Number.isFinite(Number(saved.currentPossibleScore))
+      ? Math.max(0, Number(saved.currentPossibleScore))
+      : bunyanPossibleScore(submittedAttempts),
+    pointsEarned: Number(saved.pointsEarned || 0),
+    isCompleted: Boolean(saved.isCompleted),
+    hasAwardedPoints: Boolean(saved.hasAwardedPoints),
+    isReplay: Boolean(saved.isReplay)
+  };
+}
+
+function bunyanPossibleScore(submittedAttempts) {
+  if (submittedAttempts === 0) return 31;
+  if (submittedAttempts === 1) return 13;
+  return 0;
+}
+
+function bunyanStateForStorage() {
+  if (bunyanState.isReplay && bunyanState.hasAwardedPoints) {
+    const savedPoints = hasAwardedScore('bunyan') ? savedMissionScore('bunyan') : bunyanState.pointsEarned;
+    return createBunyanState({
+      ...bunyanCorrectFacts,
+      submittedAttempts: submittedAttemptsFromScore(savedPoints),
+      currentPossibleScore: savedPoints,
+      pointsEarned: savedPoints,
+      isCompleted: true,
+      hasAwardedPoints: true
+    });
+  }
+  return { ...bunyanState, isReplay: false };
+}
+
 function createHistoryState(saved = {}) {
   const allowedEvents = new Set(historyEvents.map(event => event.id));
   const usedEvents = new Set();
@@ -701,6 +764,7 @@ function loadScoreState() {
     phoneState = createPhoneState(saved.phone);
     flavorState = createFlavorState(saved.flavor);
     presidentState = createPresidentState(saved.president);
+    bunyanState = createBunyanState(saved.bunyan);
     historyState = createHistoryState(saved.history);
     if (primeState.hasAwardedPoints && !missionScores.prime) {
       missionScores.prime = {
@@ -855,6 +919,23 @@ function loadScoreState() {
         hasAwardedPoints: true
       });
     }
+    if (bunyanState.hasAwardedPoints && !missionScores.bunyan) {
+      missionScores.bunyan = {
+        pointsEarned: bunyanState.pointsEarned,
+        hasAwardedPoints: true
+      };
+    }
+    if (!bunyanState.hasAwardedPoints && missionScores.bunyan?.hasAwardedPoints) {
+      const savedPoints = Number(missionScores.bunyan.pointsEarned || 0);
+      bunyanState = createBunyanState({
+        ...bunyanCorrectFacts,
+        submittedAttempts: submittedAttemptsFromScore(savedPoints),
+        currentPossibleScore: savedPoints,
+        pointsEarned: savedPoints,
+        isCompleted: true,
+        hasAwardedPoints: true
+      });
+    }
     if (historyState.hasAwardedPoints && !missionScores.history) {
       missionScores.history = {
         pointsEarned: historyState.pointsEarned,
@@ -881,6 +962,7 @@ function loadScoreState() {
     if (galliumState.isCompleted) solved.add('gallium');
     if (flavorState.isCompleted) solved.add('flavor');
     if (presidentState.isCompleted) solved.add('president');
+    if (bunyanState.isCompleted) solved.add('bunyan');
     if (historyState.isCompleted) solved.add('history');
     if (phoneState.isCompleted) solved.add('phone');
     Object.entries(missionScores).forEach(([missionId, score]) => {
@@ -896,6 +978,7 @@ function loadScoreState() {
     phoneState = createPhoneState();
     flavorState = createFlavorState();
     presidentState = createPresidentState();
+    bunyanState = createBunyanState();
     historyState = createHistoryState();
     missionScores = {};
   }
@@ -913,6 +996,7 @@ function saveScoreState() {
       phone: phoneStateForStorage(),
       flavor: flavorStateForStorage(),
       president: presidentStateForStorage(),
+      bunyan: bunyanStateForStorage(),
       history: historyStateForStorage(),
       missionScores
     }));
@@ -1772,23 +1856,149 @@ function updateNetherlandsPanel() {
 }
 
 function renderBunyan(mission) {
-  stack = [];
-  challengeShell(mission, 'Stack familiar objects to estimate 31 feet. Three basketball hoops equal 30 feet, so the statue needs one extra foot.', `
-    <div class="tool-card">
-      <div class="button-grid">
-        <button class="object-button" type="button" data-object="Basketball hoop" data-feet="10">Basketball hoop<br>10 ft</button>
-        <button class="object-button" type="button" data-object="One-foot ruler" data-feet="1">One-foot ruler<br>1 ft</button>
-        <button class="object-button" type="button" data-object="Door" data-feet="7">Door<br>7 ft</button>
-        <button class="object-button" type="button" data-object="Desk" data-feet="3">Desk<br>3 ft</button>
+  const isReplay = bunyanState.isCompleted;
+  if (isReplay) {
+    bunyanState = createBunyanState({
+      hasAwardedPoints: true,
+      isReplay: true
+    });
+  }
+  const isLocked = bunyanState.isCompleted && !bunyanState.isReplay;
+  const displayedScore = isLocked && hasAwardedScore('bunyan')
+    ? savedMissionScore('bunyan')
+    : bunyanState.currentPossibleScore;
+  const scoreLabel = isLocked ? 'Score earned' : bunyanState.isReplay ? 'Practice score' : 'Possible score';
+  challengeShell(mission, 'Repair the missing museum plaque by choosing the correct facts about the 31-foot Paul Bunyan statue.', `
+    <div class="tool-card bunyan-plaque">
+      <div class="plaque-header">
+        <span aria-hidden="true">31</span>
+        <h3>Paul Bunyan Museum Plaque</h3>
       </div>
+      <div class="plaque-fields">
+        ${renderBunyanSelect('selectedLocation', 'Location', 'Choose location', isLocked)}
+        ${renderBunyanSelect('selectedHeight', 'Height', 'Choose height', isLocked)}
+        ${renderBunyanSelect('selectedYear', 'Year unveiled', 'Choose year', isLocked)}
+        ${renderBunyanSelect('selectedReason', 'Why it was built', 'Choose reason', isLocked)}
+      </div>
+      <p class="bunyan-world-line" id="bunyanWorldLine" ${isLocked ? '' : 'hidden'}>Bangor was known as the Lumber Capital of the World.</p>
     </div>
-    <div class="total-display" id="heightTotal">Total: 0 ft</div>
-    <div class="stack-list" id="stackList"></div>
+    <div class="case-scoreboard" aria-live="polite">
+      <span>${scoreLabel}</span>
+      <strong id="bunyanScore">${displayedScore} points</strong>
+    </div>
+    ${bunyanState.isReplay ? `<p class="machine-score-line">Practice replay. Your first Paul Bunyan Fact Builder score was ${savedMissionScore('bunyan')} points, and no additional points will be awarded.</p>` : ''}
+    <p class="machine-score-line" id="bunyanResultScore" ${isLocked ? '' : 'hidden'}>${isLocked ? `Points earned: ${displayedScore} points` : ''}</p>
     <div class="tile-bank">
-      <button class="ghost-button" type="button" data-action="reset-stack">Reset stack</button>
-      <button class="primary-button" type="button" data-action="check-stack">Check height</button>
+      <button class="ghost-button" type="button" data-action="reset-bunyan" ${isLocked ? 'disabled' : ''}>Reset Plaque</button>
+      <button class="primary-button" type="button" data-action="check-bunyan" ${isLocked || !bunyanPlaqueComplete() ? 'disabled' : ''}>Check Facts</button>
     </div>
   `);
+}
+
+function renderBunyanSelect(key, label, placeholder, isLocked) {
+  return `
+    <label class="plaque-field">
+      <span>${label}</span>
+      <select data-bunyan-select="${key}" ${isLocked ? 'disabled' : ''}>
+        <option value="">${placeholder}</option>
+        ${bunyanChoices[key].map(choice => `<option value="${choice}" ${bunyanState[key] === choice ? 'selected' : ''}>${choice}</option>`).join('')}
+      </select>
+    </label>
+  `;
+}
+
+function bunyanPlaqueComplete() {
+  return Boolean(
+    bunyanState.selectedLocation
+    && bunyanState.selectedHeight
+    && bunyanState.selectedYear
+    && bunyanState.selectedReason
+  );
+}
+
+function bunyanPlaqueIsCorrect() {
+  return Object.entries(bunyanCorrectFacts).every(([key, value]) => bunyanState[key] === value);
+}
+
+function updateBunyanScoreDisplay() {
+  const score = challengeRoot.querySelector('#bunyanScore');
+  if (!score) return;
+  const label = score.closest('.case-scoreboard')?.querySelector('span');
+  const isLocked = bunyanState.isCompleted && !bunyanState.isReplay;
+  if (label) label.textContent = isLocked ? 'Score earned' : bunyanState.isReplay ? 'Practice score' : 'Possible score';
+  score.textContent = `${isLocked && hasAwardedScore('bunyan') ? savedMissionScore('bunyan') : bunyanState.currentPossibleScore} points`;
+}
+
+function updateBunyanControls() {
+  const checkButton = challengeRoot.querySelector('[data-action="check-bunyan"]');
+  if (checkButton) checkButton.disabled = (bunyanState.isCompleted && !bunyanState.isReplay) || !bunyanPlaqueComplete();
+}
+
+function resetBunyanPlaque() {
+  bunyanState.selectedLocation = '';
+  bunyanState.selectedHeight = '';
+  bunyanState.selectedYear = '';
+  bunyanState.selectedReason = '';
+  challengeRoot.querySelectorAll('[data-bunyan-select]').forEach(select => {
+    select.value = '';
+  });
+  updateBunyanControls();
+  const resultScore = challengeRoot.querySelector('#bunyanResultScore');
+  if (resultScore) {
+    resultScore.hidden = true;
+    resultScore.textContent = '';
+  }
+  const worldLine = challengeRoot.querySelector('#bunyanWorldLine');
+  if (worldLine) worldLine.hidden = true;
+  setFeedback('');
+  if (!bunyanState.isReplay && !bunyanState.isCompleted) saveScoreState();
+}
+
+function lockBunyanPlaque() {
+  challengeRoot.querySelectorAll('[data-bunyan-select], [data-action="reset-bunyan"], [data-action="check-bunyan"]').forEach(control => {
+    control.disabled = true;
+  });
+}
+
+function completeBunyanPlaque(pointsForAttempt) {
+  if (bunyanState.isReplay || bunyanState.hasAwardedPoints || hasAwardedScore('bunyan')) {
+    const savedPoints = savedMissionScore('bunyan') || bunyanState.pointsEarned;
+    bunyanState.pointsEarned = savedPoints;
+    bunyanState.isCompleted = true;
+    bunyanState.hasAwardedPoints = true;
+    updateBunyanScoreDisplay();
+    lockBunyanPlaque();
+    const resultScore = challengeRoot.querySelector('#bunyanResultScore');
+    if (resultScore) {
+      resultScore.hidden = false;
+      resultScore.textContent = `Practice complete. Your saved Paul Bunyan Fact Builder score remains ${savedPoints} points.`;
+    }
+    const worldLine = challengeRoot.querySelector('#bunyanWorldLine');
+    if (worldLine) worldLine.hidden = false;
+    setFeedback('Plaque repaired for practice. No additional points will be awarded.', true);
+    saveScoreState();
+    return;
+  }
+
+  const awardedPoints = awardMissionScore('bunyan', pointsForAttempt);
+  bunyanState.pointsEarned = awardedPoints;
+  bunyanState.currentPossibleScore = awardedPoints;
+  bunyanState.isCompleted = true;
+  bunyanState.hasAwardedPoints = true;
+  updateBunyanScoreDisplay();
+  lockBunyanPlaque();
+  const resultScore = challengeRoot.querySelector('#bunyanResultScore');
+  if (resultScore) {
+    resultScore.hidden = false;
+    resultScore.textContent = `Points earned: ${awardedPoints} points`;
+  }
+  const worldLine = challengeRoot.querySelector('#bunyanWorldLine');
+  if (worldLine) worldLine.hidden = false;
+  const message = awardedPoints > 0
+    ? `Plaque repaired! The Paul Bunyan statue in Bangor, Maine is 31 feet tall and was unveiled in 1959. Bangor was known as the Lumber Capital of the World. Points earned: ${awardedPoints} points.`
+    : 'Plaque repaired! Mission complete. Bangor was known as the Lumber Capital of the World.';
+  solveMission('bunyan', message);
+  saveScoreState();
 }
 
 function renderHistory(mission) {
@@ -2722,12 +2932,6 @@ challengeRoot.addEventListener('click', async event => {
     saveScoreState();
   }
 
-  const objectButton = event.target.closest('[data-object]');
-  if (objectButton) {
-    stack.push({ name: objectButton.dataset.object, feet: Number(objectButton.dataset.feet) });
-    updateStack();
-  }
-
   const historyMeaning = event.target.closest('[data-history-meaning]');
   if (historyMeaning) {
     if (historyMeaning.disabled || (historyState.isCompleted && !historyState.isReplay)) return;
@@ -3029,10 +3233,24 @@ challengeRoot.addEventListener('click', async event => {
     }
   }
 
-  if (action === 'reset-stack') {
-    stack = [];
-    updateStack();
-    setFeedback('Stack reset.');
+  if (action === 'reset-bunyan') {
+    if (bunyanState.isCompleted && !bunyanState.isReplay) return;
+    resetBunyanPlaque();
+  }
+
+  if (action === 'check-bunyan') {
+    if (!bunyanPlaqueComplete() || (bunyanState.isCompleted && !bunyanState.isReplay)) return;
+    const pointsForAttempt = bunyanPossibleScore(bunyanState.submittedAttempts);
+    bunyanState.submittedAttempts += 1;
+    if (bunyanPlaqueIsCorrect()) {
+      bunyanState.currentPossibleScore = pointsForAttempt;
+      completeBunyanPlaque(pointsForAttempt);
+    } else {
+      bunyanState.currentPossibleScore = bunyanPossibleScore(bunyanState.submittedAttempts);
+      updateBunyanScoreDisplay();
+      setFeedback('Some facts are still incorrect. Revise the plaque and try again.');
+      if (!bunyanState.isReplay && !bunyanState.isCompleted) saveScoreState();
+    }
   }
 
   if (action === 'reset-president') {
@@ -3048,15 +3266,6 @@ challengeRoot.addEventListener('click', async event => {
         : 'Mission reset. Open the evidence files to replay the case.');
       saveScoreState();
     }
-  }
-
-  if (action === 'check-stack') {
-    const total = stack.reduce((sum, item) => sum + item.feet, 0);
-    const hoops = stack.filter(item => item.name === 'Basketball hoop').length;
-    const rulers = stack.filter(item => item.name === 'One-foot ruler').length;
-    total === 31 && hoops === 3 && rulers === 1
-      ? solveMission('bunyan', 'Three hoops plus one foot reach 31 feet. Section active.')
-      : setFeedback('Try three 10-foot basketball hoops and one extra foot.');
   }
 
   if (action === 'reset-history') {
@@ -3096,6 +3305,19 @@ challengeRoot.addEventListener('change', event => {
     syncGalliumSelectedItems();
     setFeedback('');
     if (!galliumState.isReplay && !galliumState.isCompleted) saveScoreState();
+    return;
+  }
+
+  const bunyanSelect = event.target.closest('[data-bunyan-select]');
+  if (bunyanSelect) {
+    if (bunyanState.isCompleted && !bunyanState.isReplay) return;
+    const key = bunyanSelect.dataset.bunyanSelect;
+    if (Object.prototype.hasOwnProperty.call(bunyanChoices, key)) {
+      bunyanState[key] = bunyanSelect.value;
+      updateBunyanControls();
+      setFeedback('');
+      if (!bunyanState.isReplay && !bunyanState.isCompleted) saveScoreState();
+    }
     return;
   }
 
