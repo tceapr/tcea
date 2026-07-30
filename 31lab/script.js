@@ -181,7 +181,7 @@ const historyEvents = [
 const historyCorrectOrder = ['senate', 'house', 'ratified'];
 const historyMeaningChoices = [
   { id: 'speech', text: 'Protected freedom of speech' },
-  { id: 'slavery', text: 'Abolished slavery and involuntary servitude, except as punishment for a crime' },
+  { id: 'slavery', text: 'Abolished slavery' },
   { id: 'womenVote', text: 'Gave women the right to vote' },
   { id: 'citizenship', text: 'Established citizenship for everyone born in the United States' }
 ];
