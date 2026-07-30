@@ -1414,6 +1414,90 @@ h3 {
   gap: 10px;
 }
 
+.history-timeline-builder,
+.history-meaning-card {
+  display: grid;
+  gap: 14px;
+}
+
+.history-panel-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.history-panel-heading h3,
+.history-meaning-card h3,
+.history-timeline-builder h3,
+.history-explanation h3 {
+  margin: 0;
+}
+
+.history-event-bank {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.history-space-row {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.history-space {
+  grid-template-columns: 1fr;
+  min-height: 178px;
+  align-content: start;
+}
+
+.history-space .route-space-number {
+  width: auto;
+  height: auto;
+  justify-self: start;
+  padding: 6px 10px;
+  border-radius: 999px;
+  line-height: 1;
+}
+
+.history-event-card {
+  min-height: 128px;
+  display: grid;
+  align-content: start;
+  gap: 7px;
+  text-align: left;
+  line-height: 1.25;
+}
+
+.history-event-card strong {
+  color: var(--navy);
+  font-size: 1rem;
+}
+
+.history-event-card span {
+  font-size: 0.9rem;
+  font-weight: 750;
+}
+
+.history-meaning-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.history-explanation {
+  display: grid;
+  gap: 8px;
+  padding: 14px;
+  border: 1px solid rgba(22, 139, 135, 0.22);
+  border-radius: 8px;
+  color: var(--navy);
+  background: rgba(22, 139, 135, 0.08);
+}
+
+.history-explanation p {
+  margin: 0;
+  color: var(--muted);
+  font-weight: 650;
+  line-height: 1.45;
+}
+
 .final-panel {
   display: grid;
   gap: 18px;
@@ -1514,6 +1598,9 @@ h3 {
 
   .mission-ring,
   .history-row,
+  .history-event-bank,
+  .history-space-row,
+  .history-meaning-grid,
   .clue-grid,
   .case-timeline,
   .evidence-folder-grid,
