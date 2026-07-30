@@ -186,6 +186,7 @@ const historyMeaningChoices = [
   { id: 'womenVote', text: 'Gave women the right to vote' },
   { id: 'citizenship', text: 'Established citizenship for everyone born in the United States' }
 ];
+const galliumCorrectItems = ['Computer', 'LED light', 'Phone', 'Solar panel'];
 
 let activeMission = null;
 let romanState = createRomanState();
@@ -196,6 +197,7 @@ let calendarState = createCalendarState();
 let halloweenState = createHalloweenState();
 let halloweenDrag = null;
 let halloweenRouteAnimating = false;
+let galliumState = createGalliumState();
 let phoneState = createPhoneState();
 let flavorState = createFlavorState();
 let presidentState = createPresidentState();
@@ -354,6 +356,49 @@ function romanStateForStorage() {
     };
   }
   return { ...romanState, isReplay: false };
+}
+
+function createGalliumState(saved = {}) {
+  const selectedItems = Array.isArray(saved.selectedItems)
+    ? [...new Set(saved.selectedItems.filter(item => ['LED light', 'Phone', 'Solar panel', 'Computer', 'Wooden spoon', 'Paper clip'].includes(item)))].sort()
+    : [];
+  const submittedAttempts = Number.isFinite(Number(saved.submittedAttempts))
+    ? Math.max(0, Number(saved.submittedAttempts))
+    : 0;
+  return {
+    currentTemperature: Number.isFinite(Number(saved.currentTemperature)) ? Number(saved.currentTemperature) : 82,
+    selectedItems,
+    submittedAttempts,
+    currentPossibleScore: Number.isFinite(Number(saved.currentPossibleScore))
+      ? Math.max(0, Number(saved.currentPossibleScore))
+      : galliumPossibleScore(submittedAttempts),
+    pointsEarned: Number(saved.pointsEarned || 0),
+    isCompleted: Boolean(saved.isCompleted),
+    hasAwardedPoints: Boolean(saved.hasAwardedPoints),
+    isReplay: Boolean(saved.isReplay)
+  };
+}
+
+function galliumPossibleScore(submittedAttempts) {
+  if (submittedAttempts === 0) return 31;
+  if (submittedAttempts === 1) return 13;
+  return 0;
+}
+
+function galliumStateForStorage() {
+  if (galliumState.isReplay && galliumState.hasAwardedPoints) {
+    const savedPoints = hasAwardedScore('gallium') ? savedMissionScore('gallium') : galliumState.pointsEarned;
+    return createGalliumState({
+      currentTemperature: 85.6,
+      selectedItems: galliumCorrectItems,
+      submittedAttempts: submittedAttemptsFromScore(savedPoints),
+      currentPossibleScore: savedPoints,
+      pointsEarned: savedPoints,
+      isCompleted: true,
+      hasAwardedPoints: true
+    });
+  }
+  return { ...galliumState, isReplay: false };
 }
 
 function createPhoneState(saved = {}) {
@@ -652,6 +697,7 @@ function loadScoreState() {
     romanState = createRomanState(saved.roman);
     calendarState = createCalendarState(saved.calendar);
     halloweenState = createHalloweenState(saved.halloween);
+    galliumState = createGalliumState(saved.gallium);
     phoneState = createPhoneState(saved.phone);
     flavorState = createFlavorState(saved.flavor);
     presidentState = createPresidentState(saved.president);
@@ -735,6 +781,24 @@ function loadScoreState() {
         hasAwardedPoints: true
       });
     }
+    if (galliumState.hasAwardedPoints && !missionScores.gallium) {
+      missionScores.gallium = {
+        pointsEarned: galliumState.pointsEarned,
+        hasAwardedPoints: true
+      };
+    }
+    if (!galliumState.hasAwardedPoints && missionScores.gallium?.hasAwardedPoints) {
+      const savedPoints = Number(missionScores.gallium.pointsEarned || 0);
+      galliumState = createGalliumState({
+        currentTemperature: 85.6,
+        selectedItems: galliumCorrectItems,
+        submittedAttempts: submittedAttemptsFromScore(savedPoints),
+        currentPossibleScore: savedPoints,
+        pointsEarned: savedPoints,
+        isCompleted: true,
+        hasAwardedPoints: true
+      });
+    }
     if (flavorState.hasAwardedPoints && !missionScores.flavor) {
       missionScores.flavor = {
         pointsEarned: flavorState.pointsEarned,
@@ -814,6 +878,7 @@ function loadScoreState() {
     if (romanState.isCompleted) solved.add('roman');
     if (calendarState.isCompleted) solved.add('calendar');
     if (halloweenState.isCompleted) solved.add('halloween');
+    if (galliumState.isCompleted) solved.add('gallium');
     if (flavorState.isCompleted) solved.add('flavor');
     if (presidentState.isCompleted) solved.add('president');
     if (historyState.isCompleted) solved.add('history');
@@ -827,6 +892,7 @@ function loadScoreState() {
     romanState = createRomanState();
     calendarState = createCalendarState();
     halloweenState = createHalloweenState();
+    galliumState = createGalliumState();
     phoneState = createPhoneState();
     flavorState = createFlavorState();
     presidentState = createPresidentState();
@@ -843,6 +909,7 @@ function saveScoreState() {
       roman: romanStateForStorage(),
       calendar: calendarStateForStorage(),
       halloween: halloweenStateForStorage(),
+      gallium: galliumStateForStorage(),
       phone: phoneStateForStorage(),
       flavor: flavorStateForStorage(),
       president: presidentStateForStorage(),
@@ -1326,12 +1393,25 @@ function renderState(mission) {
 }
 
 function renderGallium(mission) {
+  const isReplay = galliumState.isCompleted;
+  if (isReplay) {
+    galliumState = createGalliumState({
+      pointsEarned: savedMissionScore('gallium'),
+      hasAwardedPoints: true,
+      isReplay: true
+    });
+  }
+  const isLocked = galliumState.isCompleted && !galliumState.isReplay;
+  const displayedScore = isLocked && hasAwardedScore('gallium')
+    ? savedMissionScore('gallium')
+    : galliumState.currentPossibleScore;
+  const scoreLabel = isLocked ? 'Score earned' : galliumState.isReplay ? 'Practice score' : 'Possible score';
   challengeShell(mission, 'Move the temperature to 85.6 degrees Fahrenheit. Then select the items that may contain gallium-based parts.', `
     <div class="tool-card gallium-lab">
       <div>
         <label for="temperatureSlider">Temperature</label>
-        <input class="temperature-slider" id="temperatureSlider" type="range" min="80" max="90" step="0.1" value="82">
-        <div class="temperature-display" id="temperatureDisplay">82.0 degrees F</div>
+        <input class="temperature-slider" id="temperatureSlider" type="range" min="80" max="90" step="0.1" value="${galliumState.currentTemperature.toFixed(1)}" ${isLocked ? 'disabled' : ''}>
+        <div class="temperature-display" id="temperatureDisplay">${galliumState.currentTemperature.toFixed(1)} degrees F</div>
       </div>
       <div class="gallium-sample" aria-label="Gallium solid and melted sample">
         <img src="assets/gallium-lab.png" alt="Gallium solid chunks and melted gallium on a lab tray">
@@ -1341,12 +1421,19 @@ function renderGallium(mission) {
     <div class="tool-card">
       <div class="item-grid">
         ${['LED light', 'Phone', 'Solar panel', 'Computer', 'Wooden spoon', 'Paper clip'].map(item => `
-          <label class="item-check"><input type="checkbox" data-gallium-item="${item}"> ${item}</label>
+          <label class="item-check"><input type="checkbox" data-gallium-item="${item}" ${galliumState.selectedItems.includes(item) ? 'checked' : ''} ${isLocked ? 'disabled' : ''}> ${item}</label>
         `).join('')}
       </div>
     </div>
-    <button class="primary-button" type="button" data-action="check-gallium">Check lab results</button>
+    <div class="case-scoreboard" aria-live="polite">
+      <span>${scoreLabel}</span>
+      <strong id="galliumScore">${displayedScore} points</strong>
+    </div>
+    ${galliumState.isReplay ? `<p class="machine-score-line">Practice replay. Your first Gallium Lab score was ${savedMissionScore('gallium')} points, and no additional points will be awarded.</p>` : ''}
+    <p class="machine-score-line" id="galliumResultScore" ${isLocked ? '' : 'hidden'}>${isLocked ? `Points earned: ${displayedScore} points` : ''}</p>
+    <button class="primary-button" type="button" data-action="check-gallium" ${isLocked ? 'disabled' : ''}>Check Lab Results</button>
   `);
+  updateGallium();
 }
 
 function renderFlavor(mission) {
@@ -2342,11 +2429,79 @@ function finishHistoryDrag(clientX, clientY) {
 }
 
 function updateGallium() {
-  const value = Number(challengeRoot.querySelector('#temperatureSlider').value);
+  const slider = challengeRoot.querySelector('#temperatureSlider');
+  if (!slider) return;
+  const value = Number(slider.value);
+  galliumState.currentTemperature = value;
   challengeRoot.querySelector('#temperatureDisplay').textContent = `${value.toFixed(1)} degrees F`;
   const indicator = challengeRoot.querySelector('#galliumMetal');
   indicator.classList.toggle('melted', value >= 85.6);
   indicator.textContent = value >= 85.6 ? 'melted' : 'warming';
+}
+
+function syncGalliumSelectedItems() {
+  galliumState.selectedItems = [...challengeRoot.querySelectorAll('[data-gallium-item]:checked')]
+    .map(input => input.dataset.galliumItem)
+    .sort();
+}
+
+function galliumLabIsCorrect() {
+  const temperatureIsCorrect = Number(galliumState.currentTemperature.toFixed(1)) === 85.6;
+  const selected = [...galliumState.selectedItems].sort();
+  const target = [...galliumCorrectItems].sort();
+  return temperatureIsCorrect
+    && selected.length === target.length
+    && selected.every((item, index) => item === target[index]);
+}
+
+function updateGalliumScoreDisplay() {
+  const score = challengeRoot.querySelector('#galliumScore');
+  if (!score) return;
+  const label = score.closest('.case-scoreboard')?.querySelector('span');
+  const isLocked = galliumState.isCompleted && !galliumState.isReplay;
+  if (label) label.textContent = isLocked ? 'Score earned' : galliumState.isReplay ? 'Practice score' : 'Possible score';
+  score.textContent = `${isLocked && hasAwardedScore('gallium') ? savedMissionScore('gallium') : galliumState.currentPossibleScore} points`;
+}
+
+function lockGalliumLab() {
+  challengeRoot.querySelector('#temperatureSlider')?.setAttribute('disabled', '');
+  challengeRoot.querySelectorAll('[data-gallium-item]').forEach(input => {
+    input.disabled = true;
+  });
+  challengeRoot.querySelector('[data-action="check-gallium"]')?.setAttribute('disabled', '');
+}
+
+function completeGalliumLab(pointsForAttempt) {
+  if (galliumState.isReplay) {
+    galliumState.isCompleted = true;
+    galliumState.hasAwardedPoints = true;
+    galliumState.pointsEarned = savedMissionScore('gallium');
+    updateGalliumScoreDisplay();
+    lockGalliumLab();
+    const resultScore = challengeRoot.querySelector('#galliumResultScore');
+    if (resultScore) {
+      resultScore.hidden = false;
+      resultScore.textContent = `Practice complete. Your saved Gallium Lab score remains ${galliumState.pointsEarned} points.`;
+    }
+    setFeedback('Lab confirmed for practice. No additional points will be awarded.', true);
+    saveScoreState();
+    return;
+  }
+
+  const awardedPoints = awardMissionScore('gallium', pointsForAttempt);
+  galliumState.pointsEarned = awardedPoints;
+  galliumState.currentPossibleScore = awardedPoints;
+  galliumState.isCompleted = true;
+  galliumState.hasAwardedPoints = true;
+  updateGalliumScoreDisplay();
+  lockGalliumLab();
+  const resultScore = challengeRoot.querySelector('#galliumResultScore');
+  if (resultScore) {
+    resultScore.hidden = false;
+    resultScore.textContent = `Points earned: ${awardedPoints} points`;
+  }
+  solveMission('gallium', `Lab confirmed! Gallium melts at about 85.6 degrees Fahrenheit and may be used in electronic components found in LED lights, phones, solar panels, and computers. Points earned: ${awardedPoints} points.`);
+  saveScoreState();
 }
 
 let dialed = '';
@@ -2840,12 +2995,19 @@ challengeRoot.addEventListener('click', async event => {
   }
 
   if (action === 'check-gallium') {
-    const value = Number(challengeRoot.querySelector('#temperatureSlider').value);
-    const selected = [...challengeRoot.querySelectorAll('[data-gallium-item]:checked')].map(input => input.dataset.galliumItem).sort();
-    const target = ['Computer', 'LED light', 'Phone', 'Solar panel'].sort();
-    Math.abs(value - 85.6) < 0.05 && selected.length === target.length && selected.every((item, index) => item === target[index])
-      ? solveMission('gallium', 'The gallium melted and the tech items checked out. Section active.')
-      : setFeedback('Set the slider to 85.6 degrees F and choose the gallium-based technology items.');
+    if (galliumState.isCompleted && !galliumState.isReplay) return;
+    updateGallium();
+    syncGalliumSelectedItems();
+    const pointsForAttempt = galliumPossibleScore(galliumState.submittedAttempts);
+    galliumState.submittedAttempts += 1;
+    if (galliumLabIsCorrect()) {
+      completeGalliumLab(pointsForAttempt);
+    } else {
+      galliumState.currentPossibleScore = galliumPossibleScore(galliumState.submittedAttempts);
+      updateGalliumScoreDisplay();
+      if (!galliumState.isReplay && !galliumState.isCompleted) saveScoreState();
+      setFeedback('The lab results are not quite right. Check both the temperature and the selected items.');
+    }
   }
 
   if (action === 'reset-flavor') {
@@ -2919,10 +3081,24 @@ challengeRoot.addEventListener('click', async event => {
 });
 
 challengeRoot.addEventListener('input', event => {
-  if (event.target.id === 'temperatureSlider') updateGallium();
+  if (event.target.id === 'temperatureSlider') {
+    if (galliumState.isCompleted && !galliumState.isReplay) return;
+    updateGallium();
+    setFeedback('');
+    if (!galliumState.isReplay && !galliumState.isCompleted) saveScoreState();
+  }
 });
 
 challengeRoot.addEventListener('change', event => {
+  const galliumItem = event.target.closest('[data-gallium-item]');
+  if (galliumItem) {
+    if (galliumState.isCompleted && !galliumState.isReplay) return;
+    syncGalliumSelectedItems();
+    setFeedback('');
+    if (!galliumState.isReplay && !galliumState.isCompleted) saveScoreState();
+    return;
+  }
+
   const flavorSelect = event.target.closest('[data-flavor-select]');
   if (!flavorSelect || flavorState.isCompleted) return;
   const group = flavorSelect.dataset.flavorSelect;
