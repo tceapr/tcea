@@ -532,22 +532,23 @@ h3 {
 
 .switch-row {
   display: grid;
-  grid-template-columns: repeat(5, minmax(48px, 1fr));
+  grid-template-columns: repeat(6, minmax(48px, 1fr));
   gap: 12px;
 }
 
 .switch {
   display: grid;
-  gap: 8px;
+  gap: 7px;
   place-items: center;
-  min-height: 96px;
+  min-height: 118px;
+  padding: 10px 8px;
   border: 1px solid rgba(23, 50, 77, 0.2);
   border-radius: 8px;
   background: #ffffff;
   font-weight: 800;
 }
 
-.switch span {
+.switch-track {
   width: 26px;
   height: 48px;
   border-radius: 8px;
@@ -555,13 +556,58 @@ h3 {
   box-shadow: inset 0 8px 0 rgba(255, 255, 255, 0.36);
 }
 
+.switch-value {
+  color: var(--navy);
+  font-size: 1rem;
+  font-weight: 900;
+}
+
+.switch-digit {
+  color: var(--navy);
+  font-size: 1.35rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.switch-state {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
 .switch[aria-pressed="true"] {
   border-color: var(--gold);
   background: rgba(244, 189, 61, 0.14);
 }
 
-.switch[aria-pressed="true"] span {
+.switch[aria-pressed="true"] .switch-track {
   background: var(--gold);
+}
+
+.switch[aria-pressed="true"] .switch-state {
+  color: #8e640f;
+}
+
+.binary-status-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 10px;
+}
+
+.binary-explanation {
+  padding: 14px;
+  border: 1px solid rgba(22, 139, 135, 0.22);
+  border-radius: 8px;
+  color: var(--navy);
+  background: rgba(22, 139, 135, 0.08);
+}
+
+.binary-explanation p {
+  margin: 0;
+  color: var(--muted);
+  font-weight: 750;
+  line-height: 1.45;
 }
 
 .binary-display,
@@ -1609,15 +1655,15 @@ h3 {
   }
 
   .switch-row {
-    grid-template-columns: repeat(5, minmax(42px, 1fr));
+    grid-template-columns: repeat(3, minmax(72px, 1fr));
     gap: 6px;
   }
 
   .switch {
-    min-height: 78px;
+    min-height: 108px;
   }
 
-  .switch span {
+  .switch-track {
     height: 38px;
   }
 

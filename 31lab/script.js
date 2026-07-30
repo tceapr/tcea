@@ -20,7 +20,7 @@ const missions = [
     title: 'Binary Switchboard',
     symbol: '01',
     category: 'Math',
-    fact: '11111 in binary equals 31.'
+    fact: '011111 in binary equals 31.'
   },
   {
     id: 'roman',
@@ -117,6 +117,7 @@ const closeBadgeButton = document.getElementById('closeBadgeButton');
 const scoreCount = document.getElementById('scoreCount');
 
 const scoreStorageKey = 'the31LabScores';
+const binaryPlaceValues = [32, 16, 8, 4, 2, 1];
 const calendarCorrectMonths = ['January', 'March', 'May', 'July', 'August', 'October', 'December'];
 const halloweenMoves = [
   { id: 'nextFriday', label: 'Move to the next Friday' },
@@ -190,6 +191,7 @@ let activeMission = null;
 let romanState = createRomanState();
 let romanDrag = null;
 let primeState = createPrimeState();
+let binaryState = createBinaryState();
 let calendarState = createCalendarState();
 let halloweenState = createHalloweenState();
 let halloweenDrag = null;
@@ -241,6 +243,48 @@ function primePossibleScore(submittedAttempts) {
   return 0;
 }
 
+function createBinaryState(saved = {}) {
+  const switchStates = Array.isArray(saved.switchStates)
+    ? binaryPlaceValues.map((_, index) => Boolean(saved.switchStates[index]))
+    : binaryPlaceValues.map(() => false);
+  const submittedAttempts = Number.isFinite(Number(saved.submittedAttempts))
+    ? Math.max(0, Number(saved.submittedAttempts))
+    : 0;
+  const decimalTotal = binaryDecimalTotal(switchStates);
+  return {
+    switchStates,
+    binaryCode: binaryCodeFromStates(switchStates),
+    decimalTotal,
+    submittedAttempts,
+    currentPossibleScore: Number.isFinite(Number(saved.currentPossibleScore))
+      ? Math.max(0, Number(saved.currentPossibleScore))
+      : binaryPossibleScore(submittedAttempts),
+    pointsEarned: Number(saved.pointsEarned || 0),
+    isCompleted: Boolean(saved.isCompleted),
+    hasAwardedPoints: Boolean(saved.hasAwardedPoints),
+    isReplay: Boolean(saved.isReplay)
+  };
+}
+
+function binaryPossibleScore(submittedAttempts) {
+  if (submittedAttempts === 0) return 31;
+  if (submittedAttempts === 1) return 13;
+  return 0;
+}
+
+function binaryCodeFromStates(states = binaryState.switchStates) {
+  return states.map(isOn => isOn ? '1' : '0').join('');
+}
+
+function binaryDecimalTotal(states = binaryState.switchStates) {
+  return states.reduce((sum, isOn, index) => sum + (isOn ? binaryPlaceValues[index] : 0), 0);
+}
+
+function syncBinaryState() {
+  binaryState.binaryCode = binaryCodeFromStates();
+  binaryState.decimalTotal = binaryDecimalTotal();
+}
+
 function createRomanState(saved = {}) {
   const submittedAttempts = Number(saved.submittedAttempts || 0);
   const placedTiles = Array.isArray(saved.placedTiles)
@@ -282,6 +326,21 @@ function primeStateForStorage() {
     };
   }
   return { ...primeState, isReplay: false };
+}
+
+function binaryStateForStorage() {
+  if (binaryState.isReplay && binaryState.hasAwardedPoints) {
+    const savedPoints = hasAwardedScore('binary') ? savedMissionScore('binary') : binaryState.pointsEarned;
+    return createBinaryState({
+      switchStates: [false, true, true, true, true, true],
+      submittedAttempts: submittedAttemptsFromScore(savedPoints),
+      currentPossibleScore: savedPoints,
+      pointsEarned: savedPoints,
+      isCompleted: true,
+      hasAwardedPoints: true
+    });
+  }
+  return { ...binaryState, isReplay: false };
 }
 
 function romanStateForStorage() {
@@ -589,6 +648,7 @@ function loadScoreState() {
       ? saved.missionScores
       : {};
     primeState = createPrimeState(saved.prime);
+    binaryState = createBinaryState(saved.binary);
     romanState = createRomanState(saved.roman);
     calendarState = createCalendarState(saved.calendar);
     halloweenState = createHalloweenState(saved.halloween);
@@ -612,6 +672,23 @@ function loadScoreState() {
       const savedPoints = Number(missionScores.roman.pointsEarned || 0);
       romanState = createRomanState({
         placedTiles: ['X', 'X', 'X', 'I'],
+        submittedAttempts: submittedAttemptsFromScore(savedPoints),
+        currentPossibleScore: savedPoints,
+        pointsEarned: savedPoints,
+        isCompleted: true,
+        hasAwardedPoints: true
+      });
+    }
+    if (binaryState.hasAwardedPoints && !missionScores.binary) {
+      missionScores.binary = {
+        pointsEarned: binaryState.pointsEarned,
+        hasAwardedPoints: true
+      };
+    }
+    if (!binaryState.hasAwardedPoints && missionScores.binary?.hasAwardedPoints) {
+      const savedPoints = Number(missionScores.binary.pointsEarned || 0);
+      binaryState = createBinaryState({
+        switchStates: [false, true, true, true, true, true],
         submittedAttempts: submittedAttemptsFromScore(savedPoints),
         currentPossibleScore: savedPoints,
         pointsEarned: savedPoints,
@@ -733,6 +810,7 @@ function loadScoreState() {
       });
     }
     if (primeState.isCompleted) solved.add('prime');
+    if (binaryState.isCompleted) solved.add('binary');
     if (romanState.isCompleted) solved.add('roman');
     if (calendarState.isCompleted) solved.add('calendar');
     if (halloweenState.isCompleted) solved.add('halloween');
@@ -745,6 +823,7 @@ function loadScoreState() {
     });
   } catch {
     primeState = createPrimeState();
+    binaryState = createBinaryState();
     romanState = createRomanState();
     calendarState = createCalendarState();
     halloweenState = createHalloweenState();
@@ -760,6 +839,7 @@ function saveScoreState() {
   try {
     localStorage.setItem(scoreStorageKey, JSON.stringify({
       prime: primeStateForStorage(),
+      binary: binaryStateForStorage(),
       roman: romanStateForStorage(),
       calendar: calendarStateForStorage(),
       halloween: halloweenStateForStorage(),
@@ -898,14 +978,55 @@ function renderPrime(mission) {
 }
 
 function renderBinary(mission) {
-  challengeShell(mission, 'Flip all five switches on. The display should read 11111, which the lab converts into 31.', `
-    <div class="tool-card">
-      <div class="switch-row">
-        ${[0, 1, 2, 3, 4].map(index => `<button class="switch" type="button" aria-pressed="false" data-switch="${index}"><span></span>0</button>`).join('')}
+  const isReplay = binaryState.isCompleted;
+  if (isReplay) {
+    binaryState = {
+      ...binaryState,
+      switchStates: binaryPlaceValues.map(() => false),
+      binaryCode: '000000',
+      decimalTotal: 0,
+      submittedAttempts: 0,
+      currentPossibleScore: 31,
+      isCompleted: false,
+      isReplay: true
+    };
+  }
+  const isLocked = binaryState.isCompleted && !binaryState.isReplay;
+  const scoreLabel = isLocked ? 'Score earned' : binaryState.isReplay ? 'Practice score' : 'Possible score';
+  const displayedScore = isLocked && hasAwardedScore('binary') ? savedMissionScore('binary') : binaryState.currentPossibleScore;
+  challengeShell(mission, 'Use the binary switches to build the number 31. An ON switch represents 1, and an OFF switch represents 0.', `
+    <div class="tool-card binary-switchboard">
+      <div class="switch-row binary-switch-row">
+        ${binaryPlaceValues.map((value, index) => renderBinarySwitch(index, value, isLocked)).join('')}
       </div>
     </div>
-    <div class="binary-display" id="binaryDisplay">00000 = 0</div>
+    <div class="binary-status-row">
+      <div class="binary-display" id="binaryDisplay">${binaryState.binaryCode} = ${binaryState.decimalTotal}</div>
+      <div class="total-display" id="binaryPossibleScore">${scoreLabel}: ${displayedScore} points</div>
+      <div class="total-display" id="binaryAttemptCount">Submitted attempts: ${binaryState.submittedAttempts}</div>
+    </div>
+    <div class="route-control-row">
+      <button class="ghost-button" type="button" data-action="reset-binary" ${isLocked ? 'disabled' : ''}>Reset Switches</button>
+      <button class="primary-button" type="button" data-action="check-binary" ${isLocked ? 'disabled' : ''}>Check Binary Code</button>
+    </div>
+    <p class="machine-score-line" id="binaryResultScore" ${isLocked ? '' : 'hidden'}>${isLocked ? `Points earned: ${displayedScore} points` : ''}</p>
+    <div class="binary-explanation" id="binaryExplanation" ${isLocked ? '' : 'hidden'}>
+      <p>The switches represent 32, 16, 8, 4, 2, and 1. Turning on 16 + 8 + 4 + 2 + 1 makes 31.</p>
+    </div>
+    ${binaryState.isReplay ? `<p class="machine-score-line">Practice replay. Your first Binary Switchboard score was ${savedMissionScore('binary')} points, and no additional points will be awarded.</p>` : ''}
   `);
+}
+
+function renderBinarySwitch(index, value, isLocked = false) {
+  const isOn = binaryState.switchStates[index];
+  return `
+    <button class="switch binary-switch" type="button" aria-pressed="${isOn}" data-switch="${index}" ${isLocked ? 'disabled' : ''}>
+      <span class="switch-value">${value}</span>
+      <span class="switch-track" aria-hidden="true"></span>
+      <span class="switch-digit">${isOn ? '1' : '0'}</span>
+      <span class="switch-state">${isOn ? 'ON' : 'OFF'}</span>
+    </button>
+  `;
 }
 
 function renderRoman(mission) {
@@ -1738,11 +1859,75 @@ function completeHistoryTimeline(pointsForAttempt) {
 }
 
 function updateBinary() {
-  const switches = [...challengeRoot.querySelectorAll('[data-switch]')];
-  const binary = switches.map(button => button.getAttribute('aria-pressed') === 'true' ? '1' : '0').join('');
-  const decimal = parseInt(binary, 2);
-  challengeRoot.querySelector('#binaryDisplay').textContent = `${binary} = ${decimal}`;
-  if (binary === '11111') solveMission('binary', '11111 converts to 31. Section active.');
+  syncBinaryState();
+  const display = challengeRoot.querySelector('#binaryDisplay');
+  if (display) display.textContent = `${binaryState.binaryCode} = ${binaryState.decimalTotal}`;
+  challengeRoot.querySelectorAll('[data-switch]').forEach(button => {
+    const index = Number(button.dataset.switch);
+    const isOn = Boolean(binaryState.switchStates[index]);
+    button.setAttribute('aria-pressed', String(isOn));
+    const digit = button.querySelector('.switch-digit');
+    const state = button.querySelector('.switch-state');
+    if (digit) digit.textContent = isOn ? '1' : '0';
+    if (state) state.textContent = isOn ? 'ON' : 'OFF';
+  });
+  updateBinaryScoreboard();
+}
+
+function updateBinaryScoreboard() {
+  const possibleScoreDisplay = challengeRoot.querySelector('#binaryPossibleScore');
+  const attemptDisplay = challengeRoot.querySelector('#binaryAttemptCount');
+  const isLocked = binaryState.isCompleted && !binaryState.isReplay;
+  if (possibleScoreDisplay) {
+    const showSavedReplayScore = binaryState.isReplay && binaryState.hasAwardedPoints && binaryState.isCompleted;
+    const label = isLocked || showSavedReplayScore ? 'Score earned' : binaryState.isReplay ? 'Practice score' : 'Possible score';
+    const score = (isLocked || showSavedReplayScore) && hasAwardedScore('binary') ? savedMissionScore('binary') : binaryState.currentPossibleScore;
+    possibleScoreDisplay.textContent = `${label}: ${score} points`;
+  }
+  if (attemptDisplay) attemptDisplay.textContent = `Submitted attempts: ${binaryState.submittedAttempts}`;
+}
+
+function resetBinarySwitches() {
+  if (binaryState.isCompleted && !binaryState.isReplay) return;
+  binaryState.switchStates = binaryPlaceValues.map(() => false);
+  binaryState.binaryCode = '000000';
+  binaryState.decimalTotal = 0;
+  updateBinary();
+  setFeedback('');
+  if (!binaryState.isReplay && !binaryState.isCompleted) saveScoreState();
+}
+
+function completeBinarySwitchboard(pointsForAttempt) {
+  const alreadyAwarded = binaryState.isReplay || binaryState.hasAwardedPoints || hasAwardedScore('binary');
+  binaryState.submittedAttempts += 1;
+  binaryState.currentPossibleScore = pointsForAttempt;
+  binaryState.pointsEarned = alreadyAwarded
+    ? hasAwardedScore('binary') ? savedMissionScore('binary') : binaryState.pointsEarned
+    : pointsForAttempt;
+  binaryState.isCompleted = true;
+  binaryState.hasAwardedPoints = true;
+  const earnedScore = alreadyAwarded ? binaryState.pointsEarned : awardMissionScore('binary', pointsForAttempt);
+  binaryState.pointsEarned = earnedScore;
+  if (alreadyAwarded) binaryState.currentPossibleScore = earnedScore;
+  challengeRoot.querySelectorAll('[data-switch], [data-action="reset-binary"], [data-action="check-binary"]').forEach(control => {
+    control.disabled = true;
+  });
+  updateBinary();
+  const resultScore = challengeRoot.querySelector('#binaryResultScore');
+  if (resultScore) {
+    resultScore.textContent = alreadyAwarded
+      ? `Practice complete. Saved score: ${earnedScore} points`
+      : `Points earned: ${earnedScore} points`;
+    resultScore.removeAttribute('hidden');
+  }
+  challengeRoot.querySelector('#binaryExplanation')?.removeAttribute('hidden');
+  saveScoreState();
+  const message = alreadyAwarded
+    ? `Practice complete. Your saved Binary Switchboard score remains ${earnedScore} points.`
+    : earnedScore > 0
+      ? `Switchboard activated! In binary, 31 is written as 011111. Points earned: ${earnedScore}.`
+      : 'Switchboard activated! You built 31 in binary. Mission complete.';
+  solveMission('binary', message);
 }
 
 function updateRomanSlots() {
@@ -2231,10 +2416,12 @@ challengeRoot.addEventListener('click', async event => {
 
   const switchButton = event.target.closest('[data-switch]');
   if (switchButton) {
-    const pressed = switchButton.getAttribute('aria-pressed') === 'true';
-    switchButton.setAttribute('aria-pressed', String(!pressed));
-    switchButton.lastChild.textContent = pressed ? '0' : '1';
+    if (switchButton.disabled || (binaryState.isCompleted && !binaryState.isReplay)) return;
+    const index = Number(switchButton.dataset.switch);
+    binaryState.switchStates[index] = !binaryState.switchStates[index];
     updateBinary();
+    setFeedback('');
+    if (!binaryState.isReplay && !binaryState.isCompleted) saveScoreState();
   }
 
   const numberTile = event.target.closest('[data-number-tile]');
@@ -2491,6 +2678,25 @@ challengeRoot.addEventListener('click', async event => {
       if (possibleScoreDisplay) possibleScoreDisplay.textContent = `${primeState.isReplay ? 'Practice score' : 'Possible score'}: ${primeState.currentPossibleScore} points`;
       if (attemptDisplay) attemptDisplay.textContent = `Submitted attempts: ${primeState.submittedAttempts}`;
       setFeedback('That set does not include exactly all the divisors of 31. Try again.');
+    }
+  }
+
+  if (action === 'reset-binary') {
+    resetBinarySwitches();
+  }
+
+  if (action === 'check-binary') {
+    if (binaryState.isCompleted && !binaryState.isReplay) return;
+    const pointsForAttempt = binaryPossibleScore(binaryState.submittedAttempts);
+    syncBinaryState();
+    if (binaryState.binaryCode === '011111' && binaryState.decimalTotal === 31) {
+      completeBinarySwitchboard(pointsForAttempt);
+    } else {
+      binaryState.submittedAttempts += 1;
+      binaryState.currentPossibleScore = binaryPossibleScore(binaryState.submittedAttempts);
+      updateBinaryScoreboard();
+      if (!binaryState.isReplay && !binaryState.isCompleted) saveScoreState();
+      setFeedback(`Your binary code equals ${binaryState.decimalTotal}. Adjust the switches to make exactly 31.`);
     }
   }
 
