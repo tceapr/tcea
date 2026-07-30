@@ -1869,6 +1869,12 @@ function renderBunyan(mission) {
     : bunyanState.currentPossibleScore;
   const scoreLabel = isLocked ? 'Score earned' : bunyanState.isReplay ? 'Practice score' : 'Possible score';
   challengeShell(mission, 'Repair the missing museum plaque by choosing the correct facts about the 31-foot Paul Bunyan statue.', `
+    <div class="bunyan-research-actions">
+      <button class="ghost-button" type="button" data-action="toggle-bunyan-research" aria-expanded="false" aria-controls="bunyanResearchPanel">Open Research Graphic</button>
+    </div>
+    <div class="tool-card bunyan-research-panel" id="bunyanResearchPanel" hidden>
+      <img src="assets/paul-bunyan-infographic.png" alt="Paul Bunyan infographic with facts about the 31-foot statue in Bangor, Maine">
+    </div>
     <div class="tool-card bunyan-plaque">
       <div class="plaque-header">
         <span aria-hidden="true">31</span>
@@ -2943,7 +2949,8 @@ challengeRoot.addEventListener('click', async event => {
     if (!historyState.isReplay && !historyState.isCompleted) saveScoreState();
   }
 
-  const action = event.target.closest('[data-action]')?.dataset.action;
+  const actionButton = event.target.closest('[data-action]');
+  const action = actionButton?.dataset.action;
   if (!action) return;
 
   if (action === 'place-call') {
@@ -3236,6 +3243,15 @@ challengeRoot.addEventListener('click', async event => {
   if (action === 'reset-bunyan') {
     if (bunyanState.isCompleted && !bunyanState.isReplay) return;
     resetBunyanPlaque();
+  }
+
+  if (action === 'toggle-bunyan-research') {
+    const panel = challengeRoot.querySelector('#bunyanResearchPanel');
+    if (!panel) return;
+    const willOpen = panel.hidden;
+    panel.hidden = !willOpen;
+    actionButton.textContent = willOpen ? 'Close Research Graphic' : 'Open Research Graphic';
+    actionButton.setAttribute('aria-expanded', String(willOpen));
   }
 
   if (action === 'check-bunyan') {

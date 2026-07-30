@@ -1408,6 +1408,27 @@ h3 {
   font-weight: 800;
 }
 
+.bunyan-research-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.bunyan-research-panel {
+  padding: 12px;
+  background: #ffffff;
+}
+
+.bunyan-research-panel img {
+  display: block;
+  width: 100%;
+  max-height: 72vh;
+  border: 1px solid rgba(23, 50, 77, 0.16);
+  border-radius: 8px;
+  object-fit: contain;
+  background: #fff7e8;
+}
+
 .bunyan-plaque {
   border-color: rgba(142, 100, 15, 0.36);
   background:
