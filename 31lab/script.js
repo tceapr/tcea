@@ -13,6 +13,7 @@ const missions = [
     title: 'Prime Scanner',
     symbol: 'PS',
     category: 'Math',
+    icon: 'assets/icons/primescanner.png',
     fact: 'Only 1 and 31 divide evenly into 31.'
   },
   {
@@ -20,6 +21,7 @@ const missions = [
     title: 'Binary Switchboard',
     symbol: 'BS',
     category: 'Math',
+    icon: 'assets/icons/binaryswitchboard.png',
     fact: '011111 in binary equals 31.'
   },
   {
@@ -27,6 +29,7 @@ const missions = [
     title: 'Roman Numeral Builder',
     symbol: 'RN',
     category: 'Math',
+    icon: 'assets/icons/romannumeralbuilder.png',
     fact: 'XXXI is 31 in Roman numerals.'
   },
   {
@@ -34,6 +37,7 @@ const missions = [
     title: 'Make 31 Machine',
     symbol: 'MM',
     category: 'Math',
+    icon: 'assets/icons/make31machine.png',
     fact: '1, 2, 4, 8, and 16 add to 31.'
   },
   {
@@ -41,6 +45,7 @@ const missions = [
     title: 'Calendar Hunt',
     symbol: 'CH',
     category: 'Time and calendars',
+    icon: 'assets/icons/calendarhunt.png',
     fact: 'Seven months have 31 days.'
   },
   {
@@ -48,6 +53,7 @@ const missions = [
     title: 'Halloween Door',
     symbol: 'HD',
     category: 'Time and calendars',
+    icon: 'assets/icons/halloweendoor.png',
     fact: 'Halloween is October 31.'
   },
   {
@@ -55,6 +61,7 @@ const missions = [
     title: '31st State Case',
     symbol: 'SC',
     category: 'Geography',
+    icon: 'assets/icons/31ststatecase.png',
     fact: 'California became the 31st state.'
   },
   {
@@ -62,6 +69,7 @@ const missions = [
     title: 'Gallium Lab',
     symbol: 'GL',
     category: 'Science',
+    icon: 'assets/icons/galliumlab.png',
     fact: 'Gallium melts at about 85.6 degrees Fahrenheit.'
   },
   {
@@ -69,6 +77,7 @@ const missions = [
     title: 'Flavor Formula 31',
     symbol: 'FF',
     category: 'Math',
+    icon: 'assets/icons/flavorformula31.png',
     fact: 'Robot Raspberry, Sprinkle Sparks, and Cherry Pop total 31.'
   },
   {
@@ -76,6 +85,7 @@ const missions = [
     title: 'The Mystery of President 31',
     symbol: 'MP',
     category: 'History',
+    icon: 'assets/icons/mysteryofpresident.png',
     fact: 'Herbert Hoover was the 31st U.S. president.'
   },
   {
@@ -83,6 +93,7 @@ const missions = [
     title: 'International Call',
     symbol: 'IC',
     category: 'Geography',
+    icon: 'assets/icons/internationalcalling.png',
     fact: '+31 is the country calling code for the Netherlands.'
   },
   {
@@ -90,6 +101,7 @@ const missions = [
     title: 'Paul Bunyan Fact Builder',
     symbol: 'PB',
     category: 'Popular culture',
+    icon: 'assets/icons/paulbunyanfactbuilder.png',
     fact: 'The Paul Bunyan statue in Bangor, Maine is 31 feet tall.'
   },
   {
@@ -97,6 +109,7 @@ const missions = [
     title: 'The 13th Amendment Timeline',
     symbol: 'AT',
     category: 'History',
+    icon: 'assets/icons/the13thamendment.png',
     fact: 'Congress approved the 13th Amendment before states ratified it on December 6, 1865.'
   }
 ];
@@ -1072,13 +1085,10 @@ function setFeedback(message, success = false) {
   feedback.classList.toggle('success', success);
 }
 
-function challengeShell(mission, copy, body, icon = null) {
+function challengeShell(mission, copy, body) {
   challengeTitle.textContent = mission.title;
   challengeRoot.innerHTML = `
-    <div class="mission-intro-row ${icon ? 'has-icon' : ''}">
-      <p class="mission-copy">${copy}</p>
-      ${icon ? `<img class="mission-corner-icon" src="${icon.src}" alt="${icon.alt}">` : ''}
-    </div>
+    <p class="mission-copy">${copy}</p>
     ${body}
     <p class="feedback" aria-live="polite">${solved.has(mission.id) ? 'Already active. You can still replay this mission.' : ''}</p>
   `;
@@ -1216,10 +1226,7 @@ function renderRoman(mission) {
       </div>
       <p class="machine-score-line" id="romanResultScore" ${isLocked ? '' : 'hidden'}>${isLocked ? `Points earned: ${romanState.pointsEarned}` : ''}</p>
     </div>
-  `, {
-    src: 'assets/romannumeralbuilder.png',
-    alt: 'Roman Numeral Builder mission icon'
-  });
+  `);
 }
 
 function romanSlotMarkup(index, isLocked = false) {
@@ -2765,20 +2772,60 @@ function updateStack() {
 
 function renderSort() {
   sortRoot.innerHTML = missions.map(mission => `
-    <div class="sort-row">
-      <label for="sort-${mission.id}">${mission.fact}</label>
+    <div class="sort-row" data-sort-row="${mission.id}">
+      <label for="sort-${mission.id}" data-sort-fact="${mission.id}">${mission.fact}</label>
       <select id="sort-${mission.id}" data-sort="${mission.id}">
         <option value="">Choose category</option>
         ${categories.map(category => `<option>${category}</option>`).join('')}
       </select>
+      <div class="sort-collected" data-sort-collected="${mission.id}" hidden>
+        <img src="${mission.icon}" alt="${mission.title} icon">
+        <span>${mission.title}</span>
+      </div>
     </div>
   `).join('');
+}
+
+function updateSortCard(missionId) {
+  const mission = missionById(missionId);
+  const row = sortRoot.querySelector(`[data-sort-row="${missionId}"]`);
+  const select = sortRoot.querySelector(`[data-sort="${missionId}"]`);
+  const collected = sortRoot.querySelector(`[data-sort-collected="${missionId}"]`);
+  const fact = sortRoot.querySelector(`[data-sort-fact="${missionId}"]`);
+  if (!mission || !row || !select || !collected || !fact) return false;
+  const isCorrect = select.value === mission.category;
+  row.classList.toggle('collected', isCorrect);
+  select.hidden = isCorrect;
+  fact.hidden = isCorrect;
+  collected.hidden = !isCorrect;
+  return isCorrect;
+}
+
+function updateSortProgressFeedback() {
+  const collectedCount = missions.filter(mission => updateSortCard(mission.id)).length;
+  if (collectedCount === missions.length) {
+    sortFeedback.textContent = 'All evidence icons collected. Check categories to unlock the badge.';
+    sortFeedback.classList.add('success');
+  } else if (collectedCount > 0) {
+    sortFeedback.textContent = `${collectedCount} of ${missions.length} evidence icons collected.`;
+    sortFeedback.classList.remove('success');
+  } else {
+    sortFeedback.textContent = '';
+    sortFeedback.classList.remove('success');
+  }
 }
 
 missionRing.addEventListener('click', event => {
   const button = event.target.closest('[data-mission]');
   if (!button) return;
   renderChallenge(button.dataset.mission);
+});
+
+sortRoot.addEventListener('change', event => {
+  const select = event.target.closest('[data-sort]');
+  if (!select) return;
+  updateSortCard(select.dataset.sort);
+  updateSortProgressFeedback();
 });
 
 challengeRoot.addEventListener('click', async event => {
@@ -3435,10 +3482,7 @@ challengeRoot.addEventListener('pointercancel', event => {
 });
 
 document.getElementById('checkSortButton').addEventListener('click', () => {
-  const allCorrect = missions.every(mission => {
-    const select = sortRoot.querySelector(`[data-sort="${mission.id}"]`);
-    return select && select.value === mission.category;
-  });
+  const allCorrect = missions.every(mission => updateSortCard(mission.id));
   if (allCorrect) {
     sortFeedback.textContent = '31 Is Everywhere. Badge unlocked.';
     sortFeedback.classList.add('success');
