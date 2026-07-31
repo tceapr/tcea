@@ -1072,10 +1072,13 @@ function setFeedback(message, success = false) {
   feedback.classList.toggle('success', success);
 }
 
-function challengeShell(mission, copy, body) {
+function challengeShell(mission, copy, body, icon = null) {
   challengeTitle.textContent = mission.title;
   challengeRoot.innerHTML = `
-    <p class="mission-copy">${copy}</p>
+    <div class="mission-intro-row ${icon ? 'has-icon' : ''}">
+      <p class="mission-copy">${copy}</p>
+      ${icon ? `<img class="mission-corner-icon" src="${icon.src}" alt="${icon.alt}">` : ''}
+    </div>
     ${body}
     <p class="feedback" aria-live="polite">${solved.has(mission.id) ? 'Already active. You can still replay this mission.' : ''}</p>
   `;
@@ -1213,7 +1216,10 @@ function renderRoman(mission) {
       </div>
       <p class="machine-score-line" id="romanResultScore" ${isLocked ? '' : 'hidden'}>${isLocked ? `Points earned: ${romanState.pointsEarned}` : ''}</p>
     </div>
-  `);
+  `, {
+    src: 'assets/romannumeralbuilder.png',
+    alt: 'Roman Numeral Builder mission icon'
+  });
 }
 
 function romanSlotMarkup(index, isLocked = false) {
