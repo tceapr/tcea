@@ -1655,6 +1655,17 @@ h3 {
   display: none;
 }
 
+.final-score {
+  width: fit-content;
+  margin: 0;
+  padding: 10px 14px;
+  border: 1px solid rgba(22, 139, 135, 0.28);
+  border-radius: 8px;
+  background: rgba(22, 139, 135, 0.08);
+  color: var(--navy);
+  font-weight: 900;
+}
+
 .sort-root {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(245px, 1fr));
@@ -1683,6 +1694,15 @@ h3 {
   animation: collectPop 220ms ease;
 }
 
+.sort-row.missed {
+  place-items: center;
+  border-color: rgba(230, 92, 78, 0.34);
+  background:
+    radial-gradient(circle at top, rgba(230, 92, 78, 0.12), transparent 8rem),
+    #fffaf6;
+  text-align: center;
+}
+
 .sort-row label {
   color: var(--navy);
   font-weight: 800;
@@ -1693,6 +1713,18 @@ h3 {
   border: 1px solid var(--line);
   border-radius: 8px;
   background: #ffffff;
+}
+
+.sort-attempts,
+.sort-card-feedback {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.94rem;
+  line-height: 1.35;
+}
+
+.sort-attempts {
+  font-weight: 800;
 }
 
 .sort-collected {
@@ -1719,6 +1751,36 @@ h3 {
 
 .sort-collected span {
   line-height: 1.15;
+}
+
+.sort-collected small,
+.sort-reveal small {
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.sort-reveal {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  color: var(--navy);
+}
+
+.sort-reveal[hidden] {
+  display: none;
+}
+
+.sort-reveal span {
+  color: var(--teal);
+  font-size: 0.84rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.sort-reveal strong {
+  font-size: 1.35rem;
 }
 
 .badge-dialog {
