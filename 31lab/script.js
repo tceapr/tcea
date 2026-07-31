@@ -124,6 +124,7 @@ const machineMessage = document.getElementById('machineMessage');
 const numberCore = document.querySelector('.number-core');
 const finalPanel = document.getElementById('finalPanel');
 const sortRoot = document.getElementById('sortRoot');
+const sortScore = document.getElementById('sortScore');
 const sortFeedback = document.getElementById('sortFeedback');
 const badgeDialog = document.getElementById('badgeDialog');
 const closeBadgeButton = document.getElementById('closeBadgeButton');
@@ -239,6 +240,11 @@ let stateScore = null;
 const stateRuledOut = new Set();
 let missionScores = {};
 let historyDrag = null;
+const sortMaxAttempts = 2;
+const sortFirstTryPoints = 5;
+const sortSecondTryPoints = 2;
+const sortMaxScore = missions.length * sortFirstTryPoints;
+let sortState = createSortState();
 
 resetSavedLabOnOpen();
 loadScoreState();
@@ -346,6 +352,45 @@ function submittedAttemptsFromScore(points) {
   if (points === 31) return 1;
   if (points === 13) return 2;
   return 3;
+}
+
+function createSortState() {
+  return {
+    cards: missions.reduce((cards, mission) => {
+      cards[mission.id] = {
+        attempts: 0,
+        pointsEarned: 0,
+        status: 'open'
+      };
+      return cards;
+    }, {})
+  };
+}
+
+function sortCardState(missionId) {
+  if (!sortState.cards[missionId]) {
+    sortState.cards[missionId] = {
+      attempts: 0,
+      pointsEarned: 0,
+      status: 'open'
+    };
+  }
+  return sortState.cards[missionId];
+}
+
+function sortTotalScore() {
+  return Object.values(sortState.cards)
+    .reduce((sum, card) => sum + Number(card.pointsEarned || 0), 0);
+}
+
+function sortResolvedCount() {
+  return Object.values(sortState.cards)
+    .filter(card => card.status === 'collected' || card.status === 'missed').length;
+}
+
+function updateSortScoreDisplay() {
+  if (!sortScore) return;
+  sortScore.textContent = `Final Challenge Score: ${sortTotalScore()} of ${sortMaxScore} points`;
 }
 
 function primeStateForStorage() {
@@ -2774,40 +2819,94 @@ function renderSort() {
   sortRoot.innerHTML = missions.map(mission => `
     <div class="sort-row" data-sort-row="${mission.id}">
       <label for="sort-${mission.id}" data-sort-fact="${mission.id}">${mission.fact}</label>
-      <select id="sort-${mission.id}" data-sort="${mission.id}">
+      <select id="sort-${mission.id}" data-sort="${mission.id}" aria-describedby="sort-status-${mission.id}">
         <option value="">Choose category</option>
         ${categories.map(category => `<option>${category}</option>`).join('')}
       </select>
+      <p class="sort-attempts" id="sort-status-${mission.id}" data-sort-attempts="${mission.id}">Attempts: 0 of 2</p>
+      <p class="sort-card-feedback" data-sort-card-feedback="${mission.id}" aria-live="polite"></p>
       <div class="sort-collected" data-sort-collected="${mission.id}" hidden>
         <img src="${mission.icon}" alt="${mission.title} icon">
         <span>${mission.title}</span>
+        <small data-sort-points="${mission.id}"></small>
+      </div>
+      <div class="sort-reveal" data-sort-reveal="${mission.id}" hidden>
+        <span>Correct category</span>
+        <strong>${mission.category}</strong>
+        <small>No points earned on this card.</small>
       </div>
     </div>
   `).join('');
+  missions.forEach(mission => applySortCardState(mission.id));
+  updateSortScoreDisplay();
+  updateSortProgressFeedback();
 }
 
-function updateSortCard(missionId) {
+function applySortCardState(missionId) {
   const mission = missionById(missionId);
   const row = sortRoot.querySelector(`[data-sort-row="${missionId}"]`);
   const select = sortRoot.querySelector(`[data-sort="${missionId}"]`);
   const collected = sortRoot.querySelector(`[data-sort-collected="${missionId}"]`);
+  const reveal = sortRoot.querySelector(`[data-sort-reveal="${missionId}"]`);
   const fact = sortRoot.querySelector(`[data-sort-fact="${missionId}"]`);
-  if (!mission || !row || !select || !collected || !fact) return false;
-  const isCorrect = select.value === mission.category;
-  row.classList.toggle('collected', isCorrect);
-  select.hidden = isCorrect;
-  fact.hidden = isCorrect;
-  collected.hidden = !isCorrect;
-  return isCorrect;
+  const attempts = sortRoot.querySelector(`[data-sort-attempts="${missionId}"]`);
+  const feedback = sortRoot.querySelector(`[data-sort-card-feedback="${missionId}"]`);
+  const points = sortRoot.querySelector(`[data-sort-points="${missionId}"]`);
+  if (!mission || !row || !select || !collected || !reveal || !fact || !attempts || !feedback || !points) return false;
+  const card = sortCardState(missionId);
+  const isCollected = card.status === 'collected';
+  const isMissed = card.status === 'missed';
+  row.classList.toggle('collected', isCollected);
+  row.classList.toggle('missed', isMissed);
+  select.disabled = isCollected || isMissed;
+  select.hidden = isCollected || isMissed;
+  fact.hidden = isCollected || isMissed;
+  attempts.hidden = isCollected || isMissed;
+  collected.hidden = !isCollected;
+  reveal.hidden = !isMissed;
+  if (card.status === 'open') {
+    attempts.textContent = `Attempts: ${card.attempts} of ${sortMaxAttempts}`;
+  }
+  if (isCollected) {
+    points.textContent = `${card.pointsEarned} points earned`;
+    feedback.textContent = '';
+  }
+  if (isMissed) {
+    feedback.textContent = '';
+  }
+  return isCollected || isMissed;
+}
+
+function handleSortChoice(select) {
+  const mission = missionById(select.dataset.sort);
+  if (!mission || !select.value) return;
+  const card = sortCardState(mission.id);
+  if (card.status !== 'open') return;
+  card.attempts += 1;
+  const feedback = sortRoot.querySelector(`[data-sort-card-feedback="${mission.id}"]`);
+  if (select.value === mission.category) {
+    card.status = 'collected';
+    card.pointsEarned = card.attempts === 1 ? sortFirstTryPoints : sortSecondTryPoints;
+  } else if (card.attempts >= sortMaxAttempts) {
+    card.status = 'missed';
+    card.pointsEarned = 0;
+  } else {
+    select.value = '';
+    if (feedback) feedback.textContent = 'Not quite. Think about what kind of discovery this is, then try once more.';
+  }
+  applySortCardState(mission.id);
+  updateSortScoreDisplay();
 }
 
 function updateSortProgressFeedback() {
-  const collectedCount = missions.filter(mission => updateSortCard(mission.id)).length;
-  if (collectedCount === missions.length) {
-    sortFeedback.textContent = 'All evidence icons collected. Check categories to unlock the badge.';
+  const resolvedCount = sortResolvedCount();
+  const collectedCount = Object.values(sortState.cards).filter(card => card.status === 'collected').length;
+  const missedCount = Object.values(sortState.cards).filter(card => card.status === 'missed').length;
+  if (resolvedCount === missions.length) {
+    sortFeedback.textContent = `Final challenge complete. You earned ${sortTotalScore()} of ${sortMaxScore} points. Check categories to unlock the badge.`;
     sortFeedback.classList.add('success');
-  } else if (collectedCount > 0) {
-    sortFeedback.textContent = `${collectedCount} of ${missions.length} evidence icons collected.`;
+  } else if (resolvedCount > 0) {
+    sortFeedback.textContent = `${collectedCount} icons collected, ${missedCount} answers revealed, ${missions.length - resolvedCount} cards still open.`;
     sortFeedback.classList.remove('success');
   } else {
     sortFeedback.textContent = '';
@@ -2824,7 +2923,7 @@ missionRing.addEventListener('click', event => {
 sortRoot.addEventListener('change', event => {
   const select = event.target.closest('[data-sort]');
   if (!select) return;
-  updateSortCard(select.dataset.sort);
+  handleSortChoice(select);
   updateSortProgressFeedback();
 });
 
@@ -3482,13 +3581,13 @@ challengeRoot.addEventListener('pointercancel', event => {
 });
 
 document.getElementById('checkSortButton').addEventListener('click', () => {
-  const allCorrect = missions.every(mission => updateSortCard(mission.id));
-  if (allCorrect) {
-    sortFeedback.textContent = '31 Is Everywhere. Badge unlocked.';
+  const allResolved = sortResolvedCount() === missions.length;
+  if (allResolved) {
+    sortFeedback.textContent = `31 Is Everywhere. Badge unlocked. Final Challenge Score: ${sortTotalScore()} of ${sortMaxScore} points.`;
     sortFeedback.classList.add('success');
     badgeDialog.showModal();
   } else {
-    sortFeedback.textContent = 'Some facts are still in the wrong category. Try again.';
+    sortFeedback.textContent = `Keep sorting. ${sortResolvedCount()} of ${missions.length} evidence cards are finished.`;
     sortFeedback.classList.remove('success');
   }
 });
