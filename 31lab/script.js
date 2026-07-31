@@ -11,91 +11,91 @@ const missions = [
   {
     id: 'prime',
     title: 'Prime Scanner',
-    symbol: 'P',
+    symbol: 'PS',
     category: 'Math',
     fact: 'Only 1 and 31 divide evenly into 31.'
   },
   {
     id: 'binary',
     title: 'Binary Switchboard',
-    symbol: '01',
+    symbol: 'BS',
     category: 'Math',
     fact: '011111 in binary equals 31.'
   },
   {
     id: 'roman',
     title: 'Roman Numeral Builder',
-    symbol: 'X',
+    symbol: 'RN',
     category: 'Math',
     fact: 'XXXI is 31 in Roman numerals.'
   },
   {
     id: 'make31',
     title: 'Make 31 Machine',
-    symbol: '+',
+    symbol: 'MM',
     category: 'Math',
     fact: '1, 2, 4, 8, and 16 add to 31.'
   },
   {
     id: 'calendar',
     title: 'Calendar Hunt',
-    symbol: 'M',
+    symbol: 'CH',
     category: 'Time and calendars',
     fact: 'Seven months have 31 days.'
   },
   {
     id: 'halloween',
     title: 'Halloween Door',
-    symbol: 'O',
+    symbol: 'HD',
     category: 'Time and calendars',
     fact: 'Halloween is October 31.'
   },
   {
     id: 'state',
     title: '31st State Case',
-    symbol: 'CA',
+    symbol: 'SC',
     category: 'Geography',
     fact: 'California became the 31st state.'
   },
   {
     id: 'gallium',
     title: 'Gallium Lab',
-    symbol: 'Ga',
+    symbol: 'GL',
     category: 'Science',
     fact: 'Gallium melts at about 85.6 degrees Fahrenheit.'
   },
   {
     id: 'flavor',
     title: 'Flavor Formula 31',
-    symbol: 'F',
+    symbol: 'FF',
     category: 'Math',
     fact: 'Robot Raspberry, Sprinkle Sparks, and Cherry Pop total 31.'
   },
   {
     id: 'president',
     title: 'The Mystery of President 31',
-    symbol: 'H',
+    symbol: 'MP',
     category: 'History',
     fact: 'Herbert Hoover was the 31st U.S. president.'
   },
   {
     id: 'phone',
     title: 'International Call',
-    symbol: '+31',
+    symbol: 'IC',
     category: 'Geography',
     fact: '+31 is the country calling code for the Netherlands.'
   },
   {
     id: 'bunyan',
     title: 'Paul Bunyan Fact Builder',
-    symbol: 'FT',
+    symbol: 'PB',
     category: 'Popular culture',
     fact: 'The Paul Bunyan statue in Bangor, Maine is 31 feet tall.'
   },
   {
     id: 'history',
     title: 'The 13th Amendment Timeline',
-    symbol: '1865',
+    symbol: 'AT',
     category: 'History',
     fact: 'Congress approved the 13th Amendment before states ratified it on December 6, 1865.'
   }
