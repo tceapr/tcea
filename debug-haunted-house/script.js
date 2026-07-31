@@ -64,6 +64,8 @@ const initialState = {
   finalUnlocked: false
 };
 
+resetSavedActivityOnOpen();
+
 let appState = loadState();
 let currentRoomIndex = null;
 let room1Commands = ['Up', 'Up', 'Down', 'Right', 'Right', 'Right'];
@@ -126,6 +128,14 @@ secretInput.addEventListener('keydown', event => {
 renderProgress();
 renderMap();
 showHome();
+
+function resetSavedActivityOnOpen() {
+  try {
+    localStorage.removeItem(STORAGE_KEY);
+  } catch {
+    // Local storage may be unavailable in some restricted browser modes.
+  }
+}
 
 function loadState() {
   try {
