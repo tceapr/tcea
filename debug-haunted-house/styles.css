@@ -540,8 +540,49 @@ input[type="text"] {
 
 .sequence-wrap {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(220px, .62fr);
+  grid-template-columns: minmax(220px, .58fr) minmax(0, 1fr) minmax(220px, .62fr);
   gap: 16px;
+}
+
+.recipe-guide {
+  align-self: start;
+  padding: 16px;
+  border: 2px solid rgba(78, 38, 132, 0.2);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(255, 241, 199, 0.9), rgba(255, 253, 245, 0.96)),
+    var(--cream);
+}
+
+.recipe-guide h3 {
+  margin-bottom: 8px;
+  color: var(--purple);
+}
+
+.recipe-guide p {
+  color: #47395d;
+}
+
+.recipe-guide ol {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 22px;
+  font-weight: 800;
+}
+
+.recipe-guide li::marker {
+  color: var(--purple);
+  font-weight: 900;
+}
+
+.recipe-guide .guide-note {
+  margin: 14px 0 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: var(--purple-dark);
+  background: #f3e9ff;
+  font-weight: 900;
 }
 
 .sortable-card {

@@ -510,6 +510,20 @@ function initSortable(kind, cards, hasUnused) {
   }
   roomContent.innerHTML = `
     <div class="sequence-wrap">
+      ${kind === 'potion' ? `
+      <aside class="recipe-guide" aria-label="Potion recipe guide">
+        <h3>Potion Recipe Guide</h3>
+        <p>Use this guide to decide which recipe cards belong in the cauldron and which card does not belong.</p>
+        <ol>
+          <li>Set up the cauldron.</li>
+          <li>Add the swamp water.</li>
+          <li>Add the spider rings.</li>
+          <li>Add the purple feather.</li>
+          <li>Stir the potion.</li>
+          <li>Pour the finished potion into the bottle.</li>
+        </ol>
+        <p class="guide-note">Only one spider-ring card belongs in the recipe.</p>
+      </aside>` : ''}
       <div class="work-panel">
         <h3>${kind === 'potion' ? 'Recipe Steps' : 'Pumpkin Steps'}</h3>
         <div class="sequence-list" id="${kind}Sequence"></div>
