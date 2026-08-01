@@ -512,17 +512,15 @@ function initSortable(kind, cards, hasUnused) {
     <div class="sequence-wrap">
       ${kind === 'potion' ? `
       <aside class="recipe-guide" aria-label="Potion recipe guide">
-        <h3>Potion Recipe Guide</h3>
-        <p>Use this guide to decide which recipe cards belong in the cauldron and which card does not belong.</p>
-        <ol>
-          <li>Set up the cauldron.</li>
-          <li>Add the swamp water.</li>
-          <li>Add the spider rings.</li>
-          <li>Add the purple feather.</li>
-          <li>Stir the potion.</li>
-          <li>Pour the finished potion into the bottle.</li>
-        </ol>
-        <p class="guide-note">Only one spider-ring card belongs in the recipe.</p>
+        <h3>Potion Clue Card</h3>
+        <p>Use these clues to debug the recipe without seeing the answer.</p>
+        <ul>
+          <li>The cauldron must be ready before anything goes into it.</li>
+          <li>The potion needs one liquid step and two ingredient steps before it can be stirred.</li>
+          <li>Stir only after all needed ingredients are in the cauldron.</li>
+          <li>The finished potion goes into the bottle after it has been stirred.</li>
+        </ul>
+        <p class="guide-note">One spider-ring card is extra. Read both spider-ring cards carefully.</p>
       </aside>` : ''}
       <div class="work-panel">
         <h3>${kind === 'potion' ? 'Recipe Steps' : 'Pumpkin Steps'}</h3>

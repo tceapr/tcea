@@ -563,7 +563,7 @@ input[type="text"] {
   color: #47395d;
 }
 
-.recipe-guide ol {
+.recipe-guide ul {
   display: grid;
   gap: 8px;
   margin: 0;
