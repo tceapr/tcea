@@ -520,7 +520,6 @@ function initSortable(kind, cards, hasUnused) {
           <li>Stir only after all needed ingredients are in the cauldron.</li>
           <li>The finished potion goes into the bottle after it has been stirred.</li>
         </ul>
-        <p class="guide-note">One spider-ring card is extra. Read both spider-ring cards carefully.</p>
       </aside>` : ''}
       <div class="work-panel">
         <h3>${kind === 'potion' ? 'Recipe Steps' : 'Pumpkin Steps'}</h3>
