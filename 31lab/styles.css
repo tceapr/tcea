@@ -12,6 +12,11 @@
   --lime: #71b857;
   --blue: #396fd6;
   --violet: #7955b8;
+  --choice-bg: #edf7fb;
+  --choice-bg-strong: #dff0f6;
+  --choice-border: #9bc5d7;
+  --ghost-bg: #fff3ce;
+  --ghost-border: #d5a93a;
   --shadow: 0 18px 42px rgba(23, 50, 77, 0.16);
   --soft-shadow: 0 10px 24px rgba(23, 50, 77, 0.12);
 }
@@ -399,10 +404,11 @@ h3 {
 .object-button,
 .map-region {
   min-height: 46px;
-  border: 1px solid rgba(23, 50, 77, 0.2);
+  border: 1px solid var(--choice-border);
   border-radius: 8px;
   color: var(--ink);
-  background: #ffffff;
+  background: var(--choice-bg);
+  box-shadow: 0 4px 10px rgba(23, 50, 77, 0.06);
 }
 
 .choice-button,
@@ -411,6 +417,20 @@ h3 {
 .object-button {
   padding: 10px 12px;
   font-weight: 800;
+}
+
+.choice-button:hover,
+.choice-button:focus-visible,
+.month-button:hover,
+.month-button:focus-visible,
+.timeline-button:hover,
+.timeline-button:focus-visible,
+.object-button:hover,
+.object-button:focus-visible,
+.key-button:hover,
+.key-button:focus-visible {
+  border-color: var(--teal);
+  background: var(--choice-bg-strong);
 }
 
 .month-button:focus-visible {
@@ -474,7 +494,16 @@ h3 {
 
 .ghost-button {
   padding: 0 14px;
+  border-color: var(--ghost-border);
+  background: var(--ghost-bg);
+  color: var(--navy);
   font-weight: 800;
+}
+
+.ghost-button:hover,
+.ghost-button:focus-visible {
+  border-color: #8e640f;
+  background: #f9e3a6;
 }
 
 .feedback {
@@ -581,10 +610,17 @@ h3 {
   place-items: center;
   min-height: 118px;
   padding: 10px 8px;
-  border: 1px solid rgba(23, 50, 77, 0.2);
+  border: 1px solid var(--choice-border);
   border-radius: 8px;
-  background: #ffffff;
+  background: var(--choice-bg);
   font-weight: 800;
+  box-shadow: 0 4px 10px rgba(23, 50, 77, 0.06);
+}
+
+.switch:hover,
+.switch:focus-visible {
+  border-color: var(--teal);
+  background: var(--choice-bg-strong);
 }
 
 .switch-track {
@@ -661,7 +697,7 @@ h3 {
   border: 1px solid var(--line);
   border-radius: 8px;
   color: var(--navy);
-  background: #ffffff;
+  background: #f5fbff;
   font-size: 1.45rem;
   font-weight: 800;
 }
@@ -750,7 +786,7 @@ h3 {
   height: 68px;
   border-style: dashed;
   color: var(--muted);
-  background: #ffffff;
+  background: #f3f9fd;
   font-size: 1.7rem;
   font-weight: 800;
 }
@@ -811,8 +847,14 @@ h3 {
 
 .day-button {
   border: 1px solid var(--line);
-  background: #ffffff;
+  background: var(--choice-bg);
   font-weight: 800;
+}
+
+.day-button:hover,
+.day-button:focus-visible {
+  border-color: var(--teal);
+  background: var(--choice-bg-strong);
 }
 
 .day-button.current {
@@ -898,7 +940,7 @@ h3 {
   padding: 10px;
   border: 2px dashed rgba(23, 47, 72, 0.22);
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(237, 247, 251, 0.86);
 }
 
 .route-space.filled {
@@ -1219,7 +1261,7 @@ h3 {
 }
 
 .evidence-folder.opened {
-  background: #ffffff;
+  background: #f5fbff;
 }
 
 .evidence-folder.opened .folder-clue {
@@ -1278,9 +1320,15 @@ h3 {
   border: 1px solid rgba(23, 50, 77, 0.18);
   border-radius: 8px;
   color: var(--navy);
-  background: #ffffff;
+  background: #f5fbff;
   font-weight: 900;
   box-shadow: 0 10px 22px rgba(23, 50, 77, 0.08);
+}
+
+.suspect-card:hover,
+.suspect-card:focus-visible {
+  border-color: var(--teal);
+  background: var(--choice-bg-strong);
 }
 
 .suspect-card.selected {
@@ -1429,16 +1477,37 @@ h3 {
   gap: 10px;
 }
 
+.select-grid select {
+  min-height: 48px;
+  border: 1px solid var(--choice-border);
+  border-radius: 8px;
+  color: var(--navy);
+  background: var(--choice-bg);
+  font: inherit;
+  font-weight: 800;
+}
+
+.select-grid select:focus {
+  border-color: var(--teal);
+  outline: 3px solid rgba(14, 128, 128, 0.24);
+}
+
 .item-check {
   display: flex;
   align-items: center;
   gap: 10px;
   min-height: 48px;
   padding: 10px;
-  border: 1px solid var(--line);
+  border: 1px solid var(--choice-border);
   border-radius: 8px;
-  background: #ffffff;
+  background: var(--choice-bg);
   font-weight: 800;
+}
+
+.item-check:hover,
+.item-check:focus-within {
+  border-color: var(--teal);
+  background: var(--choice-bg-strong);
 }
 
 .bunyan-research-actions {
@@ -1516,10 +1585,10 @@ h3 {
 .plaque-field select {
   width: 100%;
   min-height: 48px;
-  border: 1px solid var(--line);
+  border: 1px solid var(--choice-border);
   border-radius: 8px;
   color: var(--navy);
-  background: #ffffff;
+  background: var(--choice-bg);
   font: inherit;
   font-weight: 800;
 }
@@ -1738,9 +1807,15 @@ h3 {
 
 .sort-row select {
   min-height: 44px;
-  border: 1px solid var(--line);
+  border: 1px solid var(--choice-border);
   border-radius: 8px;
-  background: #ffffff;
+  background: var(--choice-bg);
+}
+
+.plaque-field select:focus,
+.sort-row select:focus {
+  border-color: var(--teal);
+  outline: 3px solid rgba(14, 128, 128, 0.24);
 }
 
 .sort-attempts,
