@@ -88,6 +88,7 @@ const roomContent = document.getElementById('roomContent');
 const hintBox = document.getElementById('hintBox');
 const feedbackBox = document.getElementById('feedbackBox');
 const testButton = document.getElementById('testButton');
+const resetTestButton = document.getElementById('resetTestButton');
 const checkButton = document.getElementById('checkButton');
 const finalLetters = document.getElementById('finalLetters');
 const finalFeedback = document.getElementById('finalFeedback');
@@ -101,6 +102,7 @@ const teacherAuthFeedback = document.getElementById('teacherAuthFeedback');
 const teacherPasswordPanel = document.getElementById('teacherPasswordPanel');
 const teacherGuideContent = document.getElementById('teacherGuideContent');
 let teacherGuideUnlocked = false;
+let activeTestRun = 0;
 
 document.getElementById('homeButton').addEventListener('click', showHome);
 document.getElementById('continueButton').addEventListener('click', () => {
@@ -113,6 +115,7 @@ document.getElementById('continueButton').addEventListener('click', () => {
 document.getElementById('resetButton').addEventListener('click', resetActivity);
 document.getElementById('hintButton').addEventListener('click', showHint);
 document.getElementById('testButton').addEventListener('click', testCurrentRoom);
+resetTestButton.addEventListener('click', resetCurrentTest);
 document.getElementById('checkButton').addEventListener('click', checkCurrentRoom);
 document.getElementById('unlockButton').addEventListener('click', checkFinalWord);
 document.getElementById('playAgainButton').addEventListener('click', () => resetActivity(false));
@@ -248,10 +251,20 @@ function completeRoom(roomId) {
   renderProgress();
   renderMap();
   const allSolved = allRoomsSolved();
-  setFeedback(`<strong>Correct!</strong> You earned the letter ${rooms[currentRoomIndex].letter}.<br>${roomExplanations[roomId]}${allSolved ? '<br>All six rooms are complete. The front door is ready for the final word.' : ''}`, 'success');
+  setFeedback(`<strong>Correct!</strong> You earned the letter ${rooms[currentRoomIndex].letter}.<br>${roomExplanations[roomId]}${completionReveal(roomId)}${allSolved ? '<br>All six rooms are complete. The front door is ready for the final word.' : ''}`, 'success');
   if (allSolved) {
     setTimeout(showFinal, DELAY);
   }
+}
+
+function completionReveal(roomId) {
+  if (roomId !== 'pumpkin') return '';
+  return `
+    <figure class="room-reveal">
+      <img src="assets/thepumpkinworkshop.png?v=pumpkin-reveal-20260802" alt="Glowing carved pumpkin with a candle inside">
+      <figcaption>Pumpkin Workshop complete!</figcaption>
+    </figure>
+  `;
 }
 
 function showFinal() {
@@ -307,6 +320,7 @@ function renderRoom(roomId) {
 
 function renderRoom1(position = { row: 5, col: 1 }) {
   testButton.hidden = false;
+  resetTestButton.hidden = false;
   roomContent.innerHTML = `
     <div class="activity-layout">
       <div class="scene-panel">
@@ -353,6 +367,7 @@ function renderDirectionCommands() {
 
 function renderRoom2() {
   testButton.hidden = true;
+  resetTestButton.hidden = true;
   initSortable('potion', [
     'Drop in one purple feather.',
     'Add three more spider rings.',
@@ -366,6 +381,7 @@ function renderRoom2() {
 
 function renderRoom3(position = { row: 5, col: 1 }, facing = 'north') {
   testButton.hidden = false;
+  resetTestButton.hidden = false;
   roomContent.innerHTML = `
     <div class="activity-layout">
       <div class="scene-panel">
@@ -412,6 +428,7 @@ function renderTowerCommands() {
 
 function renderRoom4() {
   testButton.hidden = true;
+  resetTestButton.hidden = true;
   initSortable('pumpkin', [
     'Draw a face on the pumpkin.',
     'Place a battery-operated light inside.',
@@ -424,6 +441,7 @@ function renderRoom4() {
 
 function renderRoom5() {
   testButton.hidden = true;
+  resetTestButton.hidden = true;
   roomContent.innerHTML = `
     <div class="scene-panel">
       <h3>Repeating Picture Pattern</h3>
@@ -455,6 +473,7 @@ function renderPattern() {
 
 function renderRoom6(position = { row: 5, col: 1 }, facing = 'north') {
   testButton.hidden = false;
+  resetTestButton.hidden = false;
   roomContent.innerHTML = `
     <div class="activity-layout">
       <div class="scene-panel">
@@ -656,29 +675,55 @@ async function testCurrentRoom() {
   if (currentRoomIndex === null) return;
   setFeedback('');
   const roomId = rooms[currentRoomIndex].id;
-  if (roomId === 'path') await animatePath();
-  if (roomId === 'tower') await animateTower();
-  if (roomId === 'escape') await animateEscape();
+  const testRun = activeTestRun + 1;
+  activeTestRun = testRun;
+  testButton.disabled = true;
+  resetTestButton.disabled = false;
+  try {
+    if (roomId === 'path') await animatePath(testRun);
+    if (roomId === 'tower') await animateTower(testRun);
+    if (roomId === 'escape') await animateEscape(testRun);
+  } finally {
+    if (activeTestRun === testRun) {
+      testButton.disabled = false;
+      resetTestButton.disabled = false;
+    }
+  }
 }
 
-async function animatePath() {
+function resetCurrentTest() {
+  if (currentRoomIndex === null) return;
+  activeTestRun += 1;
+  setFeedback('');
+  const roomId = rooms[currentRoomIndex].id;
+  if (roomId === 'path') renderRoom1();
+  if (roomId === 'tower') renderRoom3();
+  if (roomId === 'escape') renderRoom6();
+  testButton.disabled = false;
+  resetTestButton.disabled = false;
+}
+
+async function animatePath(testRun) {
   let position = { row: 5, col: 1 };
   renderRoom1(position);
   await sleep(DELAY);
+  if (activeTestRun !== testRun) return;
   for (const command of room1Commands) {
     position = step(position, command);
     renderRoom1(position);
     await sleep(DELAY);
+    if (activeTestRun !== testRun) return;
   }
   const arrived = position.row === 2 && position.col === 4;
   setFeedback(arrived ? 'The cat reached the haunted house door. Now check your answer.' : 'The cat did not reach the door yet. Try changing one arrow.', arrived ? 'success' : 'error');
 }
 
-async function animateTower() {
+async function animateTower(testRun) {
   let position = { row: 5, col: 1 };
   let facing = 'north';
   renderRoom3(position, facing);
   await sleep(DELAY);
+  if (activeTestRun !== testRun) return;
   for (const command of room3Commands) {
     if (command.startsWith('Turn')) {
       facing = turn(facing, command.endsWith('left') ? 'left' : 'right');
@@ -688,27 +733,32 @@ async function animateTower() {
     }
     renderRoom3(position, facing);
     await sleep(DELAY);
+    if (activeTestRun !== testRun) return;
   }
   const arrived = position.row === 1 && position.col === 4;
   setFeedback(arrived ? 'The witch reached the moon. Now check your answer.' : 'The witch did not reach the moon yet. Check the turn before the final move.', arrived ? 'success' : 'error');
 }
 
-async function animateEscape() {
+async function animateEscape(testRun) {
   let position = { row: 5, col: 1 };
   let facing = 'north';
   renderRoom6(position, facing);
   await sleep(DELAY);
+  if (activeTestRun !== testRun) return;
   while (!(position.row === 3 && position.col === 1)) {
     position = forward(position, facing);
     renderRoom6(position, facing);
     await sleep(DELAY);
+    if (activeTestRun !== testRun) return;
   }
   facing = turn(facing, 'right');
   renderRoom6(position, facing);
   await sleep(DELAY);
+  if (activeTestRun !== testRun) return;
   position = forward(forward(position, facing), facing);
   renderRoom6(position, facing);
   await sleep(DELAY);
+  if (activeTestRun !== testRun) return;
   if (position.row === 3 && position.col === 3) {
     if (room6Choice.includes('turn left')) facing = turn(facing, 'left');
     if (room6Choice.includes('turn right')) facing = turn(facing, 'right');
@@ -721,6 +771,7 @@ async function animateEscape() {
   }
   renderRoom6(position, facing);
   await sleep(DELAY);
+  if (activeTestRun !== testRun) return;
   position = forward(forward(position, facing), facing);
   renderRoom6(position, facing);
   const arrived = position.row === 1 && position.col === 3;
