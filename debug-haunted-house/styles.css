@@ -431,6 +431,33 @@ summary {
   background: #fff0ed;
 }
 
+.room-reveal {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  width: min(100%, 420px);
+  margin: 18px auto 0;
+  padding: 12px;
+  border: 2px solid rgba(242, 123, 29, 0.36);
+  border-radius: 8px;
+  background:
+    radial-gradient(circle at center, rgba(255, 246, 183, 0.8), transparent 72%),
+    #25143d;
+  box-shadow: 0 14px 28px rgba(31, 23, 51, 0.22);
+  animation: reveal-pop 420ms ease both;
+}
+
+.room-reveal img {
+  display: block;
+  width: 100%;
+  border-radius: 8px;
+}
+
+.room-reveal figcaption {
+  color: #fff6b7;
+  font-weight: 900;
+}
+
 .activity-layout {
   display: grid;
   grid-template-columns: minmax(280px, .95fr) minmax(300px, 1fr);
@@ -765,6 +792,17 @@ input[type="text"] {
   to {
     transform: translate(var(--drift), -760px) rotate(var(--turn));
     opacity: 0;
+  }
+}
+
+@keyframes reveal-pop {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
 
