@@ -458,6 +458,38 @@ summary {
   font-weight: 900;
 }
 
+.side-reveal-slot {
+  margin-top: 14px;
+}
+
+.side-room-reveal {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  max-width: 240px;
+  margin: 0 auto;
+  padding: 10px;
+  border: 2px solid rgba(158, 220, 69, 0.34);
+  border-radius: 8px;
+  background:
+    radial-gradient(circle at center, rgba(158, 220, 69, 0.28), transparent 72%),
+    #25143d;
+  box-shadow: 0 12px 24px rgba(31, 23, 51, 0.18);
+  animation: reveal-pop 420ms ease both;
+}
+
+.side-room-reveal img {
+  display: block;
+  width: 100%;
+  border-radius: 8px;
+}
+
+.side-room-reveal figcaption {
+  color: #fff6b7;
+  font-size: 0.95rem;
+  font-weight: 900;
+}
+
 .activity-layout {
   display: grid;
   grid-template-columns: minmax(280px, .95fr) minmax(300px, 1fr);

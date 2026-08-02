@@ -252,6 +252,7 @@ function completeRoom(roomId) {
   renderMap();
   const allSolved = allRoomsSolved();
   setFeedback(`<strong>Correct!</strong> You earned the letter ${rooms[currentRoomIndex].letter}.<br>${roomExplanations[roomId]}${completionReveal(roomId)}${allSolved ? '<br>All six rooms are complete. The front door is ready for the final word.' : ''}`, 'success');
+  showSideReveal(roomId);
   if (allSolved) {
     setTimeout(showFinal, DELAY);
   }
@@ -263,6 +264,21 @@ function completionReveal(roomId) {
     <figure class="room-reveal">
       <img src="assets/thepumpkinworkshop.png?v=pumpkin-reveal-20260802" alt="Glowing carved pumpkin with a candle inside">
       <figcaption>Pumpkin Workshop complete!</figcaption>
+    </figure>
+  `;
+}
+
+function showSideReveal(roomId) {
+  if (roomId !== 'potion') return;
+  const revealSlot = document.getElementById('potionRevealSlot');
+  if (revealSlot) revealSlot.innerHTML = potionRevealMarkup();
+}
+
+function potionRevealMarkup() {
+  return `
+    <figure class="side-room-reveal">
+      <img src="assets/thepotionroom.png?v=potion-reveal-20260802" alt="Finished green potion in a cauldron with spider rings and a purple feather">
+      <figcaption>Potion Room complete!</figcaption>
     </figure>
   `;
 }
@@ -548,6 +564,7 @@ function initSortable(kind, cards, hasUnused) {
       <div class="work-panel">
         <p class="drop-title">Do Not Use</p>
         <div class="drop-zone" id="${kind}Unused" data-drop-zone="unused"></div>
+        ${kind === 'potion' ? `<div class="side-reveal-slot" id="potionRevealSlot">${appState.solved.includes('potion') ? potionRevealMarkup() : ''}</div>` : ''}
       </div>` : ''}
     </div>
   `;
