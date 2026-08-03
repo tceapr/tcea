@@ -961,7 +961,7 @@ function characterSvg(type, facing = 'north') {
     return `<svg viewBox="0 0 100 100" role="img" aria-label="Witch facing ${facing}" style="transform:rotate(${rotation}deg)">${witchBody()}</svg>`;
   }
   if (type === 'student') {
-    return `<svg viewBox="0 0 100 100" role="img" aria-label="Student facing ${facing}" style="transform:rotate(${rotation}deg)"><circle cx="50" cy="30" r="18" fill="#ffd6a5" stroke="#211331" stroke-width="5"/><path d="M28 88 Q50 52 72 88 Z" fill="#48a9a6" stroke="#211331" stroke-width="5"/><path d="M40 28 Q50 18 60 28" fill="none" stroke="#211331" stroke-width="4" stroke-linecap="round"/><circle cx="44" cy="31" r="3"/><circle cx="56" cy="31" r="3"/></svg>`;
+    return '<img class="grid-character-image" src="assets/faceicon.png?v=face-icon-20260803" alt="Student marker">';
   }
   return iconSvg('cat');
 }

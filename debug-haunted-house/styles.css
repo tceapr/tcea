@@ -516,6 +516,13 @@ summary {
   height: 78%;
 }
 
+.cell img.grid-character-image {
+  width: 78%;
+  height: 78%;
+  object-fit: contain;
+  border-radius: 50%;
+}
+
 .cell-label {
   position: absolute;
   left: 6px;
