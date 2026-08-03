@@ -490,6 +490,21 @@ summary {
   font-weight: 900;
 }
 
+.path-code-area {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(140px, 0.34fr);
+  gap: 12px;
+  align-items: start;
+}
+
+.path-code-area .side-reveal-slot {
+  margin-top: 0;
+}
+
+.pumpkin-code-reveal {
+  max-width: 180px;
+}
+
 .activity-layout {
   display: grid;
   grid-template-columns: minmax(280px, .95fr) minmax(300px, 1fr);
@@ -919,6 +934,14 @@ input[type="text"] {
 
   .sortable-card {
     grid-template-columns: 1fr;
+  }
+
+  .path-code-area {
+    grid-template-columns: 1fr;
+  }
+
+  .pumpkin-code-reveal {
+    max-width: 220px;
   }
 
   .path-layout .arrow-card {
