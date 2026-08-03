@@ -269,9 +269,19 @@ function completionReveal(roomId) {
 }
 
 function showSideReveal(roomId) {
-  if (roomId !== 'potion') return;
-  const revealSlot = document.getElementById('potionRevealSlot');
-  if (revealSlot) revealSlot.innerHTML = potionRevealMarkup();
+  const revealSlot = document.getElementById(`${roomId}RevealSlot`);
+  if (!revealSlot) return;
+  if (roomId === 'path') revealSlot.innerHTML = pathRevealMarkup();
+  if (roomId === 'potion') revealSlot.innerHTML = potionRevealMarkup();
+}
+
+function pathRevealMarkup() {
+  return `
+    <figure class="side-room-reveal pumpkin-code-reveal">
+      <img src="assets/thepumpkinworkshop.png?v=path-pumpkin-reveal-20260803" alt="Glowing carved pumpkin with a candle inside">
+      <figcaption>Crooked Path complete!</figcaption>
+    </figure>
+  `;
 }
 
 function potionRevealMarkup() {
@@ -345,7 +355,10 @@ function renderRoom1(position = { row: 5, col: 1 }) {
       </div>
       <div class="work-panel">
         <h3>Buggy Algorithm</h3>
-        <div class="commands" id="pathCommands"></div>
+        <div class="path-code-area">
+          <div class="commands" id="pathCommands"></div>
+          <div class="side-reveal-slot" id="pathRevealSlot">${appState.solved.includes('path') ? pathRevealMarkup() : ''}</div>
+        </div>
       </div>
     </div>
   `;
