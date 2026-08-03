@@ -34,7 +34,7 @@ The six rooms are:
 2. The Potion Room
 3. The Witch's Tower
 4. The Pumpkin Workshop
-5. The Ghostly Hallway
+5. The Banner Blunder
 6. The Escape Hall
 
 ## Teacher Editing Notes

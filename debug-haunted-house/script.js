@@ -35,10 +35,10 @@ const rooms = [
   },
   {
     id: 'hallway',
-    title: 'The Ghostly Hallway',
+    title: 'The Banner Blunder',
     letter: 'T',
     hint: 'Look at the first three pictures. That same group should repeat.',
-    intro: 'The ghost decorated the hallway with a repeating pattern, but one picture does not belong. Select the bug and replace it with the correct picture.'
+    intro: 'The banner has a repeating pattern, but one picture does not belong. Select the bug and replace it with the correct picture.'
   },
   {
     id: 'escape',
@@ -54,7 +54,7 @@ const roomExplanations = {
   potion: 'An algorithm needs clear steps in a logical order. The repeated spider-ring step is unnecessary and changes the recipe.',
   tower: 'After flying across the sky, the witch must turn left to face the moon. Turning right sends her toward the chimney.',
   pumpkin: 'We debug everyday processes, not just computer code. The steps must be in an order that is safe and possible to complete.',
-  hallway: 'The pattern repeats Bat, Pumpkin, Ghost. The cat breaks the pattern and should be replaced with a ghost.',
+  hallway: 'The banner pattern repeats Bat, Pumpkin, Ghost. The cat breaks the pattern and should be replaced with a ghost.',
   escape: 'The condition tells the character what to do when the ghost appears. Turning left points the character toward the front door.'
 };
 
