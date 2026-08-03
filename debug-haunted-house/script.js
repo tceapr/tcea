@@ -158,7 +158,7 @@ function isSolved(index) {
 }
 
 function isUnlocked(index) {
-  return index === 0 || isSolved(index - 1);
+  return teacherGuideUnlocked || index === 0 || isSolved(index - 1);
 }
 
 function nextRoomIndex() {
@@ -327,6 +327,8 @@ function unlockTeacherGuide() {
   teacherAuthFeedback.textContent = '';
   teacherPasswordPanel.hidden = true;
   teacherGuideContent.hidden = false;
+  renderProgress();
+  renderMap();
 }
 
 function renderRoom(roomId) {
