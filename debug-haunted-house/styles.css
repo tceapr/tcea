@@ -579,6 +579,32 @@ summary {
   font-weight: 900;
 }
 
+.path-layout .commands {
+  gap: 10px;
+}
+
+.path-layout .arrow-card {
+  grid-template-columns: auto minmax(108px, 0.42fr) minmax(160px, 1fr);
+  align-items: center;
+  gap: 10px;
+  min-height: 74px;
+  padding: 10px 12px;
+}
+
+.path-layout .arrow-symbol {
+  width: 42px;
+  height: 42px;
+  font-size: 1.45rem;
+}
+
+.path-layout .arrow-card label {
+  margin: 0;
+}
+
+.path-layout .arrow-card select {
+  min-height: 40px;
+}
+
 select,
 input[type="text"] {
   width: 100%;
@@ -893,6 +919,14 @@ input[type="text"] {
 
   .sortable-card {
     grid-template-columns: 1fr;
+  }
+
+  .path-layout .arrow-card {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .path-layout .arrow-card select {
+    grid-column: 1 / -1;
   }
 }
 

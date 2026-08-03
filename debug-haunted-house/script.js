@@ -338,7 +338,7 @@ function renderRoom1(position = { row: 5, col: 1 }) {
   testButton.hidden = false;
   resetTestButton.hidden = false;
   roomContent.innerHTML = `
-    <div class="activity-layout">
+    <div class="activity-layout path-layout">
       <div class="scene-panel">
         <h3>Test Area</h3>
         <div class="grid-board" id="pathGrid" aria-label="Five by five path grid"></div>
