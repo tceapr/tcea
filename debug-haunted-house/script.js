@@ -251,37 +251,22 @@ function completeRoom(roomId) {
   renderProgress();
   renderMap();
   const allSolved = allRoomsSolved();
-  setFeedback(`<strong>Correct!</strong> You earned the letter ${rooms[currentRoomIndex].letter}.<br>${roomExplanations[roomId]}${completionReveal(roomId)}${allSolved ? '<br>All six rooms are complete. The front door is ready for the final word.' : ''}`, 'success');
+  setFeedback(`<strong>Correct!</strong> You earned the letter ${rooms[currentRoomIndex].letter}.<br>${roomExplanations[roomId]}${allSolved ? '<br>All six rooms are complete. The front door is ready for the final word.' : ''}`, 'success');
   showSideReveal(roomId);
   if (allSolved) {
     setTimeout(showFinal, DELAY);
   }
 }
 
-function completionReveal(roomId) {
-  if (roomId !== 'pumpkin') return '';
-  return `
-    <figure class="room-reveal">
-      <img src="assets/thepumpkinworkshop.png?v=pumpkin-reveal-20260802" alt="Glowing carved pumpkin with a candle inside">
-      <figcaption>Pumpkin Workshop complete!</figcaption>
-    </figure>
-  `;
-}
-
 function showSideReveal(roomId) {
   const revealSlot = document.getElementById(`${roomId}RevealSlot`);
   if (!revealSlot) return;
-  if (roomId === 'path') revealSlot.innerHTML = pathRevealMarkup();
   if (roomId === 'potion') revealSlot.innerHTML = potionRevealMarkup();
-}
-
-function pathRevealMarkup() {
-  return `
-    <figure class="side-room-reveal pumpkin-code-reveal">
-      <img src="assets/thepumpkinworkshop.png?v=path-pumpkin-reveal-20260803" alt="Glowing carved pumpkin with a candle inside">
-      <figcaption>Crooked Path complete!</figcaption>
-    </figure>
-  `;
+  if (roomId === 'pumpkin') {
+    document.querySelector('.pumpkin-sequence-wrap')?.classList.remove('reveal-hidden');
+    document.getElementById('pumpkinRevealPanel')?.removeAttribute('hidden');
+    revealSlot.innerHTML = pumpkinRevealMarkup();
+  }
 }
 
 function potionRevealMarkup() {
@@ -289,6 +274,15 @@ function potionRevealMarkup() {
     <figure class="side-room-reveal">
       <img src="assets/thepotionroom.png?v=potion-reveal-20260802" alt="Finished green potion in a cauldron with spider rings and a purple feather">
       <figcaption>Potion Room complete!</figcaption>
+    </figure>
+  `;
+}
+
+function pumpkinRevealMarkup() {
+  return `
+    <figure class="side-room-reveal pumpkin-workshop-reveal">
+      <img src="assets/thepumpkinworkshop.png?v=pumpkin-workshop-reveal-20260803" alt="Glowing carved pumpkin with a candle inside">
+      <figcaption>Pumpkin Workshop complete!</figcaption>
     </figure>
   `;
 }
@@ -355,10 +349,7 @@ function renderRoom1(position = { row: 5, col: 1 }) {
       </div>
       <div class="work-panel">
         <h3>Buggy Algorithm</h3>
-        <div class="path-code-area">
-          <div class="commands" id="pathCommands"></div>
-          <div class="side-reveal-slot" id="pathRevealSlot">${appState.solved.includes('path') ? pathRevealMarkup() : ''}</div>
-        </div>
+        <div class="commands" id="pathCommands"></div>
       </div>
     </div>
   `;
@@ -557,7 +548,7 @@ function initSortable(kind, cards, hasUnused) {
     };
   }
   roomContent.innerHTML = `
-    <div class="sequence-wrap">
+    <div class="sequence-wrap ${kind}-sequence-wrap ${kind === 'pumpkin' && !appState.solved.includes('pumpkin') ? 'reveal-hidden' : ''}">
       ${kind === 'potion' ? `
       <aside class="recipe-guide" aria-label="Potion recipe guide">
         <h3>Potion Clue Card</h3>
@@ -573,6 +564,11 @@ function initSortable(kind, cards, hasUnused) {
         <h3>${kind === 'potion' ? 'Recipe Steps' : 'Pumpkin Steps'}</h3>
         <div class="sequence-list" id="${kind}Sequence"></div>
       </div>
+      ${kind === 'pumpkin' ? `
+      <div class="work-panel pumpkin-reveal-panel" id="pumpkinRevealPanel" ${appState.solved.includes('pumpkin') ? '' : 'hidden'}>
+        <h3>Finished Pumpkin</h3>
+        <div class="side-reveal-slot" id="pumpkinRevealSlot">${appState.solved.includes('pumpkin') ? pumpkinRevealMarkup() : ''}</div>
+      </div>` : ''}
       ${hasUnused ? `
       <div class="work-panel">
         <p class="drop-title">Do Not Use</p>
