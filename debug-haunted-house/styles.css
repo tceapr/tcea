@@ -384,6 +384,16 @@ summary {
   max-height: 88px;
 }
 
+.room-card img.room-map-trapdoor {
+  display: block;
+  width: min(150px, 45%);
+  height: 88px;
+  object-fit: contain;
+  justify-self: center;
+  align-self: center;
+  margin: 0 auto;
+}
+
 .room-card strong {
   font-size: 1.1rem;
 }
