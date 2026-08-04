@@ -245,6 +245,10 @@ p {
   margin-top: 22px;
 }
 
+.next-room-button {
+  background: var(--green);
+}
+
 .primary-button,
 .secondary-button,
 .reset-button,

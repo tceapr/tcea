@@ -90,6 +90,7 @@ const feedbackBox = document.getElementById('feedbackBox');
 const testButton = document.getElementById('testButton');
 const resetTestButton = document.getElementById('resetTestButton');
 const checkButton = document.getElementById('checkButton');
+const nextRoomButton = document.getElementById('nextRoomButton');
 const finalLetters = document.getElementById('finalLetters');
 const finalFeedback = document.getElementById('finalFeedback');
 const secretInput = document.getElementById('secretInput');
@@ -119,6 +120,7 @@ document.getElementById('hintButton').addEventListener('click', showHint);
 document.getElementById('testButton').addEventListener('click', testCurrentRoom);
 resetTestButton.addEventListener('click', resetCurrentTest);
 document.getElementById('checkButton').addEventListener('click', checkCurrentRoom);
+nextRoomButton.addEventListener('click', goToNextRoom);
 document.getElementById('unlockButton').addEventListener('click', checkFinalWord);
 document.getElementById('playAgainButton').addEventListener('click', () => resetActivity(false));
 closeCelebrationButton.addEventListener('click', hideFinalCelebrationPopup);
@@ -231,6 +233,7 @@ function openRoom(index) {
   hintBox.textContent = '';
   setFeedback('');
   renderRoom(room.id);
+  updateNextRoomButton();
   setActiveScreen(roomScreen);
   roomTitle.focus?.();
 }
@@ -255,10 +258,31 @@ function completeRoom(roomId) {
   renderMap();
   const allSolved = allRoomsSolved();
   setFeedback(`<strong>Correct!</strong> You earned the letter ${rooms[currentRoomIndex].letter}.<br>${roomExplanations[roomId]}${allSolved ? '<br>All six rooms are complete. The final unlock is ready for the final word.' : ''}`, 'success');
+  updateNextRoomButton();
   showSideReveal(roomId);
-  if (allSolved) {
-    setTimeout(showFinal, DELAY);
+}
+
+function updateNextRoomButton() {
+  if (currentRoomIndex === null || !isSolved(currentRoomIndex)) {
+    nextRoomButton.hidden = true;
+    return;
   }
+  nextRoomButton.hidden = false;
+  nextRoomButton.textContent = allRoomsSolved() && currentRoomIndex === rooms.length - 1 ? 'Open Final Unlock' : 'Go to Next Room';
+}
+
+function goToNextRoom() {
+  if (currentRoomIndex === null) return;
+  if (allRoomsSolved() && currentRoomIndex === rooms.length - 1) {
+    showFinal();
+    return;
+  }
+  const nextIndex = currentRoomIndex + 1;
+  if (nextIndex < rooms.length && isUnlocked(nextIndex)) {
+    openRoom(nextIndex);
+    return;
+  }
+  showHome();
 }
 
 function showSideReveal(roomId) {
@@ -292,6 +316,7 @@ function pumpkinRevealMarkup() {
 
 function showFinal() {
   renderProgress();
+  nextRoomButton.hidden = true;
   setActiveScreen(finalScreen);
   finalFeedback.textContent = '';
   secretInput.value = '';
