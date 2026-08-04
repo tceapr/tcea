@@ -997,7 +997,11 @@ function startCelebration() {
 
 function mapArt(index) {
   const art = ['cat', 'cauldron', 'witch', 'pumpkin', 'ghost', 'trapdoor'][index];
-  return index === 5 ? iconSvg(art).replace('grid-icon-image trapdoor-icon', 'grid-icon-image trapdoor-icon room-map-trapdoor') : iconSvg(art);
+  return index === 5
+    ? iconSvg(art)
+      .replace('grid-icon-image trapdoor-icon', 'grid-icon-image trapdoor-icon room-map-trapdoor')
+      .replace('assets/trapdoor.png?v=trap-door-20260804', 'assets/trapdoor-map.png?v=trapdoor-map-large-20260804')
+    : iconSvg(art);
 }
 
 function characterSvg(type, facing = 'north') {
