@@ -647,6 +647,22 @@ input[type="text"] {
   gap: 16px;
 }
 
+.room-hero-banner {
+  margin: 0 0 16px;
+  overflow: hidden;
+  border: 2px solid rgba(78, 38, 132, 0.16);
+  border-radius: 8px;
+  background: #fff8ea;
+  box-shadow: 0 10px 22px rgba(33, 19, 49, 0.08);
+}
+
+.room-hero-banner img {
+  display: block;
+  width: 100%;
+  max-height: 220px;
+  object-fit: contain;
+}
+
 .pumpkin-sequence-wrap {
   grid-template-columns: minmax(0, 1fr) minmax(220px, 0.42fr);
 }
