@@ -30,7 +30,7 @@ const rooms = [
     id: 'pumpkin',
     title: 'The Pumpkin Workshop',
     letter: 'A',
-    hint: 'The pumpkin must be opened and cleaned before the face is cut out. The light goes inside last.',
+    hint: 'The pumpkin must be opened and cleaned before the face is cut out.',
     intro: 'This is a pretend sequencing activity. An adult should handle any real cutting. Arrange the steps in a safe and logical order.'
   },
   {
