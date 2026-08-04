@@ -44,8 +44,8 @@ const rooms = [
     id: 'escape',
     title: 'The Escape Hall',
     letter: 'S',
-    hint: 'After reaching the ghost, decide which turn points toward the door.',
-    intro: 'Choose the missing if-then command, then test the algorithm to see whether the student reaches the front door.'
+    hint: 'After reaching the ghost, decide which turn points toward the trap door.',
+    intro: 'Choose the missing if-then command, then test the algorithm to see whether the student reaches the trap door.'
   }
 ];
 
@@ -55,7 +55,7 @@ const roomExplanations = {
   tower: 'After flying across the sky, the witch must turn left to face the moon. Turning right sends her toward the chimney.',
   pumpkin: 'We debug everyday processes, not just computer code. The steps must be in an order that is safe and possible to complete.',
   hallway: 'The banner pattern repeats Bat, Pumpkin, Ghost. The cat breaks the pattern and should be replaced with a ghost.',
-  escape: 'The condition tells the character what to do when the ghost appears. Turning left points the character toward the front door.'
+  escape: 'The condition tells the character what to do when the ghost appears. Turning left points the character toward the trap door.'
 };
 
 const initialState = {
@@ -251,7 +251,7 @@ function completeRoom(roomId) {
   renderProgress();
   renderMap();
   const allSolved = allRoomsSolved();
-  setFeedback(`<strong>Correct!</strong> You earned the letter ${rooms[currentRoomIndex].letter}.<br>${roomExplanations[roomId]}${allSolved ? '<br>All six rooms are complete. The front door is ready for the final word.' : ''}`, 'success');
+  setFeedback(`<strong>Correct!</strong> You earned the letter ${rooms[currentRoomIndex].letter}.<br>${roomExplanations[roomId]}${allSolved ? '<br>All six rooms are complete. The final unlock is ready for the final word.' : ''}`, 'success');
   showSideReveal(roomId);
   if (allSolved) {
     setTimeout(showFinal, DELAY);
@@ -510,7 +510,7 @@ function renderRoom6(position = { row: 5, col: 1 }, facing = 'north') {
           <li>Move forward 2 spaces.</li>
           <li><strong>Missing command</strong></li>
           <li>Move forward 2 spaces.</li>
-          <li>Stop at the front door.</li>
+          <li>Stop at the trap door.</li>
         </ol>
         <div class="choice-list">
           ${[
@@ -531,7 +531,7 @@ function renderRoom6(position = { row: 5, col: 1 }, facing = 'north') {
   renderGrid('escapeGrid', position, {
     pumpkin: { row: 3, col: 1 },
     ghost: { row: 3, col: 3 },
-    door: { row: 1, col: 3 },
+    trapdoor: { row: 1, col: 3 },
     character: 'student',
     facing
   });
@@ -687,6 +687,7 @@ function renderGrid(gridId, characterPosition, details) {
     for (let col = 1; col <= 5; col += 1) {
       const items = [];
       if (details.door?.row === row && details.door?.col === col) items.push(iconSvg('door'));
+      if (details.trapdoor?.row === row && details.trapdoor?.col === col) items.push(iconSvg('trapdoor'));
       if (details.moon?.row === row && details.moon?.col === col) items.push(iconSvg('moon'));
       if (details.chimney?.row === row && details.chimney?.col === col) items.push(iconSvg('chimney'));
       if (details.pumpkin?.row === row && details.pumpkin?.col === col) items.push(iconSvg('pumpkin'));
@@ -793,7 +794,7 @@ async function animateEscape(testRun) {
     if (room6Choice.includes('move backward')) position = backward(position, facing);
     if (room6Choice.includes('stop')) {
       renderRoom6(position, facing);
-      setFeedback('The student stopped at the ghost, not at the front door.', 'error');
+      setFeedback('The student stopped at the ghost, not at the trap door.', 'error');
       return;
     }
   }
@@ -803,7 +804,7 @@ async function animateEscape(testRun) {
   position = forward(forward(position, facing), facing);
   renderRoom6(position, facing);
   const arrived = position.row === 1 && position.col === 3;
-  setFeedback(arrived ? 'The student reached the front door. Now check your answer.' : 'That condition does not point the student toward the door yet.', arrived ? 'success' : 'error');
+  setFeedback(arrived ? 'The student reached the trap door. Now check your answer.' : 'That condition does not point the student toward the trap door yet.', arrived ? 'success' : 'error');
 }
 
 function checkCurrentRoom() {
@@ -852,7 +853,7 @@ function checkCurrentRoom() {
   }
   if (roomId === 'escape') {
     if (room6Choice === 'If you see a ghost, turn left.') return completeRoom(roomId);
-    setFeedback('Try again. Choose the condition that points the student toward the front door.', 'error');
+    setFeedback('Try again. Choose the condition that points the student toward the trap door.', 'error');
   }
 }
 
@@ -951,7 +952,7 @@ function startCelebration() {
 }
 
 function mapArt(index) {
-  const art = ['cat', 'cauldron', 'witch', 'pumpkin', 'ghost', 'door'][index];
+  const art = ['cat', 'cauldron', 'witch', 'pumpkin', 'ghost', 'trapdoor'][index];
   return iconSvg(art);
 }
 
@@ -982,6 +983,7 @@ function iconSvg(type) {
     feather: '<svg viewBox="0 0 100 100" role="img" aria-label="Purple feather"><path d="M28 84 Q44 20 82 14 Q79 58 28 84 Z" fill="#b96cff" stroke="#211331" stroke-width="5"/><path d="M28 84 Q54 54 82 14 M46 60 L31 54 M56 48 L42 40" stroke="#211331" stroke-width="4" stroke-linecap="round"/></svg>',
     bottle: '<svg viewBox="0 0 100 100" role="img" aria-label="Potion bottle"><path d="M40 12 H60 V36 Q76 46 76 68 Q76 90 50 90 Q24 90 24 68 Q24 46 40 36 Z" fill="#9edc45" stroke="#211331" stroke-width="5"/><path d="M36 65 Q50 76 65 63" fill="none" stroke="#fff6b7" stroke-width="5" stroke-linecap="round"/></svg>',
     ghost: '<svg viewBox="0 0 100 100" role="img" aria-label="Friendly ghost"><path d="M22 88 V42 Q22 16 50 16 Q78 16 78 42 V88 L66 78 L56 88 L46 78 L36 88 L28 78 Z" fill="#fff" stroke="#211331" stroke-width="5"/><circle cx="40" cy="45" r="4" fill="#211331"/><circle cx="60" cy="45" r="4" fill="#211331"/><path d="M41 60 Q50 67 59 60" fill="none" stroke="#211331" stroke-width="4" stroke-linecap="round"/></svg>',
+    trapdoor: '<img class="grid-icon-image trapdoor-icon" src="assets/trapdoor.png?v=trap-door-20260804" alt="Open trap door">',
     student: '<svg viewBox="0 0 100 100" role="img" aria-label="Student"><circle cx="50" cy="30" r="18" fill="#ffd6a5" stroke="#211331" stroke-width="5"/><path d="M28 88 Q50 52 72 88 Z" fill="#48a9a6" stroke="#211331" stroke-width="5"/><circle cx="44" cy="31" r="3"/><circle cx="56" cy="31" r="3"/></svg>'
   };
   return icons[type] || '';
