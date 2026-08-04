@@ -511,9 +511,14 @@ summary {
   background: #f5f0ff;
 }
 
-.cell svg {
+.cell svg,
+.cell img.grid-icon-image {
   width: 78%;
   height: 78%;
+}
+
+.cell img.grid-icon-image {
+  object-fit: contain;
 }
 
 .cell img.grid-character-image {
@@ -521,6 +526,12 @@ summary {
   height: 78%;
   object-fit: contain;
   border-radius: 50%;
+}
+
+.room-card img.grid-icon-image {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
 }
 
 .cell-label {
