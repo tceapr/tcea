@@ -580,7 +580,7 @@ function initSortable(kind, cards, hasUnused) {
   roomContent.innerHTML = `
     ${kind === 'potion' ? `
     <figure class="room-hero-banner potion-room-banner">
-      <img src="assets/potion-room-banner.png?v=potion-room-banner-wide-20260804" alt="The Potion Room">
+      <img src="assets/potion-room-banner.png?v=potion-room-banner-fullwidth-20260804" alt="The Potion Room">
     </figure>` : ''}
     <div class="sequence-wrap ${kind}-sequence-wrap ${kind === 'pumpkin' && !appState.solved.includes('pumpkin') ? 'reveal-hidden' : ''}">
       ${kind === 'potion' ? `
