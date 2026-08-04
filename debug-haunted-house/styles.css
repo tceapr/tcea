@@ -386,8 +386,8 @@ summary {
 
 .room-card img.room-map-trapdoor {
   display: block;
-  width: min(150px, 45%);
-  height: 88px;
+  width: min(180px, 58%);
+  height: 96px;
   object-fit: contain;
   justify-self: center;
   align-self: center;
