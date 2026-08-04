@@ -96,6 +96,8 @@ const secretInput = document.getElementById('secretInput');
 const frontDoor = document.getElementById('frontDoor');
 const playAgainButton = document.getElementById('playAgainButton');
 const celebration = document.getElementById('celebration');
+const finalCelebrationPopup = document.getElementById('finalCelebrationPopup');
+const closeCelebrationButton = document.getElementById('closeCelebrationButton');
 const teacherPassword = document.getElementById('teacherPassword');
 const teacherUnlockButton = document.getElementById('teacherUnlockButton');
 const teacherAuthFeedback = document.getElementById('teacherAuthFeedback');
@@ -119,6 +121,7 @@ resetTestButton.addEventListener('click', resetCurrentTest);
 document.getElementById('checkButton').addEventListener('click', checkCurrentRoom);
 document.getElementById('unlockButton').addEventListener('click', checkFinalWord);
 document.getElementById('playAgainButton').addEventListener('click', () => resetActivity(false));
+closeCelebrationButton.addEventListener('click', hideFinalCelebrationPopup);
 document.getElementById('teacherToggle').addEventListener('click', toggleTeacherGuide);
 teacherUnlockButton.addEventListener('click', unlockTeacherGuide);
 teacherPassword.addEventListener('keydown', event => {
@@ -876,6 +879,19 @@ function unlockFinalDoor() {
   finalFeedback.innerHTML = '<strong>You debugged the haunted house!</strong><br>The friendly ghost says, "Thank you for fixing all the bugs. The Halloween treats are hidden behind the purple bookcase."';
   playAgainButton.hidden = false;
   startCelebration();
+  setTimeout(showFinalCelebrationPopup, 520);
+}
+
+function showFinalCelebrationPopup() {
+  finalCelebrationPopup.hidden = false;
+  requestAnimationFrame(() => finalCelebrationPopup.classList.add('is-visible'));
+}
+
+function hideFinalCelebrationPopup() {
+  finalCelebrationPopup.classList.remove('is-visible');
+  setTimeout(() => {
+    finalCelebrationPopup.hidden = true;
+  }, 320);
 }
 
 function resetActivity(ask = true) {
@@ -888,6 +904,7 @@ function resetActivity(ask = true) {
   sortableStores = {};
   localStorage.removeItem(STORAGE_KEY);
   frontDoor.classList.remove('open');
+  hideFinalCelebrationPopup();
   playAgainButton.hidden = true;
   celebration.innerHTML = '';
   showHome();
@@ -937,15 +954,17 @@ function arraysEqual(left, right) {
 
 function startCelebration() {
   celebration.innerHTML = '';
-  const shapes = ['star', 'pumpkin', 'candy'];
-  const colors = ['#f27b1d', '#9edc45', '#fff6b7', '#fbb6ce', '#6cb6ff'];
-  for (let i = 0; i < 34; i += 1) {
+  const shapes = ['star', 'pumpkin', 'candy', 'bat'];
+  const colors = ['#f27b1d', '#9edc45', '#fff6b7', '#fbb6ce', '#6cb6ff', '#8b5cf6'];
+  for (let i = 0; i < 58; i += 1) {
     const span = document.createElement('span');
     span.innerHTML = miniShape(shapes[i % shapes.length]);
     span.style.setProperty('--x', `${Math.random() * 100}%`);
-    span.style.setProperty('--drift', `${Math.random() * 180 - 90}px`);
-    span.style.setProperty('--turn', `${Math.random() * 520}deg`);
-    span.style.setProperty('--duration', `${4 + Math.random() * 2}s`);
+    span.style.setProperty('--drift', `${Math.random() * 220 - 110}px`);
+    span.style.setProperty('--turn', `${Math.random() * 720 - 360}deg`);
+    span.style.setProperty('--duration', `${3.2 + Math.random() * 2.4}s`);
+    span.style.setProperty('--delay', `${Math.random() * 0.8}s`);
+    span.style.setProperty('--scale', `${0.72 + Math.random() * 0.5}`);
     span.style.setProperty('--color', colors[i % colors.length]);
     celebration.appendChild(span);
   }
@@ -996,5 +1015,6 @@ function witchBody() {
 function miniShape(type) {
   if (type === 'star') return '<svg viewBox="0 0 32 32" width="32" height="32" aria-hidden="true"><path d="M16 2 L20 12 H30 L22 18 L25 30 L16 23 L7 30 L10 18 L2 12 H12 Z" fill="currentColor"/></svg>';
   if (type === 'candy') return '<svg viewBox="0 0 32 32" width="32" height="32" aria-hidden="true"><path d="M10 12 H22 V20 H10 Z" fill="currentColor"/><path d="M10 12 L2 8 L6 16 L2 24 L10 20 M22 12 L30 8 L26 16 L30 24 L22 20" fill="currentColor"/></svg>';
+  if (type === 'bat') return '<svg viewBox="0 0 32 32" width="32" height="32" aria-hidden="true"><path d="M16 17 Q10 7 2 13 Q6 15 5 21 Q10 18 16 25 Q22 18 27 21 Q26 15 30 13 Q22 7 16 17 Z" fill="currentColor"/></svg>';
   return '<svg viewBox="0 0 32 32" width="32" height="32" aria-hidden="true"><ellipse cx="16" cy="19" rx="13" ry="9" fill="currentColor"/><path d="M16 10 Q14 6 19 4" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>';
 }
