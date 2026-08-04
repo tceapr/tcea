@@ -1000,7 +1000,7 @@ function mapArt(index) {
   return index === 5
     ? iconSvg(art)
       .replace('grid-icon-image trapdoor-icon', 'grid-icon-image trapdoor-icon room-map-trapdoor')
-      .replace('assets/trapdoor.png?v=trap-door-20260804', 'assets/trapdoor-map.png?v=trapdoor-map-large-20260804')
+      .replace('assets/trapdoor.png?v=trap-door-20260804', 'assets/trapdoor-map.png?v=trapdoor-map-xl-20260804')
     : iconSvg(art);
 }
 
