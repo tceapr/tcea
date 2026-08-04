@@ -386,8 +386,8 @@ summary {
 
 .room-card img.room-map-trapdoor {
   display: block;
-  width: min(180px, 58%);
-  height: 96px;
+  width: min(220px, 68%);
+  height: 112px;
   object-fit: contain;
   justify-self: center;
   align-self: center;
@@ -546,6 +546,11 @@ summary {
   width: 56px;
   height: 56px;
   object-fit: contain;
+}
+
+.room-card img.grid-icon-image.room-map-trapdoor {
+  width: min(220px, 68%);
+  height: 112px;
 }
 
 .cell-label {
