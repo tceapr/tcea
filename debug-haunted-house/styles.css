@@ -656,11 +656,19 @@ input[type="text"] {
   box-shadow: 0 10px 22px rgba(33, 19, 49, 0.08);
 }
 
+.potion-room-banner {
+  margin: 0 calc(clamp(18px, 4vw, 34px) * -1) 18px;
+  border-right: 0;
+  border-left: 0;
+  border-radius: 0;
+}
+
 .room-hero-banner img {
   display: block;
   width: 100%;
-  max-height: 220px;
-  object-fit: contain;
+  height: clamp(160px, 22vw, 275px);
+  object-fit: cover;
+  object-position: center;
 }
 
 .pumpkin-sequence-wrap {
