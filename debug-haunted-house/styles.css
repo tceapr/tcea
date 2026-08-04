@@ -837,9 +837,46 @@ input[type="text"] {
   transform: rotateY(-68deg);
 }
 
+.final-celebration-popup {
+  position: fixed;
+  z-index: 8;
+  left: 50%;
+  top: 50%;
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+  width: min(88vw, 820px);
+  padding: clamp(12px, 2vw, 18px);
+  border: 3px solid #fff6b7;
+  border-radius: 8px;
+  background: rgba(15, 20, 52, 0.96);
+  box-shadow: 0 26px 70px rgba(9, 8, 26, 0.45);
+  opacity: 0;
+  transform: translate(-50%, -46%) scale(0.94);
+  transition: opacity 320ms ease, transform 320ms ease;
+}
+
+.final-celebration-popup.is-visible {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.final-celebration-popup img {
+  display: block;
+  width: 100%;
+  max-height: min(72vh, 620px);
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.final-celebration-popup button {
+  background: #fff6b7;
+}
+
 .celebration {
-  position: absolute;
+  position: fixed;
   inset: 0;
+  z-index: 7;
   pointer-events: none;
   overflow: hidden;
 }
@@ -847,15 +884,22 @@ input[type="text"] {
 .celebration span {
   position: absolute;
   left: var(--x);
-  bottom: -40px;
+  top: -48px;
   color: var(--color);
   font-size: 28px;
-  animation: float-up var(--duration) ease-in forwards;
+  animation: confetti-fall var(--duration) linear var(--delay) forwards;
 }
 
-@keyframes float-up {
+@keyframes confetti-fall {
+  from {
+    opacity: 0;
+    transform: translateY(-40px) rotate(0deg) scale(var(--scale));
+  }
+  12% {
+    opacity: 1;
+  }
   to {
-    transform: translate(var(--drift), -760px) rotate(var(--turn));
+    transform: translate(var(--drift), 110vh) rotate(var(--turn)) scale(var(--scale));
     opacity: 0;
   }
 }
