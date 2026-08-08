@@ -25,7 +25,7 @@ const locks = [
     title: '6 Letter Lock',
     badge: 'Letter',
     label: 'Example: ABCDEF',
-    answerHash: '48dba2c8'
+    answerHash: '8fa0e766'
   },
   {
     id: 'word',
@@ -55,7 +55,7 @@ const clueGraphics = [
     id: 'factOpinion',
     title: 'F or O',
     icon: 'assets/taco-icon-6.png',
-    image: 'assets/factopinion.png',
+    image: 'assets/factopinion.png?v=20260808',
     alt: 'Fact or opinion clue graphic'
   },
   {
