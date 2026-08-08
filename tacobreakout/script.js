@@ -76,7 +76,7 @@ const clueGraphics = [
     id: 'yumYum',
     title: 'Yum Yum',
     icon: 'assets/taco-icon-1.png',
-    image: 'assets/yumyum.png',
+    image: 'assets/yumyum.png?v=20260808',
     alt: 'Yum yum taco clue graphic'
   },
   {
