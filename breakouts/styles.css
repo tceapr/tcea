@@ -138,6 +138,15 @@ h1 {
   object-fit: contain;
 }
 
+.full-bleed-media {
+  padding: 0;
+}
+
+.full-bleed-media img {
+  max-height: none;
+  object-fit: cover;
+}
+
 .level-media {
   background: #eaf7ff;
 }
@@ -320,6 +329,15 @@ h1 {
 .fall-card:hover .open-link,
 .fall-card:focus-visible .open-link {
   background: #7f351c;
+}
+
+.gobble-card .open-link {
+  background: #a62d3f;
+}
+
+.gobble-card:hover .open-link,
+.gobble-card:focus-visible .open-link {
+  background: #751d2a;
 }
 
 .winter-card .open-link {
