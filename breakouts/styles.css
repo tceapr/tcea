@@ -147,6 +147,14 @@ h1 {
   object-fit: cover;
 }
 
+.gobble-card-media {
+  background: #fff4dc;
+}
+
+.gobble-card-media img {
+  object-fit: contain;
+}
+
 .level-media {
   background: #eaf7ff;
 }
@@ -266,7 +274,7 @@ h1 {
 }
 
 .level-one .open-link,
-.spring-card .open-link {
+spring-card .open-link {
   background: var(--green);
 }
 
@@ -345,7 +353,7 @@ h1 {
 }
 
 .winter-card:hover .open-link,
-.winter-card:focus-visible .open-link {
+winter-card:focus-visible .open-link {
   background: var(--blue-dark);
 }
 
