@@ -176,14 +176,14 @@ h1 {
 
 .taco-media {
   background: #fff2c9;
-  padding: 18px;
+  padding: 0;
 }
 
 .taco-media img {
   width: 100%;
-  height: auto;
-  max-height: 100%;
-  object-fit: contain;
+  height: 100%;
+  max-height: none;
+  object-fit: cover;
 }
 
 .spring-media {
