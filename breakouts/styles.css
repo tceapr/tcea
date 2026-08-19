@@ -274,7 +274,7 @@ h1 {
 }
 
 .level-one .open-link,
-spring-card .open-link {
+.spring-card .open-link {
   background: var(--green);
 }
 
@@ -353,7 +353,7 @@ spring-card .open-link {
 }
 
 .winter-card:hover .open-link,
-winter-card:focus-visible .open-link {
+.winter-card:focus-visible .open-link {
   background: var(--blue-dark);
 }
 
