@@ -2,36 +2,31 @@ const locks = [
   {
     id: 'directionFive',
     title: '5 Direction Lock',
-    badge: 'Direction',
-    label: 'Use U=Up, D=Down, L=Left, and R=Right. Example: UDLR',
+    label: 'L = left, R = right, U = up, D = down. Example: LRUD',
     answerHash: 'cc48553c'
   },
   {
     id: 'date',
     title: 'Date Lock',
-    badge: 'Date',
-    label: 'Use MM/DD/YYYY format. Example: 01/31/2000 or MM/DD Example: 01/30',
+    label: 'Use MM/DD/YYYY. Example: 01/31/2026',
     answerHash: '939f386c'
   },
   {
     id: 'numberFive',
     title: '5 Number Lock',
-    badge: 'Number',
-    label: 'Example: 12345',
+    label: 'No spaces or commas. Example: 12345',
     answerHash: '129e49f1'
   },
   {
     id: 'alliteration',
     title: '3 Word Alliteration Lock',
-    badge: 'Words',
-    label: 'Example: SHESELLSSEASHELLS',
+    label: 'No spaces. Example: WORDWORDWORD',
     answerHash: '92bfdcad'
   },
   {
     id: 'colorSix',
     title: '6 Color Lock',
-    badge: 'Color',
-    label: 'First initial of each color. Use all capital letters. Example: RBG',
+    label: 'First initial of each color. Use all capital letters. Example: RBYG',
     answerHash: 'c6e3a12f'
   }
 ];
@@ -148,7 +143,6 @@ function renderLocks() {
           ${lockIconSvg(state.get(lock.id))}
           <h3>${lock.title}</h3>
         </div>
-        <span class="badge">${state.get(lock.id) ? 'Open' : lock.badge}</span>
       </div>
       <label for="${lock.id}Input">${lock.label}</label>
       <div class="lock-row">

@@ -2,29 +2,25 @@ const locks = [
   {
     id: 'color',
     title: '4 Color Lock',
-    badge: 'Color',
-    label: 'First initial of each color. Use all capital letters. Example: RGBY',
+    label: 'First initial of each color. Use all capital letters. Example: RBYG',
     answerHash: '4fac617f'
   },
   {
     id: 'letterFive',
     title: '5 Letter Lock',
-    badge: 'Letter',
-    label: 'No spaces or commas. Example: ABCDE',
+    label: 'Use all capital letters. Example: ABCDE',
     answerHash: '0c624146'
   },
   {
     id: 'directionFive',
     title: '5 Direction Lock',
-    badge: 'Direction',
-    label: 'No spaces or commas. Example: DLRUD',
+    label: 'L = left, R = right, U = up, D = down. Example: LRUD',
     answerHash: 'c2819cac'
   },
   {
     id: 'wordOne',
     title: '1 Word Lock',
-    badge: 'Word',
-    label: 'One school word. No spaces. Example: BOOK',
+    label: 'No spaces. Example: WORD',
     answerHash: '74bd1fb8'
   }
 ];
@@ -150,7 +146,6 @@ function renderLocks() {
           ${lockIconSvg(state.get(lock.id))}
           <h3>${lock.title}</h3>
         </div>
-        <span class="badge">${state.get(lock.id) ? 'Open' : lock.badge}</span>
       </div>
       <label for="${lock.id}Input">${lock.label}</label>
       <div class="lock-row">

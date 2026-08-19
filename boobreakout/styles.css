@@ -587,16 +587,6 @@ figcaption {
   font-size: 1rem;
 }
 
-.badge {
-  align-self: start;
-  padding: 4px 8px;
-  background: #efe1c5;
-  color: #554126;
-  font-size: 0.72rem;
-  font-weight: 900;
-  text-transform: uppercase;
-}
-
 .lock-card label {
   display: block;
   margin-bottom: 7px;
