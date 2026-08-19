@@ -325,6 +325,14 @@ h1 {
   color: #fffdf5;
 }
 
+.taco-card {
+  grid-template-rows: auto 1fr;
+}
+
+.taco-card .taco-media {
+  aspect-ratio: 1 / 1;
+}
+
 .taco-card:hover .open-link,
 .taco-card:focus-visible .open-link {
   background: #a83b12;
@@ -384,5 +392,9 @@ h1 {
   .activity-card {
     grid-template-rows: 220px 1fr;
     min-height: 0;
+  }
+
+  .taco-card {
+    grid-template-rows: auto 1fr;
   }
 }
