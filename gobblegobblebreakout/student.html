@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gobble Gobble Breakout</title>
+  <link rel="stylesheet" href="styles.css?v=gobble-letterexample-24">
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="hero" aria-labelledby="page-title">
+        <div>
+          <p class="eyebrow">Digital Breakout</p>
+          <h1 id="page-title">Gobble Gobble Breakout</h1>
+          <p class="brief">Crack the Thanksgiving clues, solve the puzzles, and open every lock before dinner is served.</p>
+        </div>
+        <div class="progress-panel" aria-live="polite">
+          <span id="progressText">0 of 5 locks open</span>
+          <div class="progress-track" aria-hidden="true"><span id="progressFill"></span></div>
+        </div>
+      </section>
+
+      <section class="workspace" aria-label="Breakout workspace">
+        <div class="clue-area">
+          <div class="clue-toolbar">
+            <h2>Harvest Clues</h2>
+            <button class="ghost-button" type="button" id="resetButton">Reset</button>
+          </div>
+
+          <div class="explore-board">
+            <article class="mission-card">
+              <p class="eyebrow">Mission Brief</p>
+              <h2>Escape the Feast</h2>
+              <p>The turkey is ready to be carved, the cranberries are in the bowl, and the whipped cream for the pumpkin pie is chilling in the refrigerator. Thanksgiving dinner is almost ready, but there is one thing standing between you and the feast. FIRST, you must crack the clues, solve the puzzles, and escape <strong>The Gobble Gobble Breakout!</strong></p>
+            </article>
+
+            <div id="clueScene" class="clue-scene" aria-label="Clickable Gobble Gobble clue board"></div>
+          </div>
+        </div>
+
+        <aside class="locks-panel" aria-label="Breakout locks">
+          <div class="locks-header">
+            <h2>Locks</h2>
+            <p>Solve each lock using the harvest clues on this page.</p>
+          </div>
+          <div id="locksList" class="locks-list"></div>
+        </aside>
+      </section>
+    </main>
+
+    <div id="harvestCelebration" class="harvest-celebration" aria-hidden="true"></div>
+
+    <dialog id="clueDialog" class="clue-dialog">
+      <div class="dialog-header">
+        <h2 id="clueDialogTitle"></h2>
+        <button class="icon-button" type="button" id="closeClueDialog" aria-label="Close clue">x</button>
+      </div>
+      <div class="clue-dialog-body">
+        <img id="clueDialogImage" class="clue-dialog-image" alt="">
+        <p id="clueImageFallback" class="image-fallback" hidden></p>
+      </div>
+    </dialog>
+
+    <dialog id="turkeyTalkDialog" class="turkey-talk-dialog">
+      <div id="turkeyTalkPuzzle" class="turkey-talk-puzzle" aria-labelledby="turkeyTalkTitle" tabindex="-1">
+        <div class="turkey-talk-heading">
+          <div>
+            <p class="eyebrow">Puzzle</p>
+            <h2 id="turkeyTalkTitle">Turkey Talk</h2>
+            <p>Match each turkey name to the correct picture.</p>
+          </div>
+          <div class="turkey-talk-actions">
+            <button class="ghost-button" type="button" id="turkeyTalkReset">Reset Puzzle</button>
+            <button class="icon-button" type="button" id="closeTurkeyTalkDialog" aria-label="Close Turkey Talk">x</button>
+          </div>
+        </div>
+
+        <div class="turkey-talk-layout">
+          <div class="turkey-talk-board">
+            <div id="turkeyPictureGrid" class="turkey-picture-grid" aria-label="Turkey picture cards"></div>
+
+            <div class="turkey-name-tray" aria-label="Turkey name cards">
+              <p id="turkeyTalkStatus" class="turkey-talk-status" aria-live="polite">Drag or select a name, then choose a picture.</p>
+              <div id="turkeyNameTray" class="turkey-name-cards"></div>
+            </div>
+          </div>
+
+          <aside class="turkey-reference" aria-labelledby="turkeyReferenceTitle">
+            <h3 id="turkeyReferenceTitle">Turkey Names</h3>
+            <div class="reference-item hen-ref">
+              <h4>Hens</h4>
+              <p>Female turkeys are called hens. They usually make softer chirping sounds instead of gobbling.</p>
+            </div>
+            <div class="reference-item tom-ref">
+              <h4>Toms</h4>
+              <p>Male turkeys are called toms. Toms are known for gobbling.</p>
+            </div>
+            <div class="reference-item poult-ref">
+              <h4>Poults</h4>
+              <p>A baby turkey is called a poult.</p>
+            </div>
+            <div class="reference-item flock-ref">
+              <h4>Flocks</h4>
+              <p>A group of wild turkeys is called a flock.</p>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </dialog>
+
+    <dialog id="winDialog" class="win-dialog">
+      <div class="win-card">
+        <p class="eyebrow">Breakout Complete</p>
+        <h2>Dinner is served.</h2>
+        <p>You cracked the clues, solved the puzzles, and escaped <strong>The Gobble Gobble Breakout!</strong> Pull up a chair; the feast is ready.</p>
+        <button type="button" id="playAgainButton">Play Again</button>
+      </div>
+    </dialog>
+
+  <script src="script.js?v=gobble-letterexample-24"></script>
+</body>
+</html>
