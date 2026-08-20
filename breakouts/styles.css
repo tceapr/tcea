@@ -325,12 +325,14 @@ h1 {
   color: #fffdf5;
 }
 
-.taco-card {
+.taco-card,
+.gobble-card {
   grid-template-rows: auto 1fr;
 }
 
-.taco-card .taco-media {
-  aspect-ratio: 1 / 1;
+.taco-card .taco-media,
+.gobble-card .gobble-card-media {
+  height: clamp(280px, 34vw, 360px);
 }
 
 .taco-card:hover .open-link,
@@ -349,14 +351,6 @@ h1 {
 
 .gobble-card .open-link {
   background: #a62d3f;
-}
-
-.gobble-card {
-  grid-template-rows: auto 1fr;
-}
-
-.gobble-card .gobble-card-media {
-  aspect-ratio: 1 / 1;
 }
 
 .gobble-card:hover .open-link,
@@ -402,10 +396,7 @@ h1 {
     min-height: 0;
   }
 
-  .taco-card {
-    grid-template-rows: auto 1fr;
-  }
-
+  .taco-card,
   .gobble-card {
     grid-template-rows: auto 1fr;
   }
