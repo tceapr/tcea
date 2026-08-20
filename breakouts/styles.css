@@ -351,6 +351,14 @@ h1 {
   background: #a62d3f;
 }
 
+.gobble-card {
+  grid-template-rows: auto 1fr;
+}
+
+.gobble-card .gobble-card-media {
+  aspect-ratio: 1 / 1;
+}
+
 .gobble-card:hover .open-link,
 .gobble-card:focus-visible .open-link {
   background: #751d2a;
@@ -395,6 +403,10 @@ h1 {
   }
 
   .taco-card {
+    grid-template-rows: auto 1fr;
+  }
+
+  .gobble-card {
     grid-template-rows: auto 1fr;
   }
 }
