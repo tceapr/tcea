@@ -93,11 +93,28 @@ const clueTiles = [
     alt: 'Roast turkey icon for Turkey Talk'
   },
   {
+    id: 'utensils',
+    title: 'Forks at the Feast',
+    icon: 'assets/icons/gobble8icon.png',
+    image: 'assets/utensils.png',
+    alt: 'Place setting icon for Forks at the Feast',
+    clueAlt: 'Thanksgiving fact about utensils'
+  },
+  {
     id: 'pumpkinRecipe',
     title: 'Pumpkin Pie Recipe',
     icon: 'assets/gobble2icon.png',
     image: 'assets/pumpkin-pie-recipe.png',
     alt: 'Pumpkin pie slice icon for Pumpkin Pie Recipe',
+    wide: true
+  },
+  {
+    id: 'sarahHale',
+    title: 'Sarah Josepha Hale',
+    icon: 'assets/icons/gobble7icon.png',
+    image: 'assets/sarahjosephahale.png',
+    alt: 'Sarah Josepha Hale icon',
+    clueAlt: 'Thanksgiving advocate Sarah Josepha Hale clue graphic',
     wide: true
   },
   {
