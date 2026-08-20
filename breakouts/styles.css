@@ -332,7 +332,7 @@ h1 {
 
 .taco-card .taco-media,
 .gobble-card .gobble-card-media {
-  height: clamp(280px, 34vw, 360px);
+  height: clamp(220px, 25vw, 275px);
 }
 
 .taco-card:hover .open-link,
