@@ -151,10 +151,6 @@ h1 {
   background: #fff4dc;
 }
 
-.gobble-card-media img {
-  object-fit: contain;
-}
-
 .level-media {
   background: #eaf7ff;
 }
@@ -177,13 +173,6 @@ h1 {
 .taco-media {
   background: #fff2c9;
   padding: 0;
-}
-
-.taco-media img {
-  width: 100%;
-  height: 100%;
-  max-height: none;
-  object-fit: contain;
 }
 
 .spring-media {
@@ -325,16 +314,6 @@ h1 {
   color: #fffdf5;
 }
 
-.taco-card,
-.gobble-card {
-  grid-template-rows: auto 1fr;
-}
-
-.taco-card .taco-media,
-.gobble-card .gobble-card-media {
-  height: clamp(220px, 25vw, 275px);
-}
-
 .taco-card:hover .open-link,
 .taco-card:focus-visible .open-link {
   background: #a83b12;
@@ -396,8 +375,4 @@ h1 {
     min-height: 0;
   }
 
-  .taco-card,
-  .gobble-card {
-    grid-template-rows: auto 1fr;
-  }
 }
