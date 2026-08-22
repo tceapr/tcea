@@ -471,6 +471,52 @@
         background: #0c2a45;
       }
 
+      .learning-opportunity-media {
+        position: relative;
+        padding: 18px;
+        background:
+          radial-gradient(circle at 22% 20%, rgba(250, 167, 52, 0.78), transparent 26%),
+          radial-gradient(circle at 80% 18%, rgba(0, 167, 181, 0.55), transparent 22%),
+          linear-gradient(135deg, #174778, #6f4cc3);
+      }
+
+      .learning-board-preview {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        width: min(88%, 250px);
+        transform: rotate(-2deg);
+      }
+
+      .learning-board-preview span {
+        display: grid;
+        place-items: center;
+        aspect-ratio: 1;
+        color: #174778;
+        background: #ffffff;
+        border: 4px solid rgba(255, 255, 255, 0.52);
+        border-radius: 18px;
+        font-size: 2rem;
+        font-weight: 900;
+        box-shadow: 0 12px 18px rgba(8, 40, 95, 0.18);
+      }
+
+      .learning-board-preview span:nth-child(2),
+      .learning-board-preview span:nth-child(5),
+      .learning-board-preview span:nth-child(8) {
+        color: #ffffff;
+        background: #faa734;
+      }
+
+      .learning-opportunity-card .open-link {
+        background: #174778;
+      }
+
+      .learning-opportunity-card:hover .open-link,
+      .learning-opportunity-card:focus-visible .open-link {
+        background: #0f3155;
+      }
+
       footer {
         margin-top: 34px;
         color: var(--muted);
@@ -509,6 +555,29 @@
       </section>
 
       <nav class="menu" aria-label="Activity menu">
+        <a class="activity-card learning-opportunity-card" href="name-that-learning-opportunity/">
+          <span class="activity-media learning-opportunity-media" aria-hidden="true">
+            <span class="learning-board-preview">
+              <span>?</span>
+              <span>AI</span>
+              <span>?</span>
+              <span>?</span>
+              <span>9</span>
+              <span>?</span>
+              <span>?</span>
+              <span>GO</span>
+              <span>?</span>
+            </span>
+          </span>
+          <span class="activity-copy">
+            <span>
+              <h2>Name That Learning Opportunity</h2>
+              <p>Run a fast game-show reveal for nine TCEA learning opportunities.</p>
+            </span>
+            <span class="open-link">Open Game</span>
+          </span>
+        </a>
+
         <a class="activity-card" href="groupup/">
           <span class="activity-media groupup-media full-bleed-media">
             <img src="groupup/assets/groupup-splash.jpg?v=groupup-20260727" alt="Peggy's GroupUp classroom puzzle game graphic">
