@@ -165,7 +165,7 @@ const ROUNDS = [
     ],
     reveal: {
       title: "Launch_K5",
-      details: [],
+      details: ["October 20-21, 2026"],
       linkLabel: "LEARN MORE",
       linkUrl: "https://tcea.org/event/tcea-launch_k5-cs/",
     },
