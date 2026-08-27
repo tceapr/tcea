@@ -187,6 +187,10 @@ h1 {
   background: #f8efdc;
 }
 
+.fall-media img {
+  object-position: left center;
+}
+
 .winter-media {
   background: #e8f7ff;
 }
