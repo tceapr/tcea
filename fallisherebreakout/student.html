@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Fall Is Here Breakout</title>
+    <link rel="stylesheet" href="styles.css?v=fall-is-here-publish-1">
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="hero" aria-labelledby="page-title">
+        <div>
+          <p class="eyebrow">Digital Breakout</p>
+          <h1 id="page-title">Fall Is Here Breakout</h1>
+          <p class="brief">It is that time of year when the weather gets cooler, the leaves start falling, and football is in full swing. Fall is here! Time to solve the breakout, or there could be a chance winter will get here much faster than necessary.</p>
+        </div>
+        <div class="progress-panel" aria-live="polite">
+          <span id="progressText">0 of 4 locks open</span>
+          <div class="progress-track" aria-hidden="true"><span id="progressFill"></span></div>
+        </div>
+      </section>
+
+      <section class="workspace" aria-label="Breakout workspace">
+        <div class="clue-area">
+          <div class="clue-toolbar">
+            <h2>Autumn Clues</h2>
+            <button class="ghost-button" type="button" id="resetButton">Reset</button>
+          </div>
+
+          <div class="explore-board">
+            <article class="mission-card">
+              <p class="eyebrow">Mission Brief</p>
+              <h2>Fall Is Here</h2>
+              <p>The harvest clues are scattered across the season. Explore each clue tile, solve the puzzles, and open every lock before winter arrives too soon.</p>
+            </article>
+
+            <div id="clueScene" class="clue-scene" aria-label="Clickable Fall Is Here clue board"></div>
+          </div>
+        </div>
+
+        <aside class="locks-panel" aria-label="Breakout locks">
+          <div class="locks-header">
+            <h2>Locks</h2>
+            <p>Use the fall clue tiles to open every lock.</p>
+          </div>
+          <div id="locksList" class="locks-list"></div>
+        </aside>
+      </section>
+    </main>
+
+    <div id="fallCelebration" class="fall-celebration" aria-hidden="true"></div>
+
+    <dialog id="clueDialog" class="clue-dialog">
+      <div class="dialog-header">
+        <h2 id="clueDialogTitle"></h2>
+        <button class="icon-button" type="button" id="closeClueDialog" aria-label="Close clue">x</button>
+      </div>
+      <div class="clue-dialog-body">
+        <img id="clueDialogImage" class="clue-dialog-image" alt="">
+        <p id="clueImageFallback" class="image-fallback" hidden></p>
+      </div>
+    </dialog>
+
+    <dialog id="factCheckDialog" class="fact-check-dialog">
+      <div class="dialog-header">
+        <h2>Fall Fact Check</h2>
+        <button class="icon-button" type="button" id="closeFactCheckDialog" aria-label="Close Fall Fact Check">x</button>
+      </div>
+      <div class="fact-check-body">
+        <p class="fact-check-intro">Choose T or F for each fall statement.</p>
+        <div id="factCheckList" class="fact-check-list"></div>
+        <div class="fact-check-footer">
+          <p id="factCheckStatus" class="fact-check-status" aria-live="polite">Answer each fact to build the lock code.</p>
+          <div class="fact-code" aria-label="Fall Fact Check code">
+            <strong id="factCheckCode">-----</strong>
+          </div>
+          <button class="ghost-button" type="button" id="factCheckReset">Reset Puzzle</button>
+        </div>
+      </div>
+    </dialog>
+
+    <dialog id="winDialog" class="win-dialog">
+      <div class="win-card">
+        <p class="eyebrow">Breakout Complete</p>
+        <h2>Autumn unlocked.</h2>
+        <p>You solved every clue and opened the Fall Is Here Breakout.</p>
+        <button type="button" id="playAgainButton">Play Again</button>
+      </div>
+    </dialog>
+
+    <script src="script.js?v=fall-is-here-publish-1"></script>
+  </body>
+</html>

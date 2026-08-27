@@ -1,0 +1,765 @@
+:root {
+  --ink: #2a170e;
+  --muted: #6c5342;
+  --paper: #fff8e9;
+  --panel: rgba(255, 249, 237, 0.94);
+  --cream: #ffe9bd;
+  --berry: #a63c2c;
+  --berry-dark: #762616;
+  --pumpkin: #d96f22;
+  --gold: #efb548;
+  --leaf: #657b2f;
+  --moss: #385f43;
+  --line: rgba(74, 43, 22, 0.18);
+  --shadow: 0 18px 48px rgba(87, 48, 18, 0.18);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--ink);
+  font-family: Arial, Helvetica, sans-serif;
+  background:
+    radial-gradient(circle at top left, rgba(217, 111, 34, 0.2), transparent 28rem),
+    radial-gradient(circle at top right, rgba(101, 123, 47, 0.16), transparent 28rem),
+    linear-gradient(180deg, #fff5dc, #fffaf0 58%, #ddb178);
+}
+
+button,
+input {
+  font: inherit;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.eyebrow {
+  margin: 0 0 10px;
+  color: var(--berry);
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.brief {
+  max-width: 760px;
+  margin-bottom: 0;
+  color: var(--muted);
+  font-size: 1.08rem;
+  line-height: 1.55;
+}
+
+.teacher-page {
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.teacher-shell {
+  width: min(980px, 100%);
+}
+
+.teacher-card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background:
+    linear-gradient(rgba(255, 248, 234, 0.9), rgba(255, 248, 234, 0.96)),
+    radial-gradient(circle at 80% 18%, rgba(217, 111, 34, 0.24), transparent 13rem),
+    radial-gradient(circle at 20% 82%, rgba(56, 95, 67, 0.18), transparent 14rem),
+    #fff8ea;
+  box-shadow: var(--shadow);
+  padding: clamp(28px, 6vw, 72px);
+}
+
+.teacher-card h1,
+.hero h1 {
+  margin-bottom: 12px;
+  font-size: clamp(3rem, 6vw, 6.6rem);
+  line-height: 0.9;
+  letter-spacing: 0;
+}
+
+.teacher-links {
+  display: grid;
+  gap: 14px;
+  max-width: 560px;
+  margin-top: 30px;
+}
+
+.teacher-links a,
+.lock-card button,
+.win-card button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fffaf0;
+  background: var(--berry);
+  font-weight: 900;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.teacher-links a:hover,
+.lock-card button:hover,
+.win-card button:hover {
+  background: var(--berry-dark);
+}
+
+.teacher-links a {
+  min-height: 52px;
+  padding: 0 20px;
+  justify-self: start;
+}
+
+.teacher-links p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.teacher-links span {
+  font-weight: 900;
+}
+
+.app-shell {
+  width: min(1460px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 24px 0 42px;
+}
+
+.hero {
+  min-height: 210px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 360px);
+  gap: 24px;
+  align-items: end;
+  padding: 28px 0 18px;
+}
+
+.progress-panel {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  padding: 18px;
+  box-shadow: var(--shadow);
+}
+
+.progress-panel span:first-child {
+  display: block;
+  margin-bottom: 12px;
+  font-weight: 900;
+}
+
+.progress-track {
+  height: 12px;
+  overflow: hidden;
+  background: #e8c99a;
+  border: 1px solid rgba(74, 43, 22, 0.12);
+}
+
+.progress-track span {
+  display: block;
+  width: 0;
+  height: 100%;
+  background: linear-gradient(90deg, var(--moss), var(--pumpkin), var(--berry));
+  transition: width 220ms ease;
+}
+
+.workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 390px;
+  gap: 22px;
+  align-items: start;
+}
+
+.clue-area,
+.locks-panel {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  box-shadow: var(--shadow);
+}
+
+.locks-panel {
+  position: sticky;
+  top: 16px;
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+}
+
+.clue-toolbar,
+.locks-header {
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--line);
+}
+
+.clue-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.clue-toolbar h2,
+.locks-header h2 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.locks-header {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: rgba(255, 249, 237, 0.97);
+}
+
+.locks-header p {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.4;
+}
+
+.ghost-button,
+.icon-button {
+  min-height: 40px;
+  border: 1px solid rgba(74, 43, 22, 0.22);
+  background: #ffffff;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.ghost-button:hover,
+.icon-button:hover {
+  border-color: var(--berry);
+}
+
+.explore-board {
+  display: grid;
+  gap: 16px;
+  padding: 16px;
+}
+
+.mission-card {
+  margin: 0;
+  border: 1px solid var(--line);
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.94)),
+    radial-gradient(circle at 88% 16%, rgba(166, 60, 44, 0.15), transparent 10rem),
+    radial-gradient(circle at 10% 86%, rgba(217, 111, 34, 0.18), transparent 12rem);
+  padding: 22px;
+}
+
+.mission-card h2 {
+  margin-bottom: 12px;
+  font-size: clamp(1.5rem, 3vw, 2.35rem);
+  line-height: 1.05;
+}
+
+.mission-card p {
+  color: var(--muted);
+  font-size: 1.05rem;
+  line-height: 1.62;
+}
+
+.clue-scene {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  border: 1px solid var(--line);
+  background:
+    linear-gradient(180deg, rgba(255, 248, 234, 0.64), rgba(255, 248, 234, 0.9)),
+    repeating-linear-gradient(90deg, rgba(101, 123, 47, 0.11) 0 18px, transparent 18px 36px),
+    #fff8ea;
+  padding: 14px;
+}
+
+.clue-card-button {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  min-width: 0;
+  border: 1px solid rgba(74, 43, 22, 0.16);
+  background: #fff;
+  color: var(--ink);
+  padding: 20px 14px 18px;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(87, 48, 18, 0.08);
+  transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+.clue-card-button:hover,
+.clue-card-button:focus-visible {
+  border-color: rgba(166, 60, 44, 0.52);
+  box-shadow: 0 14px 30px rgba(87, 48, 18, 0.16);
+  transform: translateY(-2px);
+}
+
+.clue-card-button:focus-visible {
+  outline: 4px solid rgba(166, 60, 44, 0.18);
+  outline-offset: 3px;
+}
+
+.clue-thumb-wrap {
+  position: relative;
+  display: block;
+  width: min(100%, 150px);
+  aspect-ratio: 1;
+  overflow: hidden;
+  border: 1px solid rgba(74, 43, 22, 0.12);
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.clue-thumb {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 10px;
+}
+
+.clue-thumb-fallback {
+  position: absolute;
+  inset: 0;
+  display: none;
+  place-items: center;
+  padding: 14px;
+  color: var(--muted);
+  background: #fff7e4;
+  font-weight: 900;
+  line-height: 1.2;
+}
+
+.clue-thumb-fallback small {
+  display: block;
+  margin-top: 8px;
+  font-size: 0.72rem;
+}
+
+.is-missing-image .clue-thumb {
+  display: none;
+}
+
+.is-missing-image .clue-thumb-fallback {
+  display: grid;
+}
+
+.clue-card-title {
+  min-height: 2.4em;
+  display: grid;
+  place-items: center;
+  font-size: 1rem;
+  font-weight: 900;
+  line-height: 1.2;
+}
+
+.locks-list {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+}
+
+.lock-card {
+  border: 1px solid rgba(74, 43, 22, 0.16);
+  background: #fffdf7;
+  padding: 14px;
+}
+
+.lock-card.solved {
+  border-color: rgba(56, 95, 67, 0.45);
+  background: #f3f8ec;
+}
+
+.lock-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.lock-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.lock-icon-svg {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+}
+
+.lock-title h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.lock-card label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.lock-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+}
+
+.lock-row input,
+.lock-row button {
+  min-height: 42px;
+  border: 1px solid rgba(74, 43, 22, 0.2);
+}
+
+.lock-row input {
+  min-width: 0;
+  padding: 0 12px;
+  background: #ffffff;
+}
+
+.lock-row button {
+  padding: 0 14px;
+}
+
+.feedback {
+  min-height: 22px;
+  margin: 8px 0 0;
+  color: var(--berry);
+  font-size: 0.88rem;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.clue-dialog,
+.win-dialog,
+.fact-check-dialog {
+  width: min(980px, calc(100vw - 32px));
+  max-height: calc(100vh - 32px);
+  padding: 0;
+  border: 1px solid var(--line);
+  background: #fffaf0;
+  box-shadow: 0 28px 80px rgba(37, 23, 15, 0.28);
+}
+
+.wide-clue-dialog {
+  width: min(1260px, calc(100vw - 32px));
+}
+
+.clue-dialog::backdrop,
+.win-dialog::backdrop,
+.fact-check-dialog::backdrop {
+  background: rgba(37, 23, 15, 0.5);
+}
+
+.dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--line);
+  background: var(--paper);
+}
+
+.dialog-header h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.icon-button {
+  width: 42px;
+  padding: 0;
+  font-weight: 900;
+}
+
+.clue-dialog-body {
+  padding: 16px;
+}
+
+.clue-dialog-image {
+  display: block;
+  width: 100%;
+  max-height: calc(100vh - 132px);
+  object-fit: contain;
+  background: #ffffff;
+}
+
+.image-fallback {
+  margin: 0;
+  padding: 42px 20px;
+  color: var(--muted);
+  text-align: center;
+  font-weight: 900;
+}
+
+.fact-check-dialog {
+  width: min(1080px, calc(100vw - 32px));
+}
+
+.fact-check-body {
+  padding: 16px;
+  overflow: auto;
+  max-height: calc(100vh - 112px);
+}
+
+.fact-check-intro {
+  margin: 0 0 14px;
+  color: var(--muted);
+  font-size: 1rem;
+  font-weight: 900;
+  line-height: 1.4;
+}
+
+.fact-check-list {
+  display: grid;
+  gap: 12px;
+}
+
+.fact-card {
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr);
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid rgba(74, 43, 22, 0.16);
+  background: #fffdf7;
+}
+
+.fact-card.is-correct {
+  border-color: rgba(56, 95, 67, 0.42);
+  background: #f1fae9;
+}
+
+.fact-card.is-missed {
+  border-color: rgba(166, 60, 44, 0.42);
+  background: #fff0e7;
+}
+
+.fact-number {
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #fffaf0;
+  background: var(--pumpkin);
+  font-weight: 900;
+}
+
+.fact-content p {
+  margin: 0;
+  color: var(--ink);
+  font-weight: 900;
+  line-height: 1.38;
+}
+
+.fact-choice-row {
+  display: flex;
+  gap: 8px;
+  margin: 10px 0;
+}
+
+.fact-choice-row button {
+  width: 54px;
+  min-height: 44px;
+  border: 2px solid rgba(74, 43, 22, 0.18);
+  border-radius: 8px;
+  color: var(--ink);
+  background: #fff4dc;
+  font-size: 1.25rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.fact-choice-row button:hover,
+.fact-choice-row button:focus-visible,
+.fact-choice-row button[aria-pressed="true"] {
+  border-color: var(--berry);
+  background: #ffd780;
+}
+
+.fact-content .fact-response {
+  color: var(--muted);
+  font-size: 0.92rem;
+  font-weight: 800;
+}
+
+.fact-check-footer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 12px;
+  align-items: center;
+  margin-top: 14px;
+  padding: 14px;
+  border: 1px solid rgba(74, 43, 22, 0.16);
+  background: #fff4dc;
+}
+
+.fact-check-status {
+  margin: 0;
+  color: var(--muted);
+  font-weight: 900;
+  line-height: 1.35;
+}
+
+.fact-code {
+  display: grid;
+  gap: 2px;
+  min-width: 136px;
+  text-align: center;
+}
+
+.fact-code span {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.fact-code strong {
+  padding: 8px 12px;
+  border: 2px solid rgba(74, 43, 22, 0.22);
+  border-radius: 8px;
+  background: #ffffff;
+  font-size: 1.45rem;
+  letter-spacing: 0;
+}
+
+.win-card {
+  display: grid;
+  justify-items: center;
+  padding: clamp(30px, 6vw, 76px);
+  text-align: center;
+}
+
+.win-card h2 {
+  margin-bottom: 14px;
+  font-size: clamp(2.2rem, 7vw, 5.6rem);
+  line-height: 0.92;
+}
+
+.win-card p:not(.eyebrow) {
+  max-width: 760px;
+  color: var(--muted);
+  font-size: 1.12rem;
+  line-height: 1.5;
+}
+
+.win-card button {
+  min-height: 52px;
+  margin-top: 18px;
+  padding: 0 22px;
+  border: 0;
+}
+
+.fall-celebration {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  z-index: 20;
+}
+
+.fall-piece {
+  position: absolute;
+  top: -40px;
+  left: var(--x);
+  width: 20px;
+  height: 28px;
+  border-radius: 70% 8px 70% 8px;
+  background: var(--pumpkin);
+  animation: fall var(--duration) linear var(--delay) forwards;
+}
+
+.fall-piece-1 {
+  background: var(--berry);
+}
+
+.fall-piece-2 {
+  background: var(--gold);
+}
+
+.fall-piece-3 {
+  background: var(--leaf);
+}
+
+@keyframes fall {
+  to {
+    transform: translate(var(--drift), calc(100vh + 90px)) rotate(var(--spin));
+  }
+}
+
+@media (max-width: 1120px) {
+  .workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .locks-panel {
+    position: static;
+    max-height: none;
+  }
+}
+
+@media (max-width: 840px) {
+  .app-shell {
+    width: min(100% - 20px, 1460px);
+    padding-top: 12px;
+  }
+
+  .hero {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+
+  .clue-scene {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .teacher-page {
+    padding: 12px;
+  }
+
+  .teacher-card h1,
+  .hero h1 {
+    font-size: clamp(2.6rem, 16vw, 4.2rem);
+  }
+
+  .clue-scene {
+    grid-template-columns: 1fr;
+  }
+
+  .lock-row {
+    grid-template-columns: 1fr;
+  }
+
+  .fact-card,
+  .fact-check-footer {
+    grid-template-columns: 1fr;
+  }
+
+  .fact-number {
+    width: 38px;
+    height: 38px;
+  }
+}
