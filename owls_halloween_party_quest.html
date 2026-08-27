@@ -194,6 +194,20 @@
       padding: 10px;
     }
 
+    .timer-note {
+      margin-top: 10px;
+      text-align: center;
+      color: var(--white);
+      font-size: 0.95rem;
+      font-weight: 800;
+      line-height: 1.35;
+      opacity: 0.95;
+    }
+
+    .timer-note.expired {
+      color: var(--gold);
+    }
+
     .progress-track {
       height: 14px;
       margin-top: 12px;
@@ -711,6 +725,17 @@
       font-size: 1.2rem;
     }
 
+    .final-note {
+      width: min(680px, 100%);
+      margin: 0 auto 18px;
+      padding: 12px 16px;
+      border: 2px solid var(--gold);
+      border-radius: 14px;
+      background: #fff0d2;
+      color: var(--navy);
+      font-weight: 800;
+    }
+
     .restart-button {
       border: 3px solid var(--navy);
       border-radius: 999px;
@@ -896,7 +921,8 @@
         <h1 id="mainTitle">Owl's <span>Halloween</span><br />Party Quest</h1>
         <p class="subtitle">
           A friendly owl needs help before moonrise. Play six quick mini-games,
-          unlock each Halloween surprise, and start the moonlit celebration.
+          unlock each Halloween surprise, and finish before moonrise for a bonus.
+          If the moon rises first, keep playing and start the celebration anyway.
         </p>
           <p class="resource-disclaimer" style="margin: 18px 0 0; color: inherit; opacity: .78; font-size: .86rem; line-height: 1.45; font-weight: 700;">A TCEA educator resource · CC BY-NC 4.0 · Free to use and adapt with credit · Not for commercial use · No logins · No data collected</p>
         <button id="startButton" class="start-button">Start the Halloween Quest</button>
@@ -917,8 +943,11 @@
         <header class="topbar">
           <div class="stats">
             <div class="stat">Halloween Points <span id="scoreValue">0</span>/300</div>
-            <div class="stat">Time <span id="timerValue">180</span> seconds</div>
+            <div class="stat">Moonrise Bonus <span id="timerValue">180</span> seconds</div>
             <div class="stat">Quest Items <span id="itemValue">0</span>/6</div>
+          </div>
+          <div id="timerNote" class="timer-note">
+            Finish before moonrise for a 30-point bonus. If time runs out, keep playing.
           </div>
           <div class="progress-track" aria-label="Halloween quest progress">
             <div id="progressFill" class="progress-fill"></div>
@@ -936,13 +965,14 @@
         </div>
 
         <div class="mini-stars" aria-hidden="true">✦ ✧ ✦</div>
-        <h1>Moonlit Party Ready!</h1>
-        <p class="subtitle">
+        <h1 id="finalTitle">Moonlit Party Ready!</h1>
+        <p id="finalMessage" class="subtitle">
           You stacked the spooky cake, charged the moon magic, packed the treat bag, caught the floating ghosts,
           fixed the spooky songs, and found the friendly owl.
         </p>
         <div class="score-badge">Official Halloween Quest Keeper</div>
-        <p><strong>Final score</strong> <span id="finalScore">300</span> out of 300</p>
+        <p id="finalTimeResult" class="final-note"></p>
+        <p><strong>Final score</strong> <span id="finalScore">300</span> out of <span id="finalScoreMax">330</span></p>
         <button id="restartButton" class="restart-button">Play Again</button>
       </div>
     </section>
@@ -955,9 +985,14 @@
     const gameCard = document.getElementById("gameCard");
     const scoreValue = document.getElementById("scoreValue");
     const timerValue = document.getElementById("timerValue");
+    const timerNote = document.getElementById("timerNote");
     const itemValue = document.getElementById("itemValue");
     const progressFill = document.getElementById("progressFill");
+    const finalTitle = document.getElementById("finalTitle");
+    const finalMessage = document.getElementById("finalMessage");
+    const finalTimeResult = document.getElementById("finalTimeResult");
     const finalScore = document.getElementById("finalScore");
+    const finalScoreMax = document.getElementById("finalScoreMax");
 
     let currentGame = 0;
     let score = 0;
@@ -966,7 +1001,9 @@
     let timerId = null;
     let currentSolved = false;
     let audioContext = null;
+    let moonriseBonusAvailable = true;
 
+    const MOONRISE_BONUS = 30;
     const pointValues = [50, 50, 50, 50, 50, 50];
 
     const games = [
@@ -991,6 +1028,10 @@
       completedItems = 0;
       timeLeft = 180;
       currentSolved = false;
+      moonriseBonusAvailable = true;
+      timerValue.textContent = timeLeft;
+      timerNote.textContent = `Finish before moonrise for a ${MOONRISE_BONUS}-point bonus. If time runs out, keep playing.`;
+      timerNote.classList.remove("expired");
       updateStats();
       startTimer();
       games[currentGame]();
@@ -1005,12 +1046,18 @@
     function startTimer() {
       clearInterval(timerId);
       timerId = setInterval(() => {
-        if (timeLeft > 0) {
+        if (timeLeft > 1) {
           timeLeft -= 1;
           timerValue.textContent = timeLeft;
-        } else {
-          timerValue.textContent = "Bonus";
+          return;
         }
+
+        timeLeft = 0;
+        moonriseBonusAvailable = false;
+        timerValue.textContent = "Moonrise";
+        timerNote.textContent = "Moonrise has arrived. Keep playing to finish the party.";
+        timerNote.classList.add("expired");
+        clearInterval(timerId);
       }, 1000);
     }
 
@@ -1643,7 +1690,17 @@
       clearInterval(timerId);
       gameScreen.classList.remove("active");
       finalScreen.classList.add("active");
-      finalScore.textContent = score;
+      const earnedMoonriseBonus = moonriseBonusAvailable && timeLeft > 0;
+      const finalTotal = score + (earnedMoonriseBonus ? MOONRISE_BONUS : 0);
+      finalTitle.textContent = earnedMoonriseBonus ? "Moonlit Party Ready!" : "Party Ready After Moonrise!";
+      finalMessage.textContent = earnedMoonriseBonus
+        ? "You stacked the spooky cake, charged the moon magic, packed the treat bag, caught the floating ghosts, fixed the spooky songs, found the friendly owl, and made it before moonrise."
+        : "You stacked the spooky cake, charged the moon magic, packed the treat bag, caught the floating ghosts, fixed the spooky songs, and found the friendly owl after moonrise.";
+      finalTimeResult.textContent = earnedMoonriseBonus
+        ? `You finished before moonrise and earned a ${MOONRISE_BONUS}-point Moonrise Bonus.`
+        : "Moonrise arrived before the quest was complete. The party still came together, and you can replay to try for the Moonrise Bonus.";
+      finalScore.textContent = finalTotal;
+      finalScoreMax.textContent = 300 + MOONRISE_BONUS;
       launchMiniConfetti(180);
       playFinaleSound();
     }
