@@ -495,11 +495,6 @@ function renderChoiceCard(choice, index) {
   const fact = document.createElement("p");
   fact.textContent = choice.fact;
 
-  const year = document.createElement("p");
-  year.className = "which-year";
-  year.textContent = choice.year;
-  year.hidden = !whichRoundAnswered;
-
   const button = document.createElement("button");
   button.className = "primary-button";
   button.type = "button";
@@ -507,7 +502,7 @@ function renderChoiceCard(choice, index) {
   button.textContent = whichRoundAnswered ? "Answer Locked" : "Choose This Event";
   button.disabled = whichRoundAnswered;
 
-  card.append(header, title, fact, year, button);
+  card.append(header, title, fact, button);
   return card;
 }
 
@@ -538,6 +533,14 @@ function renderWhichCameFirst() {
     whichFeedback.innerHTML = `
       <strong>${isCorrect ? response : "Not quite. Here's the timeline."}</strong>
       <p>${round.correct} came first.</p>
+      <div class="result-timeline" aria-label="Round years">
+        ${activeChoices
+          .map(
+            (choice) =>
+              `<span class="${choice.title === round.correct ? "first" : ""}">${choice.title}: ${choice.year}</span>`,
+          )
+          .join("")}
+      </div>
     `;
     nextRoundButton.hidden = false;
   } else {
