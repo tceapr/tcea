@@ -151,6 +151,8 @@ let draggedId = null;
 let selectedYear = null;
 let dateMatches = {};
 let lastFocus = null;
+let glitterPieces = [];
+let glitterAnimation = null;
 
 function shuffle(items) {
   const copy = [...items];
@@ -167,6 +169,22 @@ function eventById(id) {
 
 function setMessage(text) {
   message.textContent = text;
+}
+
+function isTimelineInOrder() {
+  return orderedIds.every((id, index) => id === events[index].id);
+}
+
+function completeTimeline() {
+  if (completed) return;
+  completed = true;
+  orderedIds = events.map((event) => event.id);
+  renderTimeline(Object.fromEntries(events.map((event) => [event.id, "correct"])));
+  completionPanel.hidden = false;
+  checkButton.disabled = true;
+  tryAgainButton.disabled = true;
+  setMessage("Beautiful work. The years are revealed, and the Date Challenge is ready.");
+  launchPinkGlitterBursts(7);
 }
 
 function renderTimeline(statuses = {}) {
@@ -224,6 +242,10 @@ function moveCard(id, direction) {
   if (nextIndex < 0 || nextIndex >= orderedIds.length) return;
   [orderedIds[currentIndex], orderedIds[nextIndex]] = [orderedIds[nextIndex], orderedIds[currentIndex]];
   renderTimeline();
+  if (isTimelineInOrder()) {
+    completeTimeline();
+    return;
+  }
   maybeShowFirstFact(id);
   const movedButton = timelineList.querySelector(`[data-id="${id}"] [data-move="${direction < 0 ? "up" : "down"}"]`);
   if (movedButton) movedButton.focus();
@@ -262,14 +284,7 @@ function checkTimeline() {
   });
 
   if (allCorrect) {
-    completed = true;
-    orderedIds = events.map((event) => event.id);
-    renderTimeline(Object.fromEntries(events.map((event) => [event.id, "correct"])));
-    completionPanel.hidden = false;
-    checkButton.disabled = true;
-    tryAgainButton.disabled = true;
-    setMessage("Beautiful work. The years are revealed, and the Date Challenge is ready.");
-    launchConfettiBursts(7);
+    completeTimeline();
   } else {
     renderTimeline(statuses);
     setMessage("Some cards are in the right spot and some need to move. Keep thinking from earliest to latest.");
@@ -352,7 +367,7 @@ function checkDateMatches() {
   updateDateMatches(statuses);
   if (allCorrect) {
     setMessage("Date Challenge complete. Every year matches the right Dolly moment.");
-    launchConfettiBursts(7);
+    launchPinkGlitterBursts(7);
   } else if (!allMatched) {
     setMessage("Add a year to every event, then check your matches again.");
   } else {
@@ -366,53 +381,87 @@ function resizeCanvas() {
   ctx.setTransform(window.devicePixelRatio, 0, 0, window.devicePixelRatio, 0, 0);
 }
 
-function launchConfettiBursts(count) {
+function launchPinkGlitterBursts(count) {
   let bursts = 0;
   const interval = window.setInterval(() => {
     bursts += 1;
-    createConfettiBurst();
+    createPinkGlitterBurst();
     if (bursts >= count) window.clearInterval(interval);
   }, 420);
 }
 
-function createConfettiBurst() {
-  const pieces = Array.from({ length: 72 }, () => ({
-    x: window.innerWidth / 2 + (Math.random() - 0.5) * 160,
-    y: window.innerHeight * 0.24 + (Math.random() - 0.5) * 60,
-    size: 6 + Math.random() * 8,
-    color: ["#d73f86", "#0f8d91", "#f6b939", "#7f69c8", "#ffffff"][Math.floor(Math.random() * 5)],
-    vx: (Math.random() - 0.5) * 8,
-    vy: -5 - Math.random() * 5,
-    rotation: Math.random() * Math.PI,
-    spin: (Math.random() - 0.5) * 0.28,
-    life: 84,
-  }));
+function createPinkGlitterBurst() {
+  const centerX = window.innerWidth / 2;
+  const centerY = window.innerHeight / 2;
+  const colors = ["#ff4fa3", "#ff7ac2", "#ffb8df", "#ffffff", "#ffd76a", "#f7a7cf"];
 
-  function frame() {
-    ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-    pieces.forEach((piece) => {
-      piece.x += piece.vx;
-      piece.y += piece.vy;
-      piece.vy += 0.18;
-      piece.rotation += piece.spin;
-      piece.life -= 1;
-      ctx.save();
-      ctx.translate(piece.x, piece.y);
-      ctx.rotate(piece.rotation);
-      ctx.globalAlpha = Math.max(piece.life / 84, 0);
-      ctx.fillStyle = piece.color;
-      ctx.fillRect(-piece.size / 2, -piece.size / 2, piece.size, piece.size * 0.62);
-      ctx.restore();
+  for (let index = 0; index < 118; index += 1) {
+    const angle = Math.random() * Math.PI * 2;
+    const speed = 3.2 + Math.random() * 9.4;
+    glitterPieces.push({
+      x: centerX,
+      y: centerY,
+      size: 2 + Math.random() * 7,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed,
+      rotation: Math.random() * Math.PI,
+      spin: (Math.random() - 0.5) * 0.34,
+      life: 72 + Math.random() * 26,
+      maxLife: 98,
+      sparkle: Math.random() > 0.48,
     });
-
-    if (pieces.some((piece) => piece.life > 0)) {
-      requestAnimationFrame(frame);
-    } else {
-      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-    }
   }
 
-  frame();
+  if (!glitterAnimation) {
+    glitterAnimation = requestAnimationFrame(drawPinkGlitter);
+  }
+}
+
+function drawPinkGlitter() {
+  ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+  glitterPieces = glitterPieces.filter((piece) => piece.life > 0);
+
+  glitterPieces.forEach((piece) => {
+    piece.x += piece.vx;
+    piece.y += piece.vy;
+    piece.vx *= 0.988;
+    piece.vy = piece.vy * 0.988 + 0.1;
+    piece.rotation += piece.spin;
+    piece.life -= 1;
+
+    const alpha = Math.max(piece.life / piece.maxLife, 0);
+    ctx.save();
+    ctx.translate(piece.x, piece.y);
+    ctx.rotate(piece.rotation);
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = piece.color;
+
+    if (piece.sparkle) {
+      ctx.beginPath();
+      ctx.moveTo(0, -piece.size * 1.35);
+      ctx.lineTo(piece.size * 0.32, -piece.size * 0.32);
+      ctx.lineTo(piece.size * 1.35, 0);
+      ctx.lineTo(piece.size * 0.32, piece.size * 0.32);
+      ctx.lineTo(0, piece.size * 1.35);
+      ctx.lineTo(-piece.size * 0.32, piece.size * 0.32);
+      ctx.lineTo(-piece.size * 1.35, 0);
+      ctx.lineTo(-piece.size * 0.32, -piece.size * 0.32);
+      ctx.closePath();
+      ctx.fill();
+    } else {
+      ctx.fillRect(-piece.size / 2, -piece.size / 2, piece.size, piece.size * 0.62);
+    }
+
+    ctx.restore();
+  });
+
+  if (glitterPieces.length) {
+    glitterAnimation = requestAnimationFrame(drawPinkGlitter);
+  } else {
+    glitterAnimation = null;
+    ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+  }
 }
 
 timelineList.addEventListener("click", (event) => {
@@ -467,6 +516,10 @@ timelineList.addEventListener("drop", (event) => {
   orderedIds.splice(sourceIndex, 1);
   orderedIds.splice(targetIndex, 0, sourceId);
   renderTimeline();
+  if (isTimelineInOrder()) {
+    completeTimeline();
+    return;
+  }
   maybeShowFirstFact(sourceId);
 });
 
