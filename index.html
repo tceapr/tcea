@@ -519,49 +519,17 @@
 
       .dolly-timeline-media {
         position: relative;
-        padding: 18px;
+        padding: 0;
         overflow: hidden;
-        background:
-          radial-gradient(circle at 18% 18%, rgba(246, 185, 57, 0.82), transparent 28%),
-          radial-gradient(circle at 82% 24%, rgba(15, 141, 145, 0.58), transparent 24%),
-          linear-gradient(145deg, #d73f86, #fff8ee 56%, #0f8d91);
+        background: #f8d58a;
       }
 
-      .dolly-timeline-preview {
-        position: relative;
-        display: grid;
-        gap: 10px;
-        width: min(88%, 270px);
-        transform: rotate(-2deg);
-      }
-
-      .dolly-timeline-preview span {
-        display: grid;
-        grid-template-columns: 58px 1fr;
-        gap: 10px;
-        align-items: center;
-        min-height: 46px;
-        padding: 8px 12px;
-        color: #1f2945;
-        background: rgba(255, 255, 255, 0.94);
-        border: 3px solid rgba(255, 255, 255, 0.62);
-        border-radius: 8px;
-        font-size: 0.9rem;
-        font-weight: 900;
-        box-shadow: 0 12px 18px rgba(65, 32, 64, 0.16);
-      }
-
-      .dolly-timeline-preview span:nth-child(2) {
-        transform: translateX(18px);
-      }
-
-      .dolly-timeline-preview span:nth-child(3) {
-        transform: translateX(-10px);
-      }
-
-      .dolly-timeline-preview strong {
-        color: #d73f86;
-        font-size: 1rem;
+      .dolly-timeline-media img {
+        width: 100%;
+        height: 100%;
+        max-height: none;
+        object-fit: cover;
+        object-position: center;
       }
 
       .dolly-timeline-card .open-link {
@@ -612,12 +580,8 @@
 
       <nav class="menu" aria-label="Activity menu">
         <a class="activity-card dolly-timeline-card" href="dolly-timeline-scramble/">
-          <span class="activity-media dolly-timeline-media" aria-hidden="true">
-            <span class="dolly-timeline-preview">
-              <span><strong>1946</strong> Born</span>
-              <span><strong>1986</strong> Dollywood</span>
-              <span><strong>2018</strong> Books</span>
-            </span>
+          <span class="activity-media dolly-timeline-media">
+            <img src="dolly-timeline-scramble/assets/dolly-title-art.png?v=dolly-art-icons-1" alt="Colorful Dolly Parton title artwork with mountains and sparkles">
           </span>
           <span class="activity-copy">
             <span>

@@ -4,7 +4,7 @@ const events = [
     year: "1946",
     title: "Dolly Parton is born",
     text: "Dolly Parton is born in Tennessee.",
-    icon: "★",
+    icon: "🎂",
     fact:
       "Dolly Rebecca Parton was born on January 19, 1946, in Sevier County, Tennessee. She grew up in a large family and was the fourth of 12 children. Music was an important part of her childhood, and she began singing and performing when she was very young.",
     hiddenFact:
@@ -15,7 +15,7 @@ const events = [
     year: "1959",
     title: "Grand Ole Opry debut",
     text: "At age 13, Dolly performs at the Grand Ole Opry.",
-    icon: "♪",
+    icon: "🎤",
     fact:
       "At just 13 years old, Dolly performed at the Grand Ole Opry in Nashville. Johnny Cash introduced her to the audience. Her performance received such an enthusiastic response that she was called back for several encores.",
     hiddenFact:
@@ -26,7 +26,7 @@ const events = [
     year: "1964",
     title: "Moves to Nashville",
     text: "The day after graduating from high school, Dolly moves to Nashville to pursue a music career.",
-    icon: "↗",
+    icon: "🧳",
     fact:
       "Dolly graduated from Sevier County High School in 1964. The very next day, she moved to Nashville to pursue her dream of becoming a professional songwriter and performer.",
     hiddenFact:
@@ -37,7 +37,7 @@ const events = [
     year: "1967",
     title: "The Porter Wagoner Show",
     text: "Dolly joins The Porter Wagoner Show.",
-    icon: "▣",
+    icon: "📺",
     fact:
       "Dolly joined The Porter Wagoner Show, a popular country music television program. Performing with Porter Wagoner introduced Dolly to audiences across the country and helped her career grow.",
     hiddenFact:
@@ -48,7 +48,7 @@ const events = [
     year: "1969",
     title: "Grand Ole Opry member",
     text: "Dolly becomes a member of the Grand Ole Opry.",
-    icon: "✦",
+    icon: "⭐",
     fact:
       "Dolly became an official member of the Grand Ole Opry in 1969. Becoming an Opry member was an important milestone for the young performer who had first appeared on its stage when she was only 13.",
     hiddenFact:
@@ -59,7 +59,7 @@ const events = [
     year: "1974",
     title: "I Will Always Love You",
     text: "I Will Always Love You becomes a major hit.",
-    icon: "♫",
+    icon: "🎵",
     fact:
       "Dolly wrote I Will Always Love You as she prepared to end her professional partnership with Porter Wagoner and begin the next stage of her career. The song reached number one on the country music chart.",
     hiddenFact:
@@ -70,7 +70,7 @@ const events = [
     year: "1980",
     title: "9 to 5",
     text: "Dolly stars in the movie 9 to 5.",
-    icon: "▶",
+    icon: "🎬",
     fact:
       "Dolly made her major movie debut in 9 to 5 alongside Jane Fonda and Lily Tomlin. She also wrote and performed the movie's title song, which became one of her most recognizable hits.",
     hiddenFact:
@@ -81,7 +81,7 @@ const events = [
     year: "1986",
     title: "Dollywood opens",
     text: "Dollywood opens in Tennessee.",
-    icon: "◆",
+    icon: "🎡",
     fact:
       "Dolly became part owner of a theme park near her hometown in East Tennessee. It reopened as Dollywood in 1986. The park helped create jobs and bring visitors to the Smoky Mountains region where Dolly grew up.",
     hiddenFact:
@@ -92,7 +92,7 @@ const events = [
     year: "1995",
     title: "Imagination Library begins",
     text: "Dolly starts the Imagination Library.",
-    icon: "▤",
+    icon: "📖",
     fact:
       "Dolly created the Imagination Library in her home county in Tennessee. The program mails free books to young children from birth until they begin school. It later expanded far beyond Tennessee.",
     hiddenFact:
@@ -103,7 +103,7 @@ const events = [
     year: "2018",
     title: "100 million books",
     text: "The Imagination Library gives away its 100 millionth book.",
-    icon: "▥",
+    icon: "📚",
     fact:
       "Dolly Parton's Imagination Library celebrated the delivery of its 100 millionth book in 2018. Dolly presented a special copy of the milestone book to the Library of Congress.",
     hiddenFact:

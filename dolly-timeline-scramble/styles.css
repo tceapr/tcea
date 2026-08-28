@@ -161,85 +161,19 @@ h3 {
 }
 
 .hero-art {
-  position: relative;
   min-height: 290px;
   overflow: hidden;
   border-radius: 8px;
-  background:
-    linear-gradient(90deg, rgba(255, 255, 255, 0.28) 1px, transparent 1px),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.28) 1px, transparent 1px),
-    linear-gradient(145deg, #d73f86, #f6b939 52%, #0f8d91);
-  background-size: 22px 22px, 22px 22px, auto;
+  background: #f8d58a;
 }
 
-.hero-art::before {
-  position: absolute;
-  inset: 24px;
-  content: "";
-  border: 2px dashed rgba(255, 255, 255, 0.82);
-  border-radius: 999px;
-}
-
-.hero-art::after {
-  position: absolute;
-  right: -28px;
-  bottom: -42px;
-  width: 210px;
-  height: 210px;
-  content: "";
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.32);
-}
-
-.hero-year,
-.hero-star,
-.hero-note {
-  position: absolute;
-  z-index: 1;
-  display: grid;
-  place-items: center;
-  color: #ffffff;
-  text-shadow: 0 3px 10px rgba(31, 41, 69, 0.28);
-}
-
-.hero-year {
-  width: 118px;
-  height: 118px;
-  border: 4px solid rgba(255, 255, 255, 0.9);
-  border-radius: 50%;
-  font-size: 1.7rem;
-  font-weight: 950;
-}
-
-.hero-year:first-child {
-  top: 36px;
-  left: 36px;
-}
-
-.hero-year:last-child {
-  right: 38px;
-  bottom: 34px;
-}
-
-.hero-line {
-  position: absolute;
-  inset: 50% 84px auto;
-  height: 8px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.82);
-  transform: rotate(-22deg);
-}
-
-.hero-star {
-  top: 42px;
-  right: 78px;
-  font-size: 4.4rem;
-}
-
-.hero-note {
-  bottom: 66px;
-  left: 84px;
-  font-size: 4rem;
+.hero-art img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 290px;
+  object-fit: cover;
+  object-position: center;
 }
 
 .toolbar {
@@ -345,7 +279,10 @@ h3 {
   border-radius: 8px;
   color: #ffffff;
   background: var(--teal);
-  font-size: 1.6rem;
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+  font-size: 1.85rem;
+  line-height: 1;
+  box-shadow: inset 0 -5px 0 rgba(31, 41, 69, 0.12);
 }
 
 .timeline-card:nth-child(3n + 1) .card-icon {
@@ -581,17 +518,6 @@ h3 {
   .toolbar button,
   .teacher-toggle {
     width: 100%;
-  }
-
-  .hero-year {
-    width: 92px;
-    height: 92px;
-    font-size: 1.3rem;
-  }
-
-  .hero-star,
-  .hero-note {
-    font-size: 3rem;
   }
 
   .match-row {
