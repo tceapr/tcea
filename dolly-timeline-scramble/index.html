@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dolly Parton Timeline Scramble</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <canvas id="confetti-canvas" aria-hidden="true"></canvas>
+
+    <main class="app-shell">
+      <section class="hero" aria-labelledby="page-title">
+        <div class="hero-copy">
+          <p class="eyebrow">Classroom Timeline Activity</p>
+          <h1 id="page-title">Dolly Parton Timeline Scramble</h1>
+          <p>Can you put these moments from Dolly's life in the right order?</p>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <span class="hero-year">1946</span>
+          <span class="hero-line"></span>
+          <span class="hero-star">✦</span>
+          <span class="hero-note">♪</span>
+          <span class="hero-year">2018</span>
+        </div>
+      </section>
+
+      <section class="toolbar" aria-label="Activity controls">
+        <button id="check-button" class="primary-button" type="button">Check My Timeline</button>
+        <button id="try-again-button" type="button">Try Again</button>
+        <button id="reset-button" type="button">Start Over</button>
+        <label class="teacher-toggle">
+          <input id="hide-years-toggle" type="checkbox" checked>
+          <span>Hide Years in Dolly Facts</span>
+        </label>
+      </section>
+
+      <section id="message" class="message" aria-live="polite">
+        Drag, tap, or use the arrow buttons to arrange the cards from earliest to latest.
+      </section>
+
+      <section class="timeline-section" aria-labelledby="timeline-title">
+        <div class="section-heading">
+          <p class="eyebrow">First Challenge</p>
+          <h2 id="timeline-title">Build the timeline.</h2>
+        </div>
+        <ol id="timeline-list" class="timeline-list" aria-label="Scrambled Dolly Parton timeline cards"></ol>
+      </section>
+
+      <section id="completion-panel" class="completion-panel" hidden>
+        <div>
+          <p class="eyebrow">Timeline Complete</p>
+          <h2>You did it!</h2>
+          <p>From the Smoky Mountains to millions of books, Dolly has created quite a timeline.</p>
+          <p class="tribute-copy">Dolly Parton was honored internationally, with tributes appearing around the world. Landmarks were lit in pink, fans created memorials, and people gathered to celebrate her life and career. People remembered not only her music, but also her generosity, humor, and lifelong impact on children through the Imagination Library.</p>
+        </div>
+        <button id="date-challenge-button" class="primary-button" type="button">Try the Date Challenge</button>
+      </section>
+
+      <section id="date-challenge" class="date-challenge" aria-labelledby="date-title" hidden>
+        <div class="section-heading">
+          <p class="eyebrow">Second Challenge</p>
+          <h2 id="date-title">Match each year to the correct event.</h2>
+        </div>
+        <div class="date-board">
+          <div>
+            <h3>Year Cards</h3>
+            <div id="year-bank" class="year-bank" aria-label="Available years"></div>
+          </div>
+          <div>
+            <h3>Event Matches</h3>
+            <div id="match-list" class="match-list" aria-label="Date challenge events"></div>
+          </div>
+        </div>
+        <div class="toolbar compact">
+          <button id="check-matches-button" class="primary-button" type="button">Check My Matches</button>
+          <button id="clear-matches-button" type="button">Clear Matches</button>
+        </div>
+      </section>
+    </main>
+
+    <div id="fact-modal" class="modal-backdrop" hidden>
+      <article class="fact-modal" role="dialog" aria-modal="true" aria-labelledby="fact-title">
+        <button id="close-fact-button" class="icon-button" type="button" aria-label="Close Dolly Fact">×</button>
+        <p class="fact-kicker">✦ Dolly Fact</p>
+        <h2 id="fact-title"></h2>
+        <p id="fact-year" class="fact-year"></p>
+        <p id="fact-body"></p>
+        <button id="got-it-button" class="primary-button" type="button">Got It!</button>
+      </article>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
