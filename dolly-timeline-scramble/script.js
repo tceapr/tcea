@@ -109,6 +109,17 @@ const events = [
     hiddenFact:
       "Dolly Parton's Imagination Library celebrated the delivery of its 100 millionth book. Dolly presented a special copy of the milestone book to the Library of Congress.",
   },
+  {
+    id: "passing",
+    year: "2026",
+    title: "Dolly Parton is remembered",
+    text: "Dolly Parton passed away and was honored internationally.",
+    icon: "🕯️",
+    fact:
+      "Dolly Parton passed away on August 25, 2026. She was honored internationally after her death, with tributes appearing around the world. Landmarks were lit in pink and fans created memorials. Musicians, world leaders, and fans remembered not only her music, but also her generosity, humor, and lifelong impact on children through the Imagination Library.",
+    hiddenFact:
+      "Dolly Parton passed away on August 25. She was honored internationally after her death, with tributes appearing around the world. Landmarks were lit in pink and fans created memorials. Musicians, world leaders, and fans remembered not only her music, but also her generosity, humor, and lifelong impact on children through the Imagination Library.",
+  },
 ];
 
 const timelineList = document.querySelector("#timeline-list");
