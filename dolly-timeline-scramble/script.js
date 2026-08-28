@@ -233,83 +233,111 @@ const whichCameFirstRounds = [
 const factOrFiddleQuestions = [
   {
     statement: "Dolly Parton grew up as one of 12 children in the Great Smoky Mountains.",
+    image: "assets/fact-or-fiddle/smokymountains.png",
+    alt: "Illustration of Dolly's Smoky Mountain childhood",
     answer: "FACT",
     explanation:
       "Dolly was born in Locust Ridge, Tennessee. She grew up with her parents and 11 siblings in a small cabin in the Great Smoky Mountains.",
   },
   {
     statement: "The doctor who delivered Dolly was paid with a sack of flour.",
+    image: "assets/fact-or-fiddle/sackofcornmeal.png",
+    alt: "Illustration of a sack of cornmeal",
     answer: "FIDDLE",
     explanation: "Close, but Dolly said her father paid the doctor with a sack of cornmeal.",
   },
   {
     statement: "Dolly's uncle gave her the first real guitar she owned.",
+    image: "assets/fact-or-fiddle/bdayguitar.png",
+    alt: "Illustration of Dolly's first real guitar",
     answer: "FACT",
     explanation:
       "Dolly first played a homemade guitar. Her uncle Bill Owens later recognized her talent and gave her her first store-bought guitar. He also helped her find early opportunities to perform.",
   },
   {
     statement: "Dolly wrote \"Jolene\" and \"I Will Always Love You\" on the same day.",
+    image: "assets/fact-or-fiddle/wrote2songs.png",
+    alt: "Illustration of two Dolly songs being written",
     answer: "FACT",
     explanation:
       "Dolly has said that she wrote both songs on the same remarkably productive day in 1973. They became two of her most famous songs.",
   },
   {
     statement: "Dolly created a signature line of wigs that is sold around the world.",
+    image: "assets/fact-or-fiddle/wigs.png",
+    alt: "Illustration of Dolly-style wigs",
     answer: "FIDDLE",
     explanation:
       "Dolly is famous for her collection of wigs, but she never launched an international signature wig line. Her stage wigs were custom-made for her.",
   },
   {
     statement: "Dolly recorded a secret song that cannot be released until 2045.",
+    image: "assets/fact-or-fiddle/timecapsule.png",
+    alt: "Illustration of a time capsule for a secret song",
     answer: "FACT",
     explanation:
       "Dolly recorded a song and placed it in a time capsule at Dollywood's DreamMore Resort. The time capsule is not supposed to be opened until 2045.",
   },
   {
     statement: "Dolly used her acrylic fingernails to help create the rhythm for \"9 to 5.\"",
+    image: "assets/fact-or-fiddle/dollysnails.png",
+    alt: "Illustration of Dolly's acrylic fingernails",
     answer: "FACT",
     explanation:
       "Dolly discovered that clicking her acrylic fingernails together sounded like a typewriter. That rhythm became an unforgettable part of \"9 to 5.\"",
   },
   {
     statement: "Dolly once entered a Dolly Parton look-alike contest and won first place.",
+    image: "assets/fact-or-fiddle/contest.png",
+    alt: "Illustration of a Dolly Parton look-alike contest",
     answer: "FIDDLE",
     explanation:
       "Dolly secretly entered a Dolly Parton look-alike contest on Santa Monica Boulevard. She exaggerated her appearance for the contest, but she did not win.",
   },
   {
     statement: "Dolly has full sleeves of brightly colored tattoos hidden beneath her clothes.",
+    image: "assets/fact-or-fiddle/tattoo.png",
+    alt: "Illustration of small pastel tattoos",
     answer: "FIDDLE",
     explanation:
       "Dolly said she had a few small, tasteful tattoos in soft pastel colors. She explained that some were used to cover scars, but she did not have full tattoo sleeves.",
   },
   {
     statement: "Dolly the sheep was the first mammal cloned from an adult cell and was named in Dolly Parton's honor.",
+    image: "assets/fact-or-fiddle/dollyclone.png",
+    alt: "Illustration of Dolly the cloned sheep",
     answer: "FACT",
     explanation:
       "Scientists created Dolly the sheep using a cell from a mammary gland. They named the famous sheep after Dolly Parton.",
   },
   {
     statement: "The Imagination Library begins mailing free books to children when they turn five.",
+    image: "assets/fact-or-fiddle/imaginationlibrary.png",
+    alt: "Illustration of books from the Imagination Library",
     answer: "FIDDLE",
     explanation:
       "The program begins much earlier. In participating communities, enrolled children receive a free book each month from birth until age five. The Imagination Library has gifted more than 300 million books around the world.",
   },
   {
     statement: "Dolly donated $1 million to COVID-19 research connected to the development of the Moderna vaccine.",
+    image: "assets/fact-or-fiddle/covidvaccine.png",
+    alt: "Illustration of vaccine research",
     answer: "FACT",
     explanation:
       "Dolly donated $1 million to Vanderbilt University Medical Center in 2020. Her gift supported COVID-19 research, including work connected to the Moderna vaccine.",
   },
   {
     statement: "Dollywood employees receive only a 50 percent discount on college tuition.",
+    image: "assets/fact-or-fiddle/collegetuition.png",
+    alt: "Illustration of college tuition support",
     answer: "FIDDLE",
     explanation:
       "Eligible employees can receive 100 percent coverage for tuition, fees, and required books and supplies in more than 100 fully funded programs through the GROW U program.",
   },
   {
     statement: "Dolly once lost a movie role because she refused to wear makeup.",
+    image: "assets/fact-or-fiddle/movierole.png",
+    alt: "Illustration of a movie role and makeup",
     answer: "FIDDLE",
     explanation:
       "There is no reliable account of Dolly losing a movie role for refusing to wear makeup. In fact, Dolly has often joked about how prepared she likes to be while wearing her signature makeup.",
@@ -350,6 +378,7 @@ const gameFretMarkers = document.querySelector("#game-fret-markers");
 const completeFretMarkers = document.querySelector("#complete-fret-markers");
 const fiddleQuestionLabel = document.querySelector("#fiddle-question-label");
 const fiddleScoreLabel = document.querySelector("#fiddle-score-label");
+const fiddleQuestionIcon = document.querySelector("#fiddle-question-icon");
 const fiddleStatement = document.querySelector("#fiddle-statement");
 const factChoiceButton = document.querySelector("#fact-button");
 const fiddleChoiceButton = document.querySelector("#fiddle-button");
@@ -747,6 +776,8 @@ function renderFactOrFiddleQuestion() {
   fiddleAnswered = false;
   fiddleQuestionLabel.textContent = `Question ${fiddleQuestionIndex + 1} of ${factOrFiddleQuestions.length}`;
   fiddleScoreLabel.textContent = `Score: ${fiddleScore}`;
+  fiddleQuestionIcon.src = question.image;
+  fiddleQuestionIcon.alt = question.alt;
   fiddleStatement.textContent = question.statement;
   fiddleAnswerPanel.hidden = true;
   fiddleAnswerPanel.className = "answer-panel";

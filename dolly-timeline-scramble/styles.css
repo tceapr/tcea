@@ -876,6 +876,11 @@ h3 {
 }
 
 .statement-card {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(16px, 3vw, 24px);
+  align-items: center;
+  justify-items: center;
   margin-bottom: 16px;
   padding: clamp(20px, 4vw, 30px);
   border: 2px solid var(--line);
@@ -884,12 +889,23 @@ h3 {
   box-shadow: 0 10px 18px rgba(75, 44, 74, 0.08);
 }
 
+.fiddle-question-icon {
+  display: block;
+  width: 100%;
+  max-width: 190px;
+  aspect-ratio: 1;
+  object-fit: contain;
+  justify-self: center;
+  filter: drop-shadow(0 12px 12px rgba(75, 44, 74, 0.12));
+}
+
 .statement-card p {
   margin: 0;
   color: var(--ink);
   font-size: clamp(1.45rem, 3vw, 2.2rem);
   font-weight: 850;
   line-height: 1.22;
+  text-align: center;
 }
 
 .answer-buttons {
@@ -1138,6 +1154,10 @@ body.reduce-motion *::after {
 
   .answer-buttons {
     grid-template-columns: 1fr;
+  }
+
+  .fiddle-question-icon {
+    max-width: 160px;
   }
 
   .decorative-guitar {
