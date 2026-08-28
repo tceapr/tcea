@@ -614,31 +614,36 @@ function burstConfetti(count = 28) {
   }, 950);
 }
 
-function fallConfetti(count = 96) {
+function fallConfetti(waveCount = 6, piecesPerWave = 24) {
   window.setTimeout(() => {
     confettiLayer.innerHTML = "";
     const colors = ["#174778", "#faa734", "#00a7b5", "#ff6f61", "#87c540", "#6f4cc3", "#d93a96"];
+    const waveInterval = 850;
 
-    for (let index = 0; index < count; index += 1) {
-      const piece = document.createElement("span");
-      const width = 8 + Math.random() * 8;
-      const height = 12 + Math.random() * 12;
+    for (let wave = 0; wave < waveCount; wave += 1) {
+      window.setTimeout(() => {
+        for (let index = 0; index < piecesPerWave; index += 1) {
+          const piece = document.createElement("span");
+          const width = 8 + Math.random() * 8;
+          const height = 12 + Math.random() * 12;
 
-      piece.className = "confetti-piece is-falling";
-      piece.style.setProperty("--start-x", `${Math.random() * 100}vw`);
-      piece.style.setProperty("--drift", `${Math.random() * 180 - 90}px`);
-      piece.style.setProperty("--rotation", `${Math.random() * 900 - 450}deg`);
-      piece.style.setProperty("--fall-duration", `${2.4 + Math.random() * 1.8}s`);
-      piece.style.setProperty("--fall-delay", `${Math.random() * 0.95}s`);
-      piece.style.setProperty("--piece-width", `${width}px`);
-      piece.style.setProperty("--piece-height", `${height}px`);
-      piece.style.setProperty("--confetti-color", colors[index % colors.length]);
-      confettiLayer.appendChild(piece);
+          piece.className = "confetti-piece is-falling";
+          piece.style.setProperty("--start-x", `${Math.random() * 100}vw`);
+          piece.style.setProperty("--drift", `${Math.random() * 180 - 90}px`);
+          piece.style.setProperty("--rotation", `${Math.random() * 900 - 450}deg`);
+          piece.style.setProperty("--fall-duration", `${2.4 + Math.random() * 1.8}s`);
+          piece.style.setProperty("--fall-delay", `${Math.random() * 0.3}s`);
+          piece.style.setProperty("--piece-width", `${width}px`);
+          piece.style.setProperty("--piece-height", `${height}px`);
+          piece.style.setProperty("--confetti-color", colors[(wave + index) % colors.length]);
+          confettiLayer.appendChild(piece);
+        }
+      }, wave * waveInterval);
     }
 
     window.setTimeout(() => {
       confettiLayer.innerHTML = "";
-    }, 5600);
+    }, waveInterval * (waveCount - 1) + 5600);
   }, 280);
 }
 
