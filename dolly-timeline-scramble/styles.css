@@ -854,14 +854,48 @@ h3 {
   font-size: 1.6rem;
 }
 
-.compact-guitar {
-  min-height: 230px;
-}
-
-.compact-guitar .decorative-guitar,
 .completed-guitar .decorative-guitar {
   width: min(100%, 340px);
   transform: rotate(-6deg) scale(0.92);
+}
+
+.question-art-stage {
+  display: grid;
+  gap: 18px;
+  min-height: 300px;
+  place-items: center;
+  padding: clamp(18px, 3vw, 26px);
+  border: 2px solid rgba(234, 216, 200, 0.72);
+  border-radius: 8px;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(246, 185, 57, 0.22), transparent 9rem),
+    radial-gradient(circle at 82% 22%, rgba(15, 141, 145, 0.16), transparent 10rem),
+    rgba(255, 248, 238, 0.7);
+}
+
+.question-icon-frame {
+  display: grid;
+  width: min(100%, 280px);
+  aspect-ratio: 1;
+  place-items: center;
+  border: 2px solid rgba(15, 141, 145, 0.22);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: 0 14px 24px rgba(75, 44, 74, 0.1);
+}
+
+.question-progress-track {
+  position: relative;
+  width: min(100%, 320px);
+  padding: 16px 14px;
+  border: 2px solid rgba(31, 41, 69, 0.08);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.76);
+}
+
+.question-progress-track .fret-markers {
+  position: relative;
+  inset: auto;
 }
 
 .fiddle-play-area {
@@ -892,11 +926,15 @@ h3 {
 .fiddle-question-icon {
   display: block;
   width: 100%;
-  max-width: 190px;
+  max-width: 240px;
   aspect-ratio: 1;
   object-fit: contain;
   justify-self: center;
   filter: drop-shadow(0 12px 12px rgba(75, 44, 74, 0.12));
+}
+
+.fact-or-fiddle.is-strumming .question-icon-frame {
+  animation: icon-pop 520ms ease;
 }
 
 .statement-card p {
@@ -1022,6 +1060,16 @@ h3 {
   100% {
     opacity: 0;
     transform: translateY(-16px) scale(0.7);
+  }
+}
+
+@keyframes icon-pop {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  45% {
+    transform: translateY(-4px) scale(1.02);
   }
 }
 
@@ -1157,7 +1205,7 @@ body.reduce-motion *::after {
   }
 
   .fiddle-question-icon {
-    max-width: 160px;
+    max-width: 200px;
   }
 
   .decorative-guitar {
