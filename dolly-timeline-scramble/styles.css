@@ -102,6 +102,7 @@ button:disabled {
 .timeline-section,
 .completion-panel,
 .date-challenge,
+.fact-or-fiddle,
 .fact-modal {
   background: rgba(255, 255, 255, 0.9);
   border: 1px solid rgba(234, 216, 200, 0.9);
@@ -217,6 +218,7 @@ h3 {
 
 .timeline-section,
 .date-challenge,
+.fact-or-fiddle,
 .completion-panel {
   border-radius: 8px;
   padding: clamp(18px, 4vw, 28px);
@@ -362,6 +364,7 @@ h3 {
 
 .completion-panel[hidden],
 .date-challenge[hidden],
+.fact-or-fiddle[hidden],
 .modal-backdrop[hidden] {
   display: none;
 }
@@ -624,6 +627,408 @@ h3 {
   color: var(--teal);
 }
 
+.fact-or-fiddle {
+  position: relative;
+  margin-top: 22px;
+  overflow: hidden;
+}
+
+.fiddle-opening,
+.fiddle-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 430px);
+  gap: 24px;
+  align-items: center;
+}
+
+.fiddle-title {
+  font-family: "Cooper Black", Georgia, serif;
+  color: var(--pink-dark);
+  font-size: clamp(2.4rem, 7vw, 5rem);
+}
+
+.fiddle-opening p:not(.eyebrow),
+.statement-card p,
+.answer-panel p,
+.fiddle-results p:not(.eyebrow) {
+  color: var(--muted);
+  font-size: 1.08rem;
+  line-height: 1.55;
+}
+
+.guitar-stage {
+  display: grid;
+  min-height: 300px;
+  place-items: center;
+  padding: 14px;
+  border: 2px solid rgba(234, 216, 200, 0.72);
+  border-radius: 8px;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(246, 185, 57, 0.22), transparent 9rem),
+    radial-gradient(circle at 82% 22%, rgba(15, 141, 145, 0.16), transparent 10rem),
+    rgba(255, 248, 238, 0.7);
+}
+
+.decorative-guitar {
+  position: relative;
+  width: min(100%, 390px);
+  height: 230px;
+  transform: rotate(-7deg);
+  transform-origin: 42% 58%;
+}
+
+.decorative-guitar.strum,
+.fact-or-fiddle.is-strumming .decorative-guitar {
+  animation: strum 520ms ease;
+}
+
+.guitar-body {
+  position: absolute;
+  left: 18px;
+  top: 52px;
+  width: 174px;
+  height: 150px;
+  border: 4px solid #8f4a26;
+  border-radius: 50% 44% 48% 52%;
+  background:
+    radial-gradient(circle at 36% 48%, #5b2b1e 0 25px, transparent 27px),
+    radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.45), transparent 3rem),
+    linear-gradient(135deg, #f8c763, #d99038);
+  box-shadow:
+    inset -12px -10px 0 rgba(143, 74, 38, 0.18),
+    0 16px 24px rgba(75, 44, 74, 0.15);
+}
+
+.guitar-body::before {
+  position: absolute;
+  right: -56px;
+  top: 34px;
+  width: 84px;
+  height: 82px;
+  content: "";
+  border: 4px solid #8f4a26;
+  border-left: 0;
+  border-radius: 0 52% 52% 0;
+  background: linear-gradient(135deg, #f4b64e, #d58b34);
+}
+
+.sound-hole {
+  position: absolute;
+  left: 58px;
+  top: 54px;
+  width: 46px;
+  height: 46px;
+  border: 5px solid #f7d98e;
+  border-radius: 999px;
+  background: #442019;
+}
+
+.guitar-neck {
+  position: absolute;
+  left: 164px;
+  top: 98px;
+  z-index: 2;
+  width: 182px;
+  height: 34px;
+  border: 3px solid #6b3824;
+  border-radius: 8px;
+  background:
+    repeating-linear-gradient(90deg, transparent 0 9px, rgba(255, 255, 255, 0.28) 10px 12px),
+    linear-gradient(180deg, #9e5d35, #6f3d27);
+}
+
+.guitar-neck::before,
+.guitar-neck::after {
+  position: absolute;
+  left: 0;
+  right: 0;
+  content: "";
+  height: 2px;
+  background: rgba(255, 255, 255, 0.75);
+}
+
+.guitar-neck::before {
+  top: 9px;
+}
+
+.guitar-neck::after {
+  bottom: 9px;
+}
+
+.guitar-head {
+  position: absolute;
+  right: 0;
+  top: 86px;
+  width: 60px;
+  height: 58px;
+  border: 3px solid #6b3824;
+  border-radius: 16px 8px 18px 8px;
+  background: linear-gradient(135deg, #9e5d35, #6f3d27);
+}
+
+.guitar-head::before,
+.guitar-head::after {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  content: "";
+  height: 8px;
+  border-radius: 999px;
+  background: #f7d98e;
+  box-shadow: 0 24px 0 #f7d98e;
+}
+
+.guitar-head::before {
+  top: 8px;
+}
+
+.guitar-head::after {
+  top: 20px;
+}
+
+.fret-markers {
+  position: absolute;
+  inset: -17px 6px auto;
+  display: grid;
+  grid-template-columns: repeat(14, 1fr);
+  gap: 3px;
+}
+
+.fret-marker {
+  position: relative;
+  width: 9px;
+  height: 9px;
+  border: 2px solid #fff8ee;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.55);
+  box-shadow: 0 0 0 1px rgba(31, 41, 69, 0.1);
+}
+
+.fret-marker.lit {
+  background: var(--gold);
+  box-shadow:
+    0 0 0 2px rgba(246, 185, 57, 0.24),
+    0 0 14px rgba(246, 185, 57, 0.82);
+}
+
+.guitar-pick,
+.guitar-flower,
+.guitar-butterfly,
+.guitar-note {
+  position: absolute;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  color: #ffffff;
+  font-weight: 950;
+}
+
+.guitar-pick {
+  right: 26px;
+  bottom: 20px;
+  width: 34px;
+  height: 40px;
+  border-radius: 50% 50% 54% 54%;
+  background: var(--teal);
+  transform: rotate(16deg);
+}
+
+.guitar-flower {
+  left: 22px;
+  top: 18px;
+  color: var(--pink-dark);
+  font-size: 1.6rem;
+}
+
+.guitar-butterfly {
+  right: 20px;
+  top: 18px;
+  color: var(--lavender);
+  font-size: 1.5rem;
+}
+
+.guitar-note {
+  left: 28px;
+  bottom: 14px;
+  color: var(--teal);
+  font-size: 1.6rem;
+}
+
+.compact-guitar {
+  min-height: 230px;
+}
+
+.compact-guitar .decorative-guitar,
+.completed-guitar .decorative-guitar {
+  width: min(100%, 340px);
+  transform: rotate(-6deg) scale(0.92);
+}
+
+.fiddle-play-area {
+  min-width: 0;
+}
+
+.fiddle-game[hidden],
+.fiddle-opening[hidden],
+.fiddle-results[hidden],
+.answer-panel[hidden] {
+  display: none;
+}
+
+.statement-card {
+  margin-bottom: 16px;
+  padding: clamp(20px, 4vw, 30px);
+  border: 2px solid var(--line);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 10px 18px rgba(75, 44, 74, 0.08);
+}
+
+.statement-card p {
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(1.45rem, 3vw, 2.2rem);
+  font-weight: 850;
+  line-height: 1.22;
+}
+
+.answer-buttons {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.answer-buttons button {
+  min-height: 74px;
+  color: #ffffff;
+  font-size: 1.35rem;
+  font-weight: 950;
+}
+
+.fact-choice {
+  background: var(--teal);
+  border-color: var(--teal);
+}
+
+.fiddle-choice {
+  background: var(--pink);
+  border-color: var(--pink);
+}
+
+.answer-buttons button.selected {
+  box-shadow:
+    0 0 0 4px #ffffff,
+    0 0 0 8px rgba(31, 41, 69, 0.2);
+}
+
+.answer-panel {
+  margin-top: 16px;
+  padding: clamp(18px, 3vw, 24px);
+  border: 2px solid var(--line);
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.answer-panel.correct {
+  border-color: var(--green);
+  background: #f3fff6;
+}
+
+.answer-panel.incorrect {
+  border-color: var(--wrong);
+  background: #fff6f1;
+}
+
+.answer-panel strong {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--ink);
+  font-size: 1.35rem;
+  font-weight: 950;
+}
+
+.correct-answer-label,
+.score-kicker {
+  color: var(--pink-dark) !important;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.correct-sparkle {
+  position: absolute;
+  right: 18px;
+  top: 18px;
+  color: var(--gold);
+  font-size: 2.2rem;
+  pointer-events: none;
+  animation: sparkle-pop 780ms ease forwards;
+}
+
+.fiddle-results {
+  text-align: center;
+}
+
+.completed-guitar {
+  max-width: 520px;
+  min-height: 230px;
+  margin: 0 auto 16px;
+}
+
+.celebration-row {
+  margin-top: 14px;
+  color: var(--gold);
+  font-size: 1.7rem;
+  letter-spacing: 0.35em;
+}
+
+@keyframes strum {
+  0%,
+  100% {
+    transform: rotate(-7deg) translateX(0);
+  }
+  35% {
+    transform: rotate(-5deg) translateX(4px);
+  }
+  65% {
+    transform: rotate(-8deg) translateX(-3px);
+  }
+}
+
+@keyframes sparkle-pop {
+  0% {
+    opacity: 0;
+    transform: translateY(6px) scale(0.5);
+  }
+  40% {
+    opacity: 1;
+    transform: translateY(0) scale(1.15);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-16px) scale(0.7);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body.reduce-motion *,
+body.reduce-motion *::before,
+body.reduce-motion *::after {
+  scroll-behavior: auto !important;
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}
+
 .modal-backdrop {
   position: fixed;
   inset: 0;
@@ -692,6 +1097,15 @@ h3 {
     grid-template-columns: 1fr;
   }
 
+  .fiddle-opening,
+  .fiddle-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .guitar-stage {
+    order: -1;
+  }
+
   .vs-badge {
     justify-self: center;
   }
@@ -720,5 +1134,13 @@ h3 {
 
   .which-card {
     min-height: 0;
+  }
+
+  .answer-buttons {
+    grid-template-columns: 1fr;
+  }
+
+  .decorative-guitar {
+    transform: rotate(-7deg) scale(0.82);
   }
 }

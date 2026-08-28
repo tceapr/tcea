@@ -230,12 +230,99 @@ const whichCameFirstRounds = [
   },
 ];
 
+const factOrFiddleQuestions = [
+  {
+    statement: "Dolly Parton grew up as one of 12 children in the Great Smoky Mountains.",
+    answer: "FACT",
+    explanation:
+      "Dolly was born in Locust Ridge, Tennessee. She grew up with her parents and 11 siblings in a small cabin in the Great Smoky Mountains.",
+  },
+  {
+    statement: "The doctor who delivered Dolly was paid with a sack of flour.",
+    answer: "FIDDLE",
+    explanation: "Close, but Dolly said her father paid the doctor with a sack of cornmeal.",
+  },
+  {
+    statement: "Dolly's uncle gave her the first real guitar she owned.",
+    answer: "FACT",
+    explanation:
+      "Dolly first played a homemade guitar. Her uncle Bill Owens later recognized her talent and gave her her first store-bought guitar. He also helped her find early opportunities to perform.",
+  },
+  {
+    statement: "Dolly wrote \"Jolene\" and \"I Will Always Love You\" on the same day.",
+    answer: "FACT",
+    explanation:
+      "Dolly has said that she wrote both songs on the same remarkably productive day in 1973. They became two of her most famous songs.",
+  },
+  {
+    statement: "Dolly created a signature line of wigs that is sold around the world.",
+    answer: "FIDDLE",
+    explanation:
+      "Dolly is famous for her collection of wigs, but she never launched an international signature wig line. Her stage wigs were custom-made for her.",
+  },
+  {
+    statement: "Dolly recorded a secret song that cannot be released until 2045.",
+    answer: "FACT",
+    explanation:
+      "Dolly recorded a song and placed it in a time capsule at Dollywood's DreamMore Resort. The time capsule is not supposed to be opened until 2045.",
+  },
+  {
+    statement: "Dolly used her acrylic fingernails to help create the rhythm for \"9 to 5.\"",
+    answer: "FACT",
+    explanation:
+      "Dolly discovered that clicking her acrylic fingernails together sounded like a typewriter. That rhythm became an unforgettable part of \"9 to 5.\"",
+  },
+  {
+    statement: "Dolly once entered a Dolly Parton look-alike contest and won first place.",
+    answer: "FIDDLE",
+    explanation:
+      "Dolly secretly entered a Dolly Parton look-alike contest on Santa Monica Boulevard. She exaggerated her appearance for the contest, but she did not win.",
+  },
+  {
+    statement: "Dolly has full sleeves of brightly colored tattoos hidden beneath her clothes.",
+    answer: "FIDDLE",
+    explanation:
+      "Dolly said she had a few small, tasteful tattoos in soft pastel colors. She explained that some were used to cover scars, but she did not have full tattoo sleeves.",
+  },
+  {
+    statement: "Dolly the sheep was the first mammal cloned from an adult cell and was named in Dolly Parton's honor.",
+    answer: "FACT",
+    explanation:
+      "Scientists created Dolly the sheep using a cell from a mammary gland. They named the famous sheep after Dolly Parton.",
+  },
+  {
+    statement: "The Imagination Library begins mailing free books to children when they turn five.",
+    answer: "FIDDLE",
+    explanation:
+      "The program begins much earlier. In participating communities, enrolled children receive a free book each month from birth until age five. The Imagination Library has gifted more than 300 million books around the world.",
+  },
+  {
+    statement: "Dolly donated $1 million to COVID-19 research connected to the development of the Moderna vaccine.",
+    answer: "FACT",
+    explanation:
+      "Dolly donated $1 million to Vanderbilt University Medical Center in 2020. Her gift supported COVID-19 research, including work connected to the Moderna vaccine.",
+  },
+  {
+    statement: "Dollywood employees receive only a 50 percent discount on college tuition.",
+    answer: "FIDDLE",
+    explanation:
+      "Eligible employees can receive 100 percent coverage for tuition, fees, and required books and supplies in more than 100 fully funded programs through the GROW U program.",
+  },
+  {
+    statement: "Dolly once lost a movie role because she refused to wear makeup.",
+    answer: "FIDDLE",
+    explanation:
+      "There is no reliable account of Dolly losing a movie role for refusing to wear makeup. In fact, Dolly has often joked about how prepared she likes to be while wearing her signature makeup.",
+  },
+];
+
 const timelineList = document.querySelector("#timeline-list");
 const message = document.querySelector("#message");
 const checkButton = document.querySelector("#check-button");
 const tryAgainButton = document.querySelector("#try-again-button");
 const resetButton = document.querySelector("#reset-button");
 const secondChallengeShortcut = document.querySelector("#second-challenge-shortcut");
+const thirdChallengeShortcut = document.querySelector("#third-challenge-shortcut");
 const hideYearsToggle = document.querySelector("#hide-years-toggle");
 const completionPanel = document.querySelector("#completion-panel");
 const dateChallengeButton = document.querySelector("#date-challenge-button");
@@ -252,6 +339,29 @@ const finalScore = document.querySelector("#final-score");
 const scoreTitle = document.querySelector("#score-title");
 const playAgainButton = document.querySelector("#play-again-button");
 const continueButton = document.querySelector("#continue-button");
+const factOrFiddle = document.querySelector("#fact-or-fiddle");
+const fiddleOpening = document.querySelector("#fiddle-opening");
+const fiddleGame = document.querySelector("#fiddle-game");
+const fiddleResults = document.querySelector("#fiddle-results");
+const startFiddleButton = document.querySelector("#start-fiddle-button");
+const reduceMotionToggle = document.querySelector("#reduce-motion-toggle");
+const fretMarkers = document.querySelector("#fret-markers");
+const gameFretMarkers = document.querySelector("#game-fret-markers");
+const completeFretMarkers = document.querySelector("#complete-fret-markers");
+const fiddleQuestionLabel = document.querySelector("#fiddle-question-label");
+const fiddleScoreLabel = document.querySelector("#fiddle-score-label");
+const fiddleStatement = document.querySelector("#fiddle-statement");
+const factChoiceButton = document.querySelector("#fact-button");
+const fiddleChoiceButton = document.querySelector("#fiddle-button");
+const fiddleAnswerPanel = document.querySelector("#fiddle-answer-panel");
+const fiddleAnswerHeading = document.querySelector("#fiddle-answer-heading");
+const fiddleCorrectAnswer = document.querySelector("#fiddle-correct-answer");
+const fiddleExplanation = document.querySelector("#fiddle-explanation");
+const nextFiddleButton = document.querySelector("#next-fiddle-button");
+const fiddleFinalScore = document.querySelector("#fiddle-final-score");
+const fiddleCompletionMessage = document.querySelector("#fiddle-completion-message");
+const fiddlePlayAgainButton = document.querySelector("#fiddle-play-again-button");
+const returnDollyButton = document.querySelector("#return-dolly-button");
 const modal = document.querySelector("#fact-modal");
 const factTitle = document.querySelector("#fact-title");
 const factYear = document.querySelector("#fact-year");
@@ -270,6 +380,10 @@ let whichScore = 0;
 let whichRoundAnswered = false;
 let whichSelectedIndex = null;
 let activeChoices = [];
+let fiddleOrder = factOrFiddleQuestions.map((_, index) => index);
+let fiddleQuestionIndex = 0;
+let fiddleScore = 0;
+let fiddleAnswered = false;
 let lastFocus = null;
 let glitterPieces = [];
 let glitterFlashes = [];
@@ -347,10 +461,12 @@ function resetGame() {
   completed = false;
   completionPanel.hidden = true;
   dateChallenge.hidden = true;
+  factOrFiddle.hidden = true;
   checkButton.disabled = false;
   tryAgainButton.disabled = false;
   renderTimeline();
   resetWhichCameFirst();
+  resetFactOrFiddle(false);
   setMessage("Drag, tap, or use the arrow buttons to arrange the cards from earliest to latest.");
 }
 
@@ -584,6 +700,128 @@ function openSecondChallenge() {
   dateChallenge.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
+function resetFactOrFiddle(shouldShuffle) {
+  fiddleOrder = shouldShuffle ? shuffle(factOrFiddleQuestions.map((_, index) => index)) : factOrFiddleQuestions.map((_, index) => index);
+  fiddleQuestionIndex = 0;
+  fiddleScore = 0;
+  fiddleAnswered = false;
+  fiddleOpening.hidden = false;
+  fiddleGame.hidden = true;
+  fiddleResults.hidden = true;
+  renderFretMarkers(fretMarkers, 0);
+  renderFretMarkers(gameFretMarkers, 0);
+  renderFretMarkers(completeFretMarkers, factOrFiddleQuestions.length);
+}
+
+function currentFiddleQuestion() {
+  return factOrFiddleQuestions[fiddleOrder[fiddleQuestionIndex]];
+}
+
+function fiddleCompletionText(score) {
+  if (score === 14) return "Top of the charts! You are a Dolly expert!";
+  if (score >= 11) return "Standing ovation! You know your Dolly facts!";
+  if (score >= 8) return "Encore! You hit plenty of the right notes!";
+  return "Tune up and try again! Dolly's story is full of surprises!";
+}
+
+function renderFretMarkers(container, litCount) {
+  container.innerHTML = "";
+  factOrFiddleQuestions.forEach((_, index) => {
+    const marker = document.createElement("span");
+    marker.className = `fret-marker${index < litCount ? " lit" : ""}`;
+    marker.setAttribute("aria-label", `Question ${index + 1} ${index < litCount ? "complete" : "not complete"}`);
+    container.append(marker);
+  });
+}
+
+function startFactOrFiddle(shouldShuffle = false) {
+  if (shouldShuffle) resetFactOrFiddle(true);
+  fiddleOpening.hidden = true;
+  fiddleGame.hidden = false;
+  fiddleResults.hidden = true;
+  renderFactOrFiddleQuestion();
+}
+
+function renderFactOrFiddleQuestion() {
+  const question = currentFiddleQuestion();
+  fiddleAnswered = false;
+  fiddleQuestionLabel.textContent = `Question ${fiddleQuestionIndex + 1} of ${factOrFiddleQuestions.length}`;
+  fiddleScoreLabel.textContent = `Score: ${fiddleScore}`;
+  fiddleStatement.textContent = question.statement;
+  fiddleAnswerPanel.hidden = true;
+  fiddleAnswerPanel.className = "answer-panel";
+  factChoiceButton.disabled = false;
+  fiddleChoiceButton.disabled = false;
+  factChoiceButton.classList.remove("selected");
+  fiddleChoiceButton.classList.remove("selected");
+  renderFretMarkers(gameFretMarkers, fiddleQuestionIndex);
+}
+
+function triggerGuitarStrum(isCorrect) {
+  factOrFiddle.classList.remove("is-strumming");
+  void factOrFiddle.offsetWidth;
+  factOrFiddle.classList.add("is-strumming");
+
+  if (isCorrect && !document.body.classList.contains("reduce-motion")) {
+    const sparkle = document.createElement("span");
+    sparkle.className = "correct-sparkle";
+    sparkle.textContent = "✦";
+    factOrFiddle.append(sparkle);
+    window.setTimeout(() => sparkle.remove(), 820);
+  }
+
+  window.setTimeout(() => factOrFiddle.classList.remove("is-strumming"), 540);
+}
+
+function answerFactOrFiddle(answer) {
+  if (fiddleAnswered) return;
+  const question = currentFiddleQuestion();
+  const isCorrect = answer === question.answer;
+
+  fiddleAnswered = true;
+  if (isCorrect) fiddleScore += 1;
+
+  factChoiceButton.disabled = true;
+  fiddleChoiceButton.disabled = true;
+  (answer === "FACT" ? factChoiceButton : fiddleChoiceButton).classList.add("selected");
+  fiddleScoreLabel.textContent = `Score: ${fiddleScore}`;
+  renderFretMarkers(gameFretMarkers, fiddleQuestionIndex + 1);
+  triggerGuitarStrum(isCorrect);
+
+  fiddleAnswerPanel.hidden = false;
+  fiddleAnswerPanel.className = `answer-panel ${isCorrect ? "correct" : "incorrect"}`;
+  fiddleAnswerHeading.textContent = isCorrect ? "You hit the right note!" : "That one was a little tricky!";
+  fiddleCorrectAnswer.textContent = `Correct Answer: ${question.answer}`;
+  fiddleExplanation.textContent = question.explanation;
+  nextFiddleButton.textContent = fiddleQuestionIndex === factOrFiddleQuestions.length - 1 ? "See My Score" : "Next Question";
+  nextFiddleButton.focus();
+}
+
+function nextFactOrFiddleQuestion() {
+  if (!fiddleAnswered) return;
+  if (fiddleQuestionIndex === factOrFiddleQuestions.length - 1) {
+    showFactOrFiddleResults();
+    return;
+  }
+
+  fiddleQuestionIndex += 1;
+  renderFactOrFiddleQuestion();
+}
+
+function showFactOrFiddleResults() {
+  fiddleGame.hidden = true;
+  fiddleResults.hidden = false;
+  fiddleFinalScore.textContent = `${fiddleScore} out of ${factOrFiddleQuestions.length}`;
+  fiddleCompletionMessage.textContent = fiddleCompletionText(fiddleScore);
+  renderFretMarkers(completeFretMarkers, factOrFiddleQuestions.length);
+  launchPinkGlitterBursts(3);
+}
+
+function openThirdChallenge() {
+  factOrFiddle.hidden = false;
+  factOrFiddle.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
 function resizeCanvas() {
   const width = document.documentElement.clientWidth;
   const height = window.innerHeight;
@@ -789,13 +1027,26 @@ tryAgainButton.addEventListener("click", () => {
 });
 resetButton.addEventListener("click", resetGame);
 secondChallengeShortcut.addEventListener("click", openSecondChallenge);
+thirdChallengeShortcut.addEventListener("click", openThirdChallenge);
 nextRoundButton.addEventListener("click", nextWhichRound);
 playAgainButton.addEventListener("click", () => {
   resetWhichCameFirst();
   dateChallenge.scrollIntoView({ behavior: "smooth", block: "start" });
 });
-continueButton.addEventListener("click", () => {
-  window.location.href = "../name-that-learning-opportunity/";
+continueButton.addEventListener("click", openThirdChallenge);
+startFiddleButton.addEventListener("click", () => startFactOrFiddle(false));
+factChoiceButton.addEventListener("click", () => answerFactOrFiddle("FACT"));
+fiddleChoiceButton.addEventListener("click", () => answerFactOrFiddle("FIDDLE"));
+nextFiddleButton.addEventListener("click", nextFactOrFiddleQuestion);
+fiddlePlayAgainButton.addEventListener("click", () => {
+  resetFactOrFiddle(true);
+  startFactOrFiddle();
+});
+returnDollyButton.addEventListener("click", () => {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+reduceMotionToggle.addEventListener("change", () => {
+  document.body.classList.toggle("reduce-motion", reduceMotionToggle.checked);
 });
 hideYearsToggle.addEventListener("change", () => {
   if (!modal.hidden) {
@@ -816,6 +1067,11 @@ window.addEventListener("keydown", (event) => {
   if (event.key === "Escape" && !modal.hidden) closeFact();
 });
 window.addEventListener("resize", resizeCanvas);
+
+if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  reduceMotionToggle.checked = true;
+  document.body.classList.add("reduce-motion");
+}
 
 resizeCanvas();
 resetGame();

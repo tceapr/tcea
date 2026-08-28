@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Dolly Parton Timeline Scramble</title>
     <link rel="icon" href="data:,">
-    <link rel="stylesheet" href="styles.css?v=no-years-on-second-cards-1">
+    <link rel="stylesheet" href="styles.css?v=fact-or-fiddle-1">
   </head>
   <body>
     <canvas id="confetti-canvas" aria-hidden="true"></canvas>
@@ -27,6 +27,7 @@
         <button id="try-again-button" type="button">Try Again</button>
         <button id="reset-button" type="button">Start Over</button>
         <button id="second-challenge-shortcut" type="button">Second Challenge</button>
+        <button id="third-challenge-shortcut" type="button">Third Challenge</button>
         <label class="teacher-toggle">
           <input id="hide-years-toggle" type="checkbox" checked>
           <span>Hide Years in Dolly Facts</span>
@@ -84,6 +85,106 @@
           </div>
         </div>
       </section>
+
+      <section id="fact-or-fiddle" class="fact-or-fiddle" aria-labelledby="fiddle-title" hidden>
+        <div id="fiddle-opening" class="fiddle-opening">
+          <div>
+            <p class="eyebrow">Third Challenge</p>
+            <h2 id="fiddle-title" class="fiddle-title">Fact or Fiddle</h2>
+            <p>How well do you know Dolly? Decide whether each statement is a fact or a fiddle.</p>
+            <div class="toolbar compact">
+              <button id="start-fiddle-button" class="primary-button" type="button">Start Playing</button>
+              <label class="teacher-toggle">
+                <input id="reduce-motion-toggle" type="checkbox">
+                <span>Reduce Motion</span>
+              </label>
+            </div>
+          </div>
+          <div class="guitar-stage" aria-hidden="true">
+            <div class="decorative-guitar">
+              <div class="guitar-neck">
+                <div id="fret-markers" class="fret-markers"></div>
+              </div>
+              <div class="guitar-head"></div>
+              <div class="guitar-body">
+                <span class="sound-hole"></span>
+                <span class="guitar-pick"></span>
+                <span class="guitar-flower">✿</span>
+                <span class="guitar-butterfly">✦</span>
+                <span class="guitar-note">♪</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="fiddle-game" class="fiddle-game" hidden>
+          <div class="fiddle-layout">
+            <div class="guitar-stage compact-guitar" aria-hidden="true">
+              <div class="decorative-guitar">
+                <div class="guitar-neck">
+                  <div id="game-fret-markers" class="fret-markers"></div>
+                </div>
+                <div class="guitar-head"></div>
+                <div class="guitar-body">
+                  <span class="sound-hole"></span>
+                  <span class="guitar-pick"></span>
+                  <span class="guitar-flower">✿</span>
+                  <span class="guitar-butterfly">✦</span>
+                  <span class="guitar-note">♪</span>
+                </div>
+              </div>
+            </div>
+            <div class="fiddle-play-area">
+              <div class="which-status">
+                <p id="fiddle-question-label" class="round-label">Question 1 of 14</p>
+                <p id="fiddle-score-label" class="score-label">Score: 0</p>
+              </div>
+              <article class="statement-card">
+                <p id="fiddle-statement"></p>
+              </article>
+              <div class="answer-buttons" aria-label="Fact or Fiddle answers">
+                <button id="fact-button" class="fact-choice" type="button">FACT</button>
+                <button id="fiddle-button" class="fiddle-choice" type="button">FIDDLE</button>
+              </div>
+              <div id="fiddle-answer-panel" class="answer-panel" aria-live="polite" hidden>
+                <strong id="fiddle-answer-heading"></strong>
+                <p id="fiddle-correct-answer" class="correct-answer-label"></p>
+                <p id="fiddle-explanation"></p>
+                <button id="next-fiddle-button" class="primary-button" type="button">Next Question</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="fiddle-results" class="fiddle-results" hidden>
+          <div class="guitar-stage completed-guitar" aria-hidden="true">
+            <div class="decorative-guitar strum">
+              <div class="guitar-neck">
+                <div id="complete-fret-markers" class="fret-markers"></div>
+              </div>
+              <div class="guitar-head"></div>
+              <div class="guitar-body">
+                <span class="sound-hole"></span>
+                <span class="guitar-pick"></span>
+                <span class="guitar-flower">✿</span>
+                <span class="guitar-butterfly">✦</span>
+                <span class="guitar-note">♪</span>
+              </div>
+            </div>
+          </div>
+          <p class="eyebrow">Complete</p>
+          <h2>You finished Fact or Fiddle!</h2>
+          <p class="score-kicker">Your Score</p>
+          <p id="fiddle-final-score" class="final-score">0 out of 14</p>
+          <p id="fiddle-completion-message" class="score-title"></p>
+          <p>Dolly's remarkable story includes music, movies, generosity, big dreams, and more than a few surprises.</p>
+          <div class="celebration-row" aria-hidden="true">✦ ♪ ✿ ✦ ♪ ✿ ✦</div>
+          <div class="toolbar compact">
+            <button id="fiddle-play-again-button" class="primary-button" type="button">Play Again</button>
+            <button id="return-dolly-button" type="button">Return to Dolly Through the Years</button>
+          </div>
+        </div>
+      </section>
     </main>
 
     <div id="fact-modal" class="modal-backdrop" hidden>
@@ -97,6 +198,6 @@
       </article>
     </div>
 
-    <script src="script.js?v=no-years-on-second-cards-1"></script>
+    <script src="script.js?v=fact-or-fiddle-1"></script>
   </body>
 </html>
