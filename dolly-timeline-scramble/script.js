@@ -122,6 +122,114 @@ const events = [
   },
 ];
 
+const whichCameFirstRounds = [
+  {
+    a: {
+      title: "Grand Ole Opry Debut",
+      year: "1959",
+      fact: "At age 13, Dolly performed at the Grand Ole Opry.",
+    },
+    b: {
+      title: "Moves to Nashville",
+      year: "1964",
+      fact: "The day after graduating from high school, Dolly moved to Nashville to pursue a music career.",
+    },
+    correct: "Grand Ole Opry Debut",
+  },
+  {
+    a: {
+      title: "Moves to Nashville",
+      year: "1964",
+      fact: "Dolly headed to Nashville immediately after high school to pursue songwriting and music.",
+    },
+    b: {
+      title: "The Porter Wagoner Show",
+      year: "1967",
+      fact: "Dolly joined Porter Wagoner's television program and gained a much larger national audience.",
+    },
+    correct: "Moves to Nashville",
+  },
+  {
+    a: {
+      title: "The Porter Wagoner Show",
+      year: "1967",
+      fact: "Dolly became a regular performer on Porter Wagoner's popular television show.",
+    },
+    b: {
+      title: "Grand Ole Opry Member",
+      year: "1969",
+      fact: "Dolly was inducted as a member of the Grand Ole Opry.",
+    },
+    correct: "The Porter Wagoner Show",
+  },
+  {
+    a: {
+      title: "Grand Ole Opry Member",
+      year: "1969",
+      fact: "Dolly became an official member of the Grand Ole Opry.",
+    },
+    b: {
+      title: "I Will Always Love You",
+      year: "1974",
+      fact: "Dolly's recording of \"I Will Always Love You\" reached number one on the country chart.",
+    },
+    correct: "Grand Ole Opry Member",
+  },
+  {
+    a: {
+      title: "I Will Always Love You",
+      year: "1974",
+      fact: "The song became one of Dolly's signature recordings and was later famously recorded by Whitney Houston.",
+    },
+    b: {
+      title: "9 to 5",
+      year: "1980",
+      fact: "Dolly starred in the movie \"9 to 5\" and wrote and performed its hit title song.",
+    },
+    correct: "I Will Always Love You",
+  },
+  {
+    a: {
+      title: "9 to 5",
+      year: "1980",
+      fact: "Dolly made her major film debut in \"9 to 5.\"",
+    },
+    b: {
+      title: "Dollywood Opens",
+      year: "1986",
+      fact: "Dollywood opened in Pigeon Forge, Tennessee.",
+    },
+    correct: "9 to 5",
+  },
+  {
+    a: {
+      title: "Dollywood Opens",
+      year: "1986",
+      fact: "Dolly partnered with the existing theme park in Tennessee and Dollywood was born.",
+    },
+    b: {
+      title: "Imagination Library Begins",
+      year: "1995",
+      fact: "Dolly launched the Imagination Library to provide free books to young children.",
+    },
+    correct: "Dollywood Opens",
+  },
+  {
+    label: "Final Challenge",
+    a: {
+      title: "Imagination Library Begins",
+      year: "1995",
+      fact: "The program began in Dolly's home county in Tennessee and eventually expanded around the world.",
+    },
+    b: {
+      title: "Rock and Roll Hall of Fame",
+      year: "2022",
+      fact: "Dolly Parton was inducted into the Rock and Roll Hall of Fame.",
+    },
+    correct: "Imagination Library Begins",
+  },
+];
+
 const timelineList = document.querySelector("#timeline-list");
 const message = document.querySelector("#message");
 const checkButton = document.querySelector("#check-button");
@@ -131,9 +239,18 @@ const hideYearsToggle = document.querySelector("#hide-years-toggle");
 const completionPanel = document.querySelector("#completion-panel");
 const dateChallengeButton = document.querySelector("#date-challenge-button");
 const dateChallenge = document.querySelector("#date-challenge");
-const matchList = document.querySelector("#match-list");
-const checkMatchesButton = document.querySelector("#check-matches-button");
-const clearMatchesButton = document.querySelector("#clear-matches-button");
+const whichGame = document.querySelector("#which-game");
+const whichBoard = document.querySelector("#which-board");
+const roundLabel = document.querySelector("#round-label");
+const scoreLabel = document.querySelector("#score-label");
+const progressDots = document.querySelector("#progress-dots");
+const whichFeedback = document.querySelector("#which-feedback");
+const nextRoundButton = document.querySelector("#next-round-button");
+const whichResults = document.querySelector("#which-results");
+const finalScore = document.querySelector("#final-score");
+const scoreTitle = document.querySelector("#score-title");
+const playAgainButton = document.querySelector("#play-again-button");
+const continueButton = document.querySelector("#continue-button");
 const modal = document.querySelector("#fact-modal");
 const factTitle = document.querySelector("#fact-title");
 const factYear = document.querySelector("#fact-year");
@@ -147,7 +264,11 @@ let orderedIds = [];
 let firstFactsShown = new Set();
 let completed = false;
 let draggedId = null;
-let dateMatches = {};
+let whichRoundIndex = 0;
+let whichScore = 0;
+let whichRoundAnswered = false;
+let whichSelectedIndex = null;
+let activeChoices = [];
 let lastFocus = null;
 let glitterPieces = [];
 let glitterFlashes = [];
@@ -182,7 +303,7 @@ function completeTimeline() {
   completionPanel.hidden = false;
   checkButton.disabled = true;
   tryAgainButton.disabled = true;
-  setMessage("Beautiful work. The years are revealed, and the Date Challenge is ready.");
+  setMessage("Beautiful work. The years are revealed, and Which Came First is ready.");
   launchPinkGlitterBursts(7);
 }
 
@@ -223,13 +344,12 @@ function resetGame() {
   orderedIds = shuffle(events).map((event) => event.id);
   firstFactsShown = new Set();
   completed = false;
-  dateMatches = {};
   completionPanel.hidden = true;
   dateChallenge.hidden = true;
   checkButton.disabled = false;
   tryAgainButton.disabled = false;
   renderTimeline();
-  renderDateChallenge();
+  resetWhichCameFirst();
   setMessage("Drag, tap, or use the arrow buttons to arrange the cards from earliest to latest.");
 }
 
@@ -289,71 +409,170 @@ function checkTimeline() {
   }
 }
 
-function renderDateChallenge() {
-  matchList.innerHTML = "";
-  const years = shuffle(events.map((event) => event.year));
-
-  events.forEach((event) => {
-    const row = document.createElement("div");
-    row.className = "match-row";
-    row.dataset.id = event.id;
-    const options = years.map((year) => `<option value="${year}">${year}</option>`).join("");
-    row.innerHTML = `
-      <div class="match-event">
-        <strong>${event.title}</strong>
-        <p>${event.text}</p>
-      </div>
-      <label>
-        <span class="sr-only">Choose a year for ${event.title}</span>
-        <select data-match="${event.id}">
-          <option value="">Choose year</option>
-          ${options}
-        </select>
-      </label>
-    `;
-    matchList.append(row);
-  });
-
-  updateDateMatches();
+function resetWhichCameFirst() {
+  whichRoundIndex = 0;
+  whichScore = 0;
+  whichRoundAnswered = false;
+  whichSelectedIndex = null;
+  activeChoices = [];
+  whichGame.hidden = false;
+  whichResults.hidden = true;
+  renderWhichCameFirst();
 }
 
-function updateDateMatches(statuses = {}) {
-  matchList.querySelectorAll(".match-row").forEach((row) => {
-    const id = row.dataset.id;
-    const select = row.querySelector("[data-match]");
-    row.classList.remove("correct", "incorrect");
-    if (statuses[id]) row.classList.add(statuses[id]);
-    select.value = dateMatches[id] || "";
+function currentRound() {
+  return whichCameFirstRounds[whichRoundIndex];
+}
+
+function scoreTitleFor(score) {
+  if (score === 8) return "Dolly Historian";
+  if (score >= 6) return "Country Superstar";
+  if (score >= 4) return "Nashville Bound";
+  return "Rising Star";
+}
+
+function roundChoices(round) {
+  const choices = [
+    { ...round.a, side: "a" },
+    { ...round.b, side: "b" },
+  ];
+  return Math.random() > 0.5 ? choices.reverse() : choices;
+}
+
+function renderProgressDots() {
+  progressDots.innerHTML = "";
+  const completedRounds = whichRoundIndex + (whichRoundAnswered ? 1 : 0);
+
+  whichCameFirstRounds.forEach((round, index) => {
+    const dot = document.createElement("span");
+    dot.className = `progress-dot${index < completedRounds ? " complete" : ""}`;
+    dot.setAttribute("aria-label", `${round.label || `Round ${index + 1}`} ${index < completedRounds ? "complete" : "not complete"}`);
+    progressDots.append(dot);
   });
 }
 
-function checkDateMatches() {
-  const statuses = {};
-  let allMatched = true;
-  let allCorrect = true;
-
-  events.forEach((event) => {
-    if (!dateMatches[event.id]) {
-      allMatched = false;
-      allCorrect = false;
-      statuses[event.id] = "incorrect";
-    } else if (dateMatches[event.id] === event.year) {
-      statuses[event.id] = "correct";
-    } else {
-      allCorrect = false;
-      statuses[event.id] = "incorrect";
-    }
-  });
-
-  updateDateMatches(statuses);
-  if (allCorrect) {
-    setMessage("Date Challenge complete. Every year matches the right Dolly moment.");
-    launchPinkGlitterBursts(7);
-  } else if (!allMatched) {
-    setMessage("Add a year to every event, then check your matches again.");
-  } else {
-    setMessage("A few dates need another look. Use the revealed timeline above to help.");
+function renderChoiceCard(choice, index) {
+  const round = currentRound();
+  const isFirst = choice.title === round.correct;
+  const isSelected = whichSelectedIndex === index;
+  const card = document.createElement("article");
+  card.className = "which-card";
+  if (whichRoundAnswered) {
+    card.classList.add("answered");
+    card.classList.add(isFirst ? "correct" : "incorrect");
   }
+
+  const cardNumber = index + 1;
+  const header = document.createElement("div");
+  header.className = "which-card-header";
+  header.innerHTML = `<span class="choice-label">Card ${cardNumber}</span>`;
+
+  if (whichRoundAnswered && isFirst) {
+    const firstLabel = document.createElement("span");
+    firstLabel.className = "result-label first";
+    firstLabel.textContent = "✓ Came First";
+    header.append(firstLabel);
+  }
+
+  if (whichRoundAnswered && isSelected) {
+    const selectedLabel = document.createElement("span");
+    selectedLabel.className = "result-label your-choice";
+    selectedLabel.textContent = "Your Choice";
+    header.append(selectedLabel);
+  }
+
+  if (whichRoundAnswered && !isFirst) {
+    const laterLabel = document.createElement("span");
+    laterLabel.className = "result-label";
+    laterLabel.textContent = "Later Event";
+    header.append(laterLabel);
+  }
+
+  const title = document.createElement("h3");
+  title.textContent = choice.title;
+
+  const fact = document.createElement("p");
+  fact.textContent = choice.fact;
+
+  const year = document.createElement("p");
+  year.className = "which-year";
+  year.textContent = choice.year;
+  year.hidden = !whichRoundAnswered;
+
+  const button = document.createElement("button");
+  button.className = "primary-button";
+  button.type = "button";
+  button.dataset.choiceIndex = index;
+  button.textContent = whichRoundAnswered ? "Answer Locked" : "Choose This Event";
+  button.disabled = whichRoundAnswered;
+
+  card.append(header, title, fact, year, button);
+  return card;
+}
+
+function renderWhichCameFirst() {
+  const round = currentRound();
+  if (!activeChoices.length) activeChoices = roundChoices(round);
+
+  roundLabel.textContent = round.label || `Round ${whichRoundIndex + 1} of ${whichCameFirstRounds.length}`;
+  scoreLabel.textContent = `Score: ${whichScore}`;
+  renderProgressDots();
+
+  whichBoard.innerHTML = "";
+  whichBoard.append(renderChoiceCard(activeChoices[0], 0));
+
+  const vs = document.createElement("div");
+  vs.className = "vs-badge";
+  vs.textContent = "VS";
+  whichBoard.append(vs);
+
+  whichBoard.append(renderChoiceCard(activeChoices[1], 1));
+
+  if (whichRoundAnswered) {
+    const selected = activeChoices[whichSelectedIndex];
+    const isCorrect = selected.title === round.correct;
+    const response = ["You got it!", "That's right!", "Nice work!"][whichRoundIndex % 3];
+    whichFeedback.hidden = false;
+    whichFeedback.className = `which-feedback ${isCorrect ? "correct" : "incorrect"}`;
+    whichFeedback.innerHTML = `
+      <strong>${isCorrect ? response : "Not quite. Here's the timeline."}</strong>
+      <p>${round.correct} came first.</p>
+    `;
+    nextRoundButton.hidden = false;
+  } else {
+    whichFeedback.hidden = true;
+    nextRoundButton.hidden = true;
+  }
+}
+
+function answerWhichRound(choiceIndex) {
+  if (whichRoundAnswered) return;
+  whichRoundAnswered = true;
+  whichSelectedIndex = choiceIndex;
+  if (activeChoices[choiceIndex].title === currentRound().correct) whichScore += 1;
+  renderWhichCameFirst();
+  nextRoundButton.focus();
+}
+
+function showWhichResults() {
+  whichGame.hidden = true;
+  whichResults.hidden = false;
+  finalScore.textContent = `${whichScore} / ${whichCameFirstRounds.length}`;
+  scoreTitle.textContent = scoreTitleFor(whichScore);
+  launchPinkGlitterBursts(7);
+}
+
+function nextWhichRound() {
+  if (!whichRoundAnswered) return;
+  if (whichRoundIndex === whichCameFirstRounds.length - 1) {
+    showWhichResults();
+    return;
+  }
+  whichRoundIndex += 1;
+  whichRoundAnswered = false;
+  whichSelectedIndex = null;
+  activeChoices = [];
+  renderWhichCameFirst();
 }
 
 function resizeCanvas() {
@@ -546,15 +765,10 @@ timelineList.addEventListener("drop", (event) => {
   maybeShowFirstFact(sourceId);
 });
 
-matchList.addEventListener("change", (event) => {
-  const select = event.target.closest("[data-match]");
-  if (!select) return;
-  if (select.value) {
-    dateMatches[select.dataset.match] = select.value;
-  } else {
-    delete dateMatches[select.dataset.match];
-  }
-  updateDateMatches();
+whichBoard.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-choice-index]");
+  if (!button) return;
+  answerWhichRound(Number(button.dataset.choiceIndex));
 });
 
 dateChallengeButton.addEventListener("click", () => {
@@ -568,11 +782,13 @@ tryAgainButton.addEventListener("click", () => {
   setMessage("Keep going. The cards are ready for another check when you are.");
 });
 resetButton.addEventListener("click", resetGame);
-checkMatchesButton.addEventListener("click", checkDateMatches);
-clearMatchesButton.addEventListener("click", () => {
-  dateMatches = {};
-  updateDateMatches();
-  setMessage("Date matches cleared. Choose a year beside each event.");
+nextRoundButton.addEventListener("click", nextWhichRound);
+playAgainButton.addEventListener("click", () => {
+  resetWhichCameFirst();
+  dateChallenge.scrollIntoView({ behavior: "smooth", block: "start" });
+});
+continueButton.addEventListener("click", () => {
+  window.location.href = "../name-that-learning-opportunity/";
 });
 hideYearsToggle.addEventListener("change", () => {
   if (!modal.hidden) {

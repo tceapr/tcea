@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Dolly Parton Timeline Scramble</title>
     <link rel="icon" href="data:,">
-    <link rel="stylesheet" href="styles.css?v=center-glitter-date-select-1">
+    <link rel="stylesheet" href="styles.css?v=which-came-first-1">
   </head>
   <body>
     <canvas id="confetti-canvas" aria-hidden="true"></canvas>
@@ -51,21 +51,36 @@
           <p>From the Smoky Mountains to millions of books, Dolly created quite a timeline.</p>
           <p class="tribute-copy">Dolly Parton was honored internationally, with tributes appearing around the world. Landmarks were lit in pink, fans created memorials, and people gathered to celebrate her life and career. People remembered not only her music, but also her generosity, humor, and lifelong impact on children through the Imagination Library.</p>
         </div>
-        <button id="date-challenge-button" class="primary-button" type="button">Try the Date Challenge</button>
+        <button id="date-challenge-button" class="primary-button" type="button">Try Which Came First?</button>
       </section>
 
       <section id="date-challenge" class="date-challenge" aria-labelledby="date-title" hidden>
         <div class="section-heading">
           <p class="eyebrow">Second Challenge</p>
-          <h2 id="date-title">Match each year to the correct event.</h2>
+          <h2 id="date-title">Which came first?</h2>
         </div>
-        <p class="challenge-note">Choose the year that matches each Dolly event.</p>
-        <div class="date-board">
-          <div id="match-list" class="match-list" aria-label="Date challenge events"></div>
+        <div id="which-game" class="which-game">
+          <div class="which-status" aria-label="Game progress">
+            <p id="round-label" class="round-label">Round 1 of 8</p>
+            <div id="progress-dots" class="progress-dots" aria-hidden="true"></div>
+            <p id="score-label" class="score-label">Score: 0</p>
+          </div>
+          <div id="which-board" class="which-board" aria-label="Which came first choices"></div>
+          <div id="which-feedback" class="which-feedback" aria-live="polite" hidden></div>
+          <div class="toolbar compact which-actions">
+            <button id="next-round-button" class="primary-button" type="button" hidden>Next Round</button>
+          </div>
         </div>
-        <div class="toolbar compact">
-          <button id="check-matches-button" class="primary-button" type="button">Check My Matches</button>
-          <button id="clear-matches-button" type="button">Clear Matches</button>
+        <div id="which-results" class="which-results" hidden>
+          <p class="eyebrow">Results</p>
+          <h2>Your Dolly Timeline Score</h2>
+          <p id="final-score" class="final-score">0 / 8</p>
+          <p id="score-title" class="score-title">Rising Star</p>
+          <p>From the Grand Ole Opry to the Imagination Library, you just traveled through decades of Dolly history.</p>
+          <div class="toolbar compact">
+            <button id="play-again-button" class="primary-button" type="button">Play Again</button>
+            <button id="continue-button" type="button">Continue</button>
+          </div>
         </div>
       </section>
     </main>
@@ -81,6 +96,6 @@
       </article>
     </div>
 
-    <script src="script.js?v=center-glitter-date-select-1"></script>
+    <script src="script.js?v=which-came-first-1"></script>
   </body>
 </html>
