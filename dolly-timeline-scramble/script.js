@@ -235,6 +235,7 @@ const message = document.querySelector("#message");
 const checkButton = document.querySelector("#check-button");
 const tryAgainButton = document.querySelector("#try-again-button");
 const resetButton = document.querySelector("#reset-button");
+const secondChallengeShortcut = document.querySelector("#second-challenge-shortcut");
 const hideYearsToggle = document.querySelector("#hide-years-toggle");
 const completionPanel = document.querySelector("#completion-panel");
 const dateChallengeButton = document.querySelector("#date-challenge-button");
@@ -575,6 +576,11 @@ function nextWhichRound() {
   renderWhichCameFirst();
 }
 
+function openSecondChallenge() {
+  dateChallenge.hidden = false;
+  dateChallenge.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
 function resizeCanvas() {
   const width = document.documentElement.clientWidth;
   const height = window.innerHeight;
@@ -771,10 +777,7 @@ whichBoard.addEventListener("click", (event) => {
   answerWhichRound(Number(button.dataset.choiceIndex));
 });
 
-dateChallengeButton.addEventListener("click", () => {
-  dateChallenge.hidden = false;
-  dateChallenge.scrollIntoView({ behavior: "smooth", block: "start" });
-});
+dateChallengeButton.addEventListener("click", openSecondChallenge);
 
 checkButton.addEventListener("click", checkTimeline);
 tryAgainButton.addEventListener("click", () => {
@@ -782,6 +785,7 @@ tryAgainButton.addEventListener("click", () => {
   setMessage("Keep going. The cards are ready for another check when you are.");
 });
 resetButton.addEventListener("click", resetGame);
+secondChallengeShortcut.addEventListener("click", openSecondChallenge);
 nextRoundButton.addEventListener("click", nextWhichRound);
 playAgainButton.addEventListener("click", () => {
   resetWhichCameFirst();
