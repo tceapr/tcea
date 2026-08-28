@@ -176,7 +176,7 @@ function renderTimeline(statuses = {}) {
       <span class="card-icon" aria-hidden="true">${event.icon}</span>
       <span class="card-copy">
         <strong>${index + 1}. ${event.text}</strong>
-        <span>${completed ? event.title : "Arrange this card in the timeline."}</span>
+        ${completed ? `<span>${event.title}</span>` : ""}
         ${yearMarkup}
       </span>
       <span class="card-actions">
