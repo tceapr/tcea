@@ -131,7 +131,6 @@ const hideYearsToggle = document.querySelector("#hide-years-toggle");
 const completionPanel = document.querySelector("#completion-panel");
 const dateChallengeButton = document.querySelector("#date-challenge-button");
 const dateChallenge = document.querySelector("#date-challenge");
-const yearBank = document.querySelector("#year-bank");
 const matchList = document.querySelector("#match-list");
 const checkMatchesButton = document.querySelector("#check-matches-button");
 const clearMatchesButton = document.querySelector("#clear-matches-button");
@@ -148,10 +147,10 @@ let orderedIds = [];
 let firstFactsShown = new Set();
 let completed = false;
 let draggedId = null;
-let selectedYear = null;
 let dateMatches = {};
 let lastFocus = null;
 let glitterPieces = [];
+let glitterFlashes = [];
 let glitterAnimation = null;
 
 function shuffle(items) {
@@ -224,7 +223,6 @@ function resetGame() {
   orderedIds = shuffle(events).map((event) => event.id);
   firstFactsShown = new Set();
   completed = false;
-  selectedYear = null;
   dateMatches = {};
   completionPanel.hidden = true;
   dateChallenge.hidden = true;
@@ -292,33 +290,26 @@ function checkTimeline() {
 }
 
 function renderDateChallenge() {
-  yearBank.innerHTML = "";
   matchList.innerHTML = "";
   const years = shuffle(events.map((event) => event.year));
-
-  years.forEach((year) => {
-    const button = document.createElement("button");
-    button.className = "year-chip";
-    button.type = "button";
-    button.textContent = year;
-    button.dataset.year = year;
-    button.addEventListener("click", () => {
-      selectedYear = year;
-      updateYearButtons();
-    });
-    yearBank.append(button);
-  });
 
   events.forEach((event) => {
     const row = document.createElement("div");
     row.className = "match-row";
     row.dataset.id = event.id;
+    const options = years.map((year) => `<option value="${year}">${year}</option>`).join("");
     row.innerHTML = `
       <div class="match-event">
         <strong>${event.title}</strong>
         <p>${event.text}</p>
       </div>
-      <button type="button" data-match="${event.id}">Choose Year</button>
+      <label>
+        <span class="sr-only">Choose a year for ${event.title}</span>
+        <select data-match="${event.id}">
+          <option value="">Choose year</option>
+          ${options}
+        </select>
+      </label>
     `;
     matchList.append(row);
   });
@@ -326,24 +317,14 @@ function renderDateChallenge() {
   updateDateMatches();
 }
 
-function updateYearButtons() {
-  yearBank.querySelectorAll(".year-chip").forEach((button) => {
-    const used = Object.values(dateMatches).includes(button.dataset.year);
-    button.classList.toggle("selected", button.dataset.year === selectedYear);
-    button.classList.toggle("used", used);
-    button.disabled = used && button.dataset.year !== selectedYear;
-  });
-}
-
 function updateDateMatches(statuses = {}) {
   matchList.querySelectorAll(".match-row").forEach((row) => {
     const id = row.dataset.id;
-    const button = row.querySelector("[data-match]");
+    const select = row.querySelector("[data-match]");
     row.classList.remove("correct", "incorrect");
     if (statuses[id]) row.classList.add(statuses[id]);
-    button.textContent = dateMatches[id] || "Choose Year";
+    select.value = dateMatches[id] || "";
   });
-  updateYearButtons();
 }
 
 function checkDateMatches() {
@@ -376,9 +357,14 @@ function checkDateMatches() {
 }
 
 function resizeCanvas() {
-  canvas.width = window.innerWidth * window.devicePixelRatio;
-  canvas.height = window.innerHeight * window.devicePixelRatio;
-  ctx.setTransform(window.devicePixelRatio, 0, 0, window.devicePixelRatio, 0, 0);
+  const width = document.documentElement.clientWidth;
+  const height = window.innerHeight;
+  const scale = window.devicePixelRatio || 1;
+  canvas.style.width = `${width}px`;
+  canvas.style.height = `${height}px`;
+  canvas.width = Math.round(width * scale);
+  canvas.height = Math.round(height * scale);
+  ctx.setTransform(scale, 0, 0, scale, 0, 0);
 }
 
 function launchPinkGlitterBursts(count) {
@@ -391,17 +377,26 @@ function launchPinkGlitterBursts(count) {
 }
 
 function createPinkGlitterBurst() {
-  const centerX = window.innerWidth / 2;
+  resizeCanvas();
+  const centerX = document.documentElement.clientWidth / 2;
   const centerY = window.innerHeight / 2;
-  const colors = ["#ff4fa3", "#ff7ac2", "#ffb8df", "#ffffff", "#ffd76a", "#f7a7cf"];
+  const colors = ["#ff2f9d", "#ff63bc", "#ff9bd5", "#ffffff", "#ffd76a", "#ffc7e7"];
 
-  for (let index = 0; index < 118; index += 1) {
+  glitterFlashes.push({
+    x: centerX,
+    y: centerY,
+    radius: 8,
+    life: 24,
+    maxLife: 24,
+  });
+
+  for (let index = 0; index < 180; index += 1) {
     const angle = Math.random() * Math.PI * 2;
-    const speed = 3.2 + Math.random() * 9.4;
+    const speed = 6 + Math.random() * 12.5;
     glitterPieces.push({
       x: centerX,
       y: centerY,
-      size: 2 + Math.random() * 7,
+      size: 2 + Math.random() * 8,
       color: colors[Math.floor(Math.random() * colors.length)],
       vx: Math.cos(angle) * speed,
       vy: Math.sin(angle) * speed,
@@ -419,8 +414,36 @@ function createPinkGlitterBurst() {
 }
 
 function drawPinkGlitter() {
-  ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+  ctx.clearRect(0, 0, document.documentElement.clientWidth, window.innerHeight);
   glitterPieces = glitterPieces.filter((piece) => piece.life > 0);
+  glitterFlashes = glitterFlashes.filter((flash) => flash.life > 0);
+
+  glitterFlashes.forEach((flash) => {
+    const progress = 1 - flash.life / flash.maxLife;
+    const alpha = Math.max(flash.life / flash.maxLife, 0);
+    flash.radius += 15;
+    flash.life -= 1;
+
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.strokeStyle = "#ff2f9d";
+    ctx.lineWidth = 6;
+    ctx.beginPath();
+    ctx.arc(flash.x, flash.y, flash.radius, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.strokeStyle = "#ffffff";
+    ctx.lineWidth = 2;
+    for (let ray = 0; ray < 18; ray += 1) {
+      const angle = (Math.PI * 2 * ray) / 18;
+      const inner = 18 + progress * 35;
+      const outer = 95 + progress * 180;
+      ctx.beginPath();
+      ctx.moveTo(flash.x + Math.cos(angle) * inner, flash.y + Math.sin(angle) * inner);
+      ctx.lineTo(flash.x + Math.cos(angle) * outer, flash.y + Math.sin(angle) * outer);
+      ctx.stroke();
+    }
+    ctx.restore();
+  });
 
   glitterPieces.forEach((piece) => {
     piece.x += piece.vx;
@@ -456,11 +479,11 @@ function drawPinkGlitter() {
     ctx.restore();
   });
 
-  if (glitterPieces.length) {
+  if (glitterPieces.length || glitterFlashes.length) {
     glitterAnimation = requestAnimationFrame(drawPinkGlitter);
   } else {
     glitterAnimation = null;
-    ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+    ctx.clearRect(0, 0, document.documentElement.clientWidth, window.innerHeight);
   }
 }
 
@@ -523,13 +546,14 @@ timelineList.addEventListener("drop", (event) => {
   maybeShowFirstFact(sourceId);
 });
 
-matchList.addEventListener("click", (event) => {
-  const button = event.target.closest("[data-match]");
-  if (!button || !selectedYear) return;
-  const existingEventForYear = Object.entries(dateMatches).find(([, year]) => year === selectedYear);
-  if (existingEventForYear) delete dateMatches[existingEventForYear[0]];
-  dateMatches[button.dataset.match] = selectedYear;
-  selectedYear = null;
+matchList.addEventListener("change", (event) => {
+  const select = event.target.closest("[data-match]");
+  if (!select) return;
+  if (select.value) {
+    dateMatches[select.dataset.match] = select.value;
+  } else {
+    delete dateMatches[select.dataset.match];
+  }
   updateDateMatches();
 });
 
@@ -546,10 +570,9 @@ tryAgainButton.addEventListener("click", () => {
 resetButton.addEventListener("click", resetGame);
 checkMatchesButton.addEventListener("click", checkDateMatches);
 clearMatchesButton.addEventListener("click", () => {
-  selectedYear = null;
   dateMatches = {};
   updateDateMatches();
-  setMessage("Date matches cleared. Pick a year card, then choose its event.");
+  setMessage("Date matches cleared. Choose a year beside each event.");
 });
 hideYearsToggle.addEventListener("change", () => {
   if (!modal.hidden) {
