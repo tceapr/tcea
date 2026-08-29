@@ -215,7 +215,7 @@ const whichCameFirstRounds = [
     correct: "Dollywood Opens",
   },
   {
-    label: "Final Challenge",
+    label: "Final Round",
     a: {
       title: "Imagination Library Begins",
       year: "1995",
@@ -346,11 +346,13 @@ const factOrFiddleQuestions = [
 
 const timelineList = document.querySelector("#timeline-list");
 const message = document.querySelector("#message");
+const timelineChallenge = document.querySelector("#timeline-challenge");
 const checkButton = document.querySelector("#check-button");
 const tryAgainButton = document.querySelector("#try-again-button");
 const resetButton = document.querySelector("#reset-button");
+const firstChallengeShortcut = document.querySelector("#first-challenge-shortcut");
 const secondChallengeShortcut = document.querySelector("#second-challenge-shortcut");
-const thirdChallengeShortcut = document.querySelector("#third-challenge-shortcut");
+const timelineChallengeShortcut = document.querySelector("#timeline-challenge-shortcut");
 const hideYearsToggle = document.querySelector("#hide-years-toggle");
 const completionPanel = document.querySelector("#completion-panel");
 const dateChallengeButton = document.querySelector("#date-challenge-button");
@@ -447,7 +449,7 @@ function completeTimeline() {
   completionPanel.hidden = false;
   checkButton.disabled = true;
   tryAgainButton.disabled = true;
-  setMessage("Beautiful work. The years are revealed, and Which Came First is ready.");
+  setMessage("Beautiful work. The years are revealed, and the full Dolly timeline is complete.");
   launchPinkGlitterBursts(7);
 }
 
@@ -484,19 +486,22 @@ function renderTimeline(statuses = {}) {
   });
 }
 
-function resetGame() {
+function resetTimelineChallenge() {
   orderedIds = shuffle(events).map((event) => event.id);
   firstFactsShown = new Set();
   completed = false;
   completionPanel.hidden = true;
-  dateChallenge.hidden = true;
-  factOrFiddle.hidden = true;
   checkButton.disabled = false;
   tryAgainButton.disabled = false;
   renderTimeline();
+  setMessage("Drag, tap, or use the arrow buttons to arrange the cards from earliest to latest.");
+}
+
+function resetGame() {
+  resetTimelineChallenge();
   resetWhichCameFirst();
   resetFactOrFiddle(false);
-  setMessage("Drag, tap, or use the arrow buttons to arrange the cards from earliest to latest.");
+  openFirstChallenge(false);
 }
 
 function moveCard(id, direction) {
@@ -724,8 +729,17 @@ function nextWhichRound() {
   renderWhichCameFirst();
 }
 
+function openFirstChallenge(shouldScroll = true) {
+  factOrFiddle.hidden = false;
+  dateChallenge.hidden = true;
+  timelineChallenge.hidden = true;
+  if (shouldScroll) factOrFiddle.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
 function openSecondChallenge() {
+  factOrFiddle.hidden = true;
   dateChallenge.hidden = false;
+  timelineChallenge.hidden = true;
   dateChallenge.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
@@ -848,9 +862,11 @@ function showFactOrFiddleResults() {
   launchPinkGlitterBursts(3);
 }
 
-function openThirdChallenge() {
-  factOrFiddle.hidden = false;
-  factOrFiddle.scrollIntoView({ behavior: "smooth", block: "start" });
+function openTimelineChallenge() {
+  factOrFiddle.hidden = true;
+  dateChallenge.hidden = true;
+  timelineChallenge.hidden = false;
+  timelineChallenge.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 function resizeCanvas() {
@@ -1049,22 +1065,23 @@ whichBoard.addEventListener("click", (event) => {
   answerWhichRound(Number(button.dataset.choiceIndex));
 });
 
-dateChallengeButton.addEventListener("click", openSecondChallenge);
+dateChallengeButton.addEventListener("click", openFirstChallenge);
 
 checkButton.addEventListener("click", checkTimeline);
 tryAgainButton.addEventListener("click", () => {
   renderTimeline();
   setMessage("Keep going. The cards are ready for another check when you are.");
 });
-resetButton.addEventListener("click", resetGame);
+resetButton.addEventListener("click", resetTimelineChallenge);
+firstChallengeShortcut.addEventListener("click", openFirstChallenge);
 secondChallengeShortcut.addEventListener("click", openSecondChallenge);
-thirdChallengeShortcut.addEventListener("click", openThirdChallenge);
+timelineChallengeShortcut.addEventListener("click", openTimelineChallenge);
 nextRoundButton.addEventListener("click", nextWhichRound);
 playAgainButton.addEventListener("click", () => {
   resetWhichCameFirst();
   dateChallenge.scrollIntoView({ behavior: "smooth", block: "start" });
 });
-continueButton.addEventListener("click", openThirdChallenge);
+continueButton.addEventListener("click", openTimelineChallenge);
 startFiddleButton.addEventListener("click", () => startFactOrFiddle(false));
 factChoiceButton.addEventListener("click", () => answerFactOrFiddle("FACT"));
 fiddleChoiceButton.addEventListener("click", () => answerFactOrFiddle("FIDDLE"));
@@ -1074,7 +1091,7 @@ fiddlePlayAgainButton.addEventListener("click", () => {
   startFactOrFiddle();
 });
 returnDollyButton.addEventListener("click", () => {
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  openSecondChallenge();
 });
 reduceMotionToggle.addEventListener("change", () => {
   document.body.classList.toggle("reduce-motion", reduceMotionToggle.checked);

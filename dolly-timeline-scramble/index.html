@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Celebrating Dolly</title>
     <link rel="icon" href="data:,">
-    <link rel="stylesheet" href="styles.css?v=fiddle-complete-card-1">
+    <link rel="stylesheet" href="styles.css?v=reordered-challenges-1">
   </head>
   <body>
     <canvas id="confetti-canvas" aria-hidden="true"></canvas>
@@ -13,47 +13,19 @@
     <main class="app-shell">
       <section class="hero" aria-labelledby="page-title">
         <div class="hero-copy">
-          <p class="eyebrow">Timeline Scramble</p>
+          <p class="eyebrow">Dolly Through the Years</p>
           <h1 id="page-title">Celebrating Dolly</h1>
-          <p>Start with the timeline, then keep going with Which Came First and Fact or Fiddle.</p>
+          <p>Start with Fact or Fiddle, then play Which Came First, and finish with Timeline Scramble.</p>
         </div>
         <div class="hero-art">
           <img src="assets/dolly-title-art.png" alt="Colorful Dolly Parton title artwork with mountains and sparkles">
         </div>
       </section>
 
-      <section class="toolbar" aria-label="Activity controls">
-        <button id="check-button" class="primary-button" type="button">Check My Timeline</button>
-        <button id="try-again-button" type="button">Try Again</button>
-        <button id="reset-button" type="button">Start Over</button>
-        <button id="second-challenge-shortcut" type="button">Second Challenge</button>
-        <button id="third-challenge-shortcut" type="button">Third Challenge</button>
-        <label class="teacher-toggle">
-          <input id="hide-years-toggle" type="checkbox" checked>
-          <span>Hide Years in Dolly Facts</span>
-        </label>
-      </section>
-
-      <section id="message" class="message" aria-live="polite">
-        Drag, tap, or use the arrow buttons to arrange the cards from earliest to latest.
-      </section>
-
-      <section class="timeline-section" aria-labelledby="timeline-title">
-        <div class="section-heading">
-          <p class="eyebrow">First Challenge</p>
-          <h2 id="timeline-title">Build the timeline.</h2>
-        </div>
-        <ol id="timeline-list" class="timeline-list" aria-label="Scrambled Dolly Parton timeline cards"></ol>
-      </section>
-
-      <section id="completion-panel" class="completion-panel" hidden>
-        <div>
-          <p class="eyebrow">Timeline Complete</p>
-          <h2>You did it!</h2>
-          <p>From the Smoky Mountains to millions of books, Dolly created quite a timeline.</p>
-          <p class="tribute-copy">Dolly Parton was honored internationally, with tributes appearing around the world. Landmarks were lit in pink, fans created memorials, and people gathered to celebrate her life and career. People remembered not only her music, but also her generosity, humor, and lifelong impact on children through the Imagination Library.</p>
-        </div>
-        <button id="date-challenge-button" class="primary-button" type="button">Try Which Came First?</button>
+      <section class="toolbar activity-nav" aria-label="Activity navigation">
+        <button id="first-challenge-shortcut" class="primary-button" type="button">First Challenge: Fact or Fiddle</button>
+        <button id="second-challenge-shortcut" type="button">Second Challenge: Which Came First?</button>
+        <button id="timeline-challenge-shortcut" type="button">Final Challenge: Timeline Scramble</button>
       </section>
 
       <section id="date-challenge" class="date-challenge" aria-labelledby="date-title" hidden>
@@ -81,7 +53,7 @@
           <p>From the Grand Ole Opry to the Imagination Library, you just traveled through decades of Dolly history.</p>
           <div class="toolbar compact">
             <button id="play-again-button" class="primary-button" type="button">Play Again</button>
-            <button id="continue-button" type="button">Continue</button>
+            <button id="continue-button" type="button">Continue to Timeline Scramble</button>
           </div>
         </div>
       </section>
@@ -89,7 +61,7 @@
       <section id="fact-or-fiddle" class="fact-or-fiddle" aria-labelledby="fiddle-title" hidden>
         <div id="fiddle-opening" class="fiddle-opening">
           <div>
-            <p class="eyebrow">Third Challenge</p>
+            <p class="eyebrow">First Challenge</p>
             <h2 id="fiddle-title" class="fiddle-title">Fact or Fiddle</h2>
             <p>How well do you know Dolly? Decide whether each statement is a fact or a fiddle.</p>
             <div class="toolbar compact">
@@ -176,9 +148,43 @@
           <div class="celebration-row" aria-hidden="true">✦ ♪ ✿ ✦ ♪ ✿ ✦</div>
           <div class="toolbar compact completion-actions">
             <button id="fiddle-play-again-button" class="primary-button" type="button">Play Again</button>
-            <button id="return-dolly-button" type="button">Return to Dolly Through the Years</button>
+            <button id="return-dolly-button" type="button">Continue to Which Came First?</button>
           </div>
         </div>
+      </section>
+
+      <section id="timeline-challenge" class="timeline-challenge" hidden>
+        <section class="toolbar" aria-label="Timeline Scramble controls">
+          <button id="check-button" class="primary-button" type="button">Check My Timeline</button>
+          <button id="try-again-button" type="button">Try Again</button>
+          <button id="reset-button" type="button">Start Over</button>
+          <label class="teacher-toggle">
+            <input id="hide-years-toggle" type="checkbox" checked>
+            <span>Hide Years in Dolly Facts</span>
+          </label>
+        </section>
+
+        <section id="message" class="message" aria-live="polite">
+          Drag, tap, or use the arrow buttons to arrange the cards from earliest to latest.
+        </section>
+
+        <section class="timeline-section" aria-labelledby="timeline-title">
+          <div class="section-heading">
+            <p class="eyebrow">Final Challenge</p>
+            <h2 id="timeline-title">Timeline Scramble</h2>
+          </div>
+          <ol id="timeline-list" class="timeline-list" aria-label="Scrambled Dolly Parton timeline cards"></ol>
+        </section>
+
+        <section id="completion-panel" class="completion-panel" hidden>
+          <div>
+            <p class="eyebrow">Timeline Complete</p>
+            <h2>You did it!</h2>
+            <p>From the Smoky Mountains to millions of books, Dolly created quite a timeline.</p>
+            <p class="tribute-copy">Dolly Parton was honored internationally, with tributes appearing around the world. Landmarks were lit in pink, fans created memorials, and people gathered to celebrate her life and career. People remembered not only her music, but also her generosity, humor, and lifelong impact on children through the Imagination Library.</p>
+          </div>
+          <button id="date-challenge-button" class="primary-button" type="button">Back to Fact or Fiddle</button>
+        </section>
       </section>
     </main>
 
@@ -193,6 +199,6 @@
       </article>
     </div>
 
-    <script src="script.js?v=fiddle-complete-card-1"></script>
+    <script src="script.js?v=reordered-challenges-1"></script>
   </body>
 </html>
