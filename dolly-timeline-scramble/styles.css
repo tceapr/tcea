@@ -324,6 +324,10 @@ h3 {
   font-weight: 900;
 }
 
+.card-copy .card-year {
+  color: #ffffff;
+}
+
 .card-actions {
   display: flex;
   gap: 8px;
