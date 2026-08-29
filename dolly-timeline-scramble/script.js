@@ -450,7 +450,7 @@ function completeTimeline() {
   checkButton.disabled = true;
   tryAgainButton.disabled = true;
   setMessage("Beautiful work. The years are revealed, and the full Dolly timeline is complete.");
-  launchPinkGlitterBursts(7);
+  launchPinkGlitterBursts(11);
 }
 
 function renderTimeline(statuses = {}) {
@@ -713,7 +713,7 @@ function showWhichResults() {
   whichResults.hidden = false;
   finalScore.textContent = `${whichScore} / ${whichCameFirstRounds.length}`;
   scoreTitle.textContent = scoreTitleFor(whichScore);
-  launchPinkGlitterBursts(7);
+  launchPinkGlitterBursts(10);
 }
 
 function nextWhichRound() {
@@ -859,7 +859,7 @@ function showFactOrFiddleResults() {
   fiddleFinalScore.textContent = `${fiddleScore} out of ${factOrFiddleQuestions.length}`;
   fiddleCompletionMessage.textContent = fiddleCompletionText(fiddleScore);
   renderFretMarkers(completeFretMarkers, factOrFiddleQuestions.length);
-  launchPinkGlitterBursts(3);
+  launchPinkGlitterBursts(10);
 }
 
 function openTimelineChallenge() {
@@ -882,43 +882,79 @@ function resizeCanvas() {
 
 function launchPinkGlitterBursts(count) {
   let bursts = 0;
+  createSparkleShower();
   const interval = window.setInterval(() => {
     bursts += 1;
-    createPinkGlitterBurst();
+    createPinkGlitterBurst(bursts);
+    if (bursts === Math.ceil(count / 2)) createSparkleShower();
     if (bursts >= count) window.clearInterval(interval);
-  }, 420);
+  }, 300);
 }
 
-function createPinkGlitterBurst() {
+function createSparkleShower() {
+  resizeCanvas();
+  const colors = ["#ff2f9d", "#ff63bc", "#ff9bd5", "#ffffff", "#ffd76a", "#18aeb3"];
+  const width = document.documentElement.clientWidth;
+
+  for (let index = 0; index < 110; index += 1) {
+    glitterPieces.push({
+      x: Math.random() * width,
+      y: -20 - Math.random() * 120,
+      size: 2 + Math.random() * 7,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      vx: -1.8 + Math.random() * 3.6,
+      vy: 2.8 + Math.random() * 4.8,
+      rotation: Math.random() * Math.PI,
+      spin: (Math.random() - 0.5) * 0.26,
+      life: 92 + Math.random() * 34,
+      maxLife: 126,
+      sparkle: Math.random() > 0.36,
+      shape: Math.random() > 0.82 ? "circle" : "sparkle",
+    });
+  }
+
+  if (!glitterAnimation) {
+    glitterAnimation = requestAnimationFrame(drawPinkGlitter);
+  }
+}
+
+function createPinkGlitterBurst(burstNumber = 1) {
   resizeCanvas();
   const centerX = document.documentElement.clientWidth / 2;
   const centerY = window.innerHeight / 2;
-  const colors = ["#ff2f9d", "#ff63bc", "#ff9bd5", "#ffffff", "#ffd76a", "#ffc7e7"];
+  const colors = ["#ff2f9d", "#ff63bc", "#ff9bd5", "#ffffff", "#ffd76a", "#ffc7e7", "#18aeb3"];
+  const bigBurst = burstNumber % 3 === 1;
 
   glitterFlashes.push({
     x: centerX,
     y: centerY,
     radius: 8,
-    life: 24,
-    maxLife: 24,
+    life: bigBurst ? 34 : 26,
+    maxLife: bigBurst ? 34 : 26,
+    color: bigBurst ? "#ffd76a" : "#ff2f9d",
   });
 
-  for (let index = 0; index < 180; index += 1) {
+  for (let index = 0; index < (bigBurst ? 280 : 220); index += 1) {
     const angle = Math.random() * Math.PI * 2;
-    const speed = 6 + Math.random() * 12.5;
+    const speed = (bigBurst ? 7.5 : 6) + Math.random() * (bigBurst ? 16 : 13);
     glitterPieces.push({
       x: centerX,
       y: centerY,
-      size: 2 + Math.random() * 8,
+      size: 2 + Math.random() * (bigBurst ? 10 : 8),
       color: colors[Math.floor(Math.random() * colors.length)],
       vx: Math.cos(angle) * speed,
       vy: Math.sin(angle) * speed,
       rotation: Math.random() * Math.PI,
-      spin: (Math.random() - 0.5) * 0.34,
-      life: 72 + Math.random() * 26,
-      maxLife: 98,
+      spin: (Math.random() - 0.5) * 0.42,
+      life: 82 + Math.random() * 34,
+      maxLife: 116,
       sparkle: Math.random() > 0.48,
+      shape: Math.random() > 0.9 ? "circle" : Math.random() > 0.42 ? "sparkle" : "rect",
     });
+  }
+
+  if (glitterPieces.length > 3200) {
+    glitterPieces.splice(0, glitterPieces.length - 3200);
   }
 
   if (!glitterAnimation) {
@@ -939,17 +975,22 @@ function drawPinkGlitter() {
 
     ctx.save();
     ctx.globalAlpha = alpha;
-    ctx.strokeStyle = "#ff2f9d";
+    ctx.strokeStyle = flash.color || "#ff2f9d";
     ctx.lineWidth = 6;
     ctx.beginPath();
     ctx.arc(flash.x, flash.y, flash.radius, 0, Math.PI * 2);
     ctx.stroke();
+    ctx.strokeStyle = "#ffd76a";
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.arc(flash.x, flash.y, flash.radius * 0.62, 0, Math.PI * 2);
+    ctx.stroke();
     ctx.strokeStyle = "#ffffff";
     ctx.lineWidth = 2;
-    for (let ray = 0; ray < 18; ray += 1) {
-      const angle = (Math.PI * 2 * ray) / 18;
+    for (let ray = 0; ray < 26; ray += 1) {
+      const angle = (Math.PI * 2 * ray) / 26;
       const inner = 18 + progress * 35;
-      const outer = 95 + progress * 180;
+      const outer = 120 + progress * 230;
       ctx.beginPath();
       ctx.moveTo(flash.x + Math.cos(angle) * inner, flash.y + Math.sin(angle) * inner);
       ctx.lineTo(flash.x + Math.cos(angle) * outer, flash.y + Math.sin(angle) * outer);
@@ -973,7 +1014,11 @@ function drawPinkGlitter() {
     ctx.globalAlpha = alpha;
     ctx.fillStyle = piece.color;
 
-    if (piece.sparkle) {
+    if (piece.shape === "circle") {
+      ctx.beginPath();
+      ctx.arc(0, 0, piece.size * 0.58, 0, Math.PI * 2);
+      ctx.fill();
+    } else if (piece.sparkle || piece.shape === "sparkle") {
       ctx.beginPath();
       ctx.moveTo(0, -piece.size * 1.35);
       ctx.lineTo(piece.size * 0.32, -piece.size * 0.32);
