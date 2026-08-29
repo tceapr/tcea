@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Celebrating Dolly</title>
     <link rel="icon" href="data:,">
-    <link rel="stylesheet" href="styles.css?v=fact-fiddle-icons-2">
+    <link rel="stylesheet" href="styles.css?v=fiddle-complete-card-1">
   </head>
   <body>
     <canvas id="confetti-canvas" aria-hidden="true"></canvas>
@@ -150,29 +150,31 @@
         </div>
 
         <div id="fiddle-results" class="fiddle-results" hidden>
-          <div class="guitar-stage completed-guitar" aria-hidden="true">
-            <div class="decorative-guitar strum">
-              <div class="guitar-neck">
-                <div id="complete-fret-markers" class="fret-markers"></div>
-              </div>
-              <div class="guitar-head"></div>
-              <div class="guitar-body">
-                <span class="sound-hole"></span>
-                <span class="guitar-pick"></span>
-                <span class="guitar-flower">✿</span>
-                <span class="guitar-butterfly">✦</span>
-                <span class="guitar-note">♪</span>
+          <div class="completion-topper">
+            <div class="guitar-stage completed-guitar" aria-hidden="true">
+              <div class="decorative-guitar strum">
+                <div class="guitar-neck">
+                  <div id="complete-fret-markers" class="fret-markers"></div>
+                </div>
+                <div class="guitar-head"></div>
+                <div class="guitar-body">
+                  <span class="sound-hole"></span>
+                  <span class="guitar-pick"></span>
+                  <span class="guitar-flower">✿</span>
+                  <span class="guitar-butterfly">✦</span>
+                  <span class="guitar-note">♪</span>
+                </div>
               </div>
             </div>
+            <p class="complete-ribbon"><span>Complete</span></p>
           </div>
-          <p class="eyebrow">Complete</p>
           <h2>You finished Fact or Fiddle!</h2>
           <p class="score-kicker">Your Score</p>
           <p id="fiddle-final-score" class="final-score">0 out of 14</p>
-          <p id="fiddle-completion-message" class="score-title"></p>
-          <p>Dolly's remarkable story includes music, movies, generosity, big dreams, and more than a few surprises.</p>
+          <p id="fiddle-completion-message" class="score-title completion-badge"></p>
+          <p class="completion-copy">Dolly's remarkable story includes music, movies, generosity, big dreams, and more than a few surprises.</p>
           <div class="celebration-row" aria-hidden="true">✦ ♪ ✿ ✦ ♪ ✿ ✦</div>
-          <div class="toolbar compact">
+          <div class="toolbar compact completion-actions">
             <button id="fiddle-play-again-button" class="primary-button" type="button">Play Again</button>
             <button id="return-dolly-button" type="button">Return to Dolly Through the Years</button>
           </div>
@@ -191,6 +193,6 @@
       </article>
     </div>
 
-    <script src="script.js?v=fact-fiddle-icons-2"></script>
+    <script src="script.js?v=fiddle-complete-card-1"></script>
   </body>
 </html>
