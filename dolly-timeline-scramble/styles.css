@@ -1408,14 +1408,45 @@ h3 {
   min-height: 88px;
   color: #ffffff;
   border-width: 3px;
+  cursor: grab;
   font-size: clamp(2.8rem, 8vw, 4.5rem);
   font-weight: 950;
   line-height: 1;
   box-shadow: 0 12px 20px rgba(75, 44, 74, 0.12);
+  touch-action: none;
+  user-select: none;
 }
 
 .number-choice:hover {
   transform: translateY(-2px);
+}
+
+.number-choice.is-dragging {
+  opacity: 0.58;
+}
+
+.nine-drag-ghost {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 40;
+  display: grid;
+  place-items: center;
+  width: 76px;
+  height: 76px;
+  pointer-events: none;
+  border: 3px solid #ffffff;
+  border-radius: 8px;
+  color: #ffffff;
+  box-shadow: 0 18px 28px rgba(75, 44, 74, 0.22);
+  font-size: 3.5rem;
+  font-weight: 950;
+  line-height: 1;
+}
+
+.nine-dragging .nine-blank {
+  border-style: solid;
+  box-shadow: 0 0 0 5px rgba(15, 141, 145, 0.18);
 }
 
 .nine-choice {

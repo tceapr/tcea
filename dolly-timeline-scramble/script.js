@@ -570,10 +570,13 @@ let nineLevelTwoOrder = nineFiveLevelTwoQuestions.map((_, index) => index);
 let nineLevelTwoIndex = 0;
 let nineLevelTwoAnswered = false;
 let nineLevelTwoWrongChoices = new Set();
+let nineDragState = null;
+let suppressNineChoiceClick = false;
 let lastFocus = null;
 let glitterPieces = [];
 let glitterFlashes = [];
 let glitterAnimation = null;
+const nineLevelOneCorrectPause = 1800;
 
 function shuffle(items) {
   const copy = [...items];
@@ -949,6 +952,7 @@ function startNineLevelOne() {
   startNineLevelTwoButton.disabled = true;
   renderNineLevelOne();
   showNinePanel(nineLevelOne);
+  nineLevelOne.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 function renderNineLevelOne() {
@@ -968,11 +972,13 @@ function renderNineLevelOne() {
       blank.dataset.blankIndex = index;
       blank.textContent = nineBlankValues[index] || `Blank ${index + 1}`;
       blank.setAttribute("aria-label", `Blank ${index + 1}${nineBlankValues[index] ? ` filled with ${nineBlankValues[index]}` : ""}`);
+      blank.addEventListener("dragover", allowNineBlankDrop);
+      blank.addEventListener("drop", dropNineNumberOnBlank);
       nineLevelOneStatement.append(blank);
     }
   });
 
-  nineNumberChoices.hidden = nineActiveBlank === null;
+  nineNumberChoices.hidden = false;
   nineCheckButton.disabled = false;
 }
 
@@ -985,7 +991,11 @@ function chooseNineBlank(index) {
 
 function placeNineNumber(value) {
   if (nineActiveBlank === null) return;
-  nineBlankValues[nineActiveBlank] = value;
+  fillNineBlank(nineActiveBlank, value);
+}
+
+function fillNineBlank(blankIndex, value) {
+  nineBlankValues[blankIndex] = value;
   const nextBlank = nineBlankValues.findIndex((item) => item === null);
   nineActiveBlank = nextBlank === -1 ? null : nextBlank;
   nineLevelOneFeedback.textContent = "";
@@ -993,6 +1003,86 @@ function placeNineNumber(value) {
   renderNineLevelOne();
   if (nineActiveBlank === null) {
     nineCheckButton.focus();
+  }
+}
+
+function allowNineBlankDrop(event) {
+  if (!event.dataTransfer.types.includes("text/plain")) return;
+  event.preventDefault();
+}
+
+function dropNineNumberOnBlank(event) {
+  const value = event.dataTransfer.getData("text/plain");
+  const blank = event.target.closest("[data-blank-index]");
+  if (!blank || !["9", "5"].includes(value)) return;
+  event.preventDefault();
+  fillNineBlank(Number(blank.dataset.blankIndex), value);
+}
+
+function startNativeNineNumberDrag(event) {
+  const choice = event.target.closest("[data-number-choice]");
+  if (!choice) return;
+  event.dataTransfer.effectAllowed = "copy";
+  event.dataTransfer.setData("text/plain", choice.dataset.numberChoice);
+}
+
+function startNinePointerDrag(event) {
+  const choice = event.target.closest("[data-number-choice]");
+  if (nineDragState) return;
+  if (!choice || event.button > 0) return;
+  nineDragState = {
+    value: choice.dataset.numberChoice,
+    startX: event.clientX,
+    startY: event.clientY,
+    currentX: event.clientX,
+    currentY: event.clientY,
+    ghost: null,
+    source: choice,
+  };
+}
+
+function createNineDragGhost() {
+  if (!nineDragState || nineDragState.ghost) return;
+  const ghost = document.createElement("span");
+  ghost.className = `nine-drag-ghost ${nineDragState.value === "9" ? "nine-choice" : "five-choice"}`;
+  ghost.textContent = nineDragState.value;
+  document.body.append(ghost);
+  nineDragState.ghost = ghost;
+  nineDragState.source.classList.add("is-dragging");
+  document.body.classList.add("nine-dragging");
+}
+
+function moveNinePointerDrag(event) {
+  if (!nineDragState) return;
+  const moved = Math.hypot(event.clientX - nineDragState.startX, event.clientY - nineDragState.startY);
+  if (moved < 8 && !nineDragState.ghost) return;
+  event.preventDefault();
+  createNineDragGhost();
+  nineDragState.currentX = event.clientX;
+  nineDragState.currentY = event.clientY;
+  nineDragState.ghost.style.transform = `translate(${event.clientX - 34}px, ${event.clientY - 34}px)`;
+}
+
+function endNinePointerDrag(event) {
+  if (!nineDragState) return;
+  const wasDragging = Boolean(nineDragState.ghost);
+  const { value, source, ghost } = nineDragState;
+  nineDragState = null;
+
+  if (ghost) ghost.remove();
+  source.classList.remove("is-dragging");
+  document.body.classList.remove("nine-dragging");
+
+  if (!wasDragging) return;
+  suppressNineChoiceClick = true;
+  window.setTimeout(() => {
+    suppressNineChoiceClick = false;
+  }, 0);
+
+  const target = document.elementFromPoint(event.clientX, event.clientY);
+  const blank = target ? target.closest("[data-blank-index]") : null;
+  if (blank) {
+    fillNineBlank(Number(blank.dataset.blankIndex), value);
   }
 }
 
@@ -1015,6 +1105,8 @@ function checkNineLevelOne() {
   nineLevelOneFeedback.textContent = nineLevelOneIndex % 2 === 0 ? "You got it!" : "That adds up!";
   nineLevelOneFeedback.className = "nine-feedback correct";
 
+  nineCheckButton.disabled = true;
+
   window.setTimeout(() => {
     if (nineLevelOneIndex === nineFiveLevelOneQuestions.length - 1) {
       nineLevelOneDone = true;
@@ -1030,7 +1122,7 @@ function checkNineLevelOne() {
     nineLevelOneFeedback.textContent = "";
     nineLevelOneFeedback.className = "nine-feedback";
     renderNineLevelOne();
-  }, 650);
+  }, nineLevelOneCorrectPause);
 }
 
 function unlockNineLevelTwo() {
@@ -1051,6 +1143,7 @@ function startNineLevelTwo() {
   nineLevelTwoWrongChoices = new Set();
   renderNineLevelTwo();
   showNinePanel(nineLevelTwo);
+  nineLevelTwo.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 function renderNineLevelTwo() {
@@ -1119,7 +1212,8 @@ function nextNineLevelTwoQuestion() {
 
 function showNineFinal() {
   showNinePanel(nineFinal);
-  launchGentleSparkleBurst();
+  nineFinal.scrollIntoView({ behavior: "smooth", block: "start" });
+  launchPinkGlitterBursts(7);
 }
 
 function resetFactOrFiddle(shouldShuffle) {
@@ -1555,10 +1649,19 @@ nineLevelOneStatement.addEventListener("click", (event) => {
   chooseNineBlank(Number(blank.dataset.blankIndex));
 });
 nineNumberChoices.addEventListener("click", (event) => {
+  if (suppressNineChoiceClick) return;
   const choice = event.target.closest("[data-number-choice]");
   if (!choice) return;
   placeNineNumber(choice.dataset.numberChoice);
 });
+nineNumberChoices.addEventListener("dragstart", startNativeNineNumberDrag);
+nineNumberChoices.addEventListener("pointerdown", startNinePointerDrag);
+window.addEventListener("pointermove", moveNinePointerDrag, { passive: false });
+window.addEventListener("pointerup", endNinePointerDrag);
+window.addEventListener("pointercancel", endNinePointerDrag);
+nineNumberChoices.addEventListener("mousedown", startNinePointerDrag);
+window.addEventListener("mousemove", moveNinePointerDrag, { passive: false });
+window.addEventListener("mouseup", endNinePointerDrag);
 startNineLevelOneButton.addEventListener("click", startNineLevelOne);
 startNineLevelTwoButton.addEventListener("click", startNineLevelTwo);
 nineCheckButton.addEventListener("click", checkNineLevelOne);
