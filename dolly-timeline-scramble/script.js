@@ -344,6 +344,127 @@ const factOrFiddleQuestions = [
   },
 ];
 
+const nineFiveLevelOneQuestions = [
+  {
+    title: "Sports Plays",
+    parts: ["A regulation baseball game has ", " innings, while a basketball team has ", " players on the court."],
+    answers: ["9", "5"],
+  },
+  {
+    title: "Shapin' Up",
+    parts: ["A pentagon has ", " sides, while a nonagon has ", " sides."],
+    answers: ["5", "9"],
+  },
+  {
+    title: "Phrase It",
+    parts: ["You are on cloud ", " when you are extremely happy, but you give someone a high ", "."],
+    answers: ["9", "5"],
+  },
+  {
+    title: "Going Roman",
+    parts: ["IX equals ", ", while V equals ", "."],
+    answers: ["9", "5"],
+  },
+  {
+    title: "Alphabet Soup",
+    parts: ["E is the ", "th letter of the alphabet, while I is the ", "th."],
+    answers: ["5", "9"],
+  },
+  {
+    title: "Elemental",
+    parts: ["Fluorine has atomic number ", ", while boron has atomic number ", "."],
+    answers: ["9", "5"],
+  },
+  {
+    title: "Calendar Check",
+    parts: ["September is the ", "th month of the year, while May is the ", "th."],
+    answers: ["9", "5"],
+  },
+  {
+    title: "Christmas Counting",
+    parts: ["In The Twelve Days of Christmas, there are ", " ladies dancing and ", " golden rings."],
+    answers: ["9", "5"],
+  },
+  {
+    title: "Factor This",
+    parts: ["", " x 19 = 95, while ", " x 19 = 171."],
+    answers: ["5", "9"],
+  },
+];
+
+const nineFiveLevelTwoQuestions = [
+  {
+    title: "County Counter",
+    question: "Dolly Parton's home state of Tennessee has how many counties?",
+    options: ["85", "95", "195"],
+    correct: "95",
+    fact: "Tennessee has 95 counties, including Sevier County, where Dolly Parton was born.",
+  },
+  {
+    title: "Elemental 95",
+    question: "Which element has atomic number 95?",
+    options: ["Uranium", "Glitterium", "Americium"],
+    correct: "Americium",
+    fact: "Americium is element number 95 on the periodic table. It is a synthetic radioactive element.",
+  },
+  {
+    title: "Hit the Highway",
+    question: "Interstate 95 is best known for running along which part of the United States?",
+    options: ["The East Coast", "The Rocky Mountains", "Straight through Dollywood"],
+    correct: "The East Coast",
+    fact: "Interstate 95 is one of the major north-south highways along the East Coast of the United States.",
+  },
+  {
+    title: "Throwback Tech",
+    question: "Which Microsoft operating system was released in 1995?",
+    options: ["Windows Bedazzled", "Windows 3.1", "Windows 95"],
+    correct: "Windows 95",
+    fact: "Windows 95 was released by Microsoft in August 1995 and helped make the Start button a familiar part of personal computers.",
+  },
+  {
+    title: "Going Roman",
+    question: "How is 95 written in Roman numerals?",
+    options: ["XCV", "VC", "DOLLY"],
+    correct: "XCV",
+    fact: "XCV represents 95 in Roman numerals. XC means 90 and V means 5.",
+  },
+  {
+    title: "What's Your Angle?",
+    question: "A 95-degree angle is:",
+    options: ["Acute", "Obtuse", "Dramatic"],
+    correct: "Obtuse",
+    fact: "An obtuse angle measures more than 90 degrees but less than 180 degrees.",
+  },
+  {
+    title: "Going Binary",
+    question: "Which is 95 written in binary?",
+    options: ["1010101", "1011111", "9995559"],
+    correct: "1011111",
+    fact: "The decimal number 95 is written as 1011111 in binary.",
+  },
+  {
+    title: "Way Out There",
+    question: "95 Arethusa is:",
+    options: ["A comet", "An asteroid", "Dolly's secret backup tour bus"],
+    correct: "An asteroid",
+    fact: "95 Arethusa is an asteroid located in the main asteroid belt between Mars and Jupiter.",
+  },
+  {
+    title: "Calling 95",
+    question: "+95 is the international calling code for:",
+    options: ["Malaysia", "Montana", "Myanmar"],
+    correct: "Myanmar",
+    fact: "The country calling code +95 is used for Myanmar.",
+  },
+  {
+    title: "Ka-Chow!",
+    question: "Which animated race car is famous for the number 95?",
+    options: ["Mater", "Lightning McQueen", "Dolly Parton's pink convertible"],
+    correct: "Lightning McQueen",
+    fact: "Lightning McQueen from Pixar's Cars races with the number 95.",
+  },
+];
+
 const timelineList = document.querySelector("#timeline-list");
 const message = document.querySelector("#message");
 const timelineChallenge = document.querySelector("#timeline-challenge");
@@ -352,6 +473,7 @@ const tryAgainButton = document.querySelector("#try-again-button");
 const resetButton = document.querySelector("#reset-button");
 const firstChallengeShortcut = document.querySelector("#first-challenge-shortcut");
 const secondChallengeShortcut = document.querySelector("#second-challenge-shortcut");
+const thirdChallengeShortcut = document.querySelector("#third-challenge-shortcut");
 const timelineChallengeShortcut = document.querySelector("#timeline-challenge-shortcut");
 const hideYearsToggle = document.querySelector("#hide-years-toggle");
 const completionPanel = document.querySelector("#completion-panel");
@@ -393,6 +515,30 @@ const fiddleFinalScore = document.querySelector("#fiddle-final-score");
 const fiddleCompletionMessage = document.querySelector("#fiddle-completion-message");
 const fiddlePlayAgainButton = document.querySelector("#fiddle-play-again-button");
 const returnDollyButton = document.querySelector("#return-dolly-button");
+const nineToFive = document.querySelector("#nine-to-five");
+const nineIntro = document.querySelector("#nine-intro");
+const nineLevelOne = document.querySelector("#nine-level-one");
+const nineLevelOneComplete = document.querySelector("#nine-level-one-complete");
+const nineLevelTwo = document.querySelector("#nine-level-two");
+const nineFinal = document.querySelector("#nine-final");
+const startNineLevelOneButton = document.querySelector("#start-nine-level-one");
+const startNineLevelTwoButton = document.querySelector("#start-nine-level-two");
+const nineLevelOneProgress = document.querySelector("#nine-level-one-progress");
+const nineLevelOneTitle = document.querySelector("#nine-level-one-title");
+const nineLevelOneStatement = document.querySelector("#nine-level-one-statement");
+const nineNumberChoices = document.querySelector("#nine-number-choices");
+const nineCheckButton = document.querySelector("#nine-check-button");
+const nineLevelOneFeedback = document.querySelector("#nine-level-one-feedback");
+const unlockLevelTwoButton = document.querySelector("#unlock-level-two-button");
+const nineLevelTwoProgress = document.querySelector("#nine-level-two-progress");
+const nineLevelTwoQuestion = document.querySelector("#nine-level-two-question");
+const nineLevelTwoOptions = document.querySelector("#nine-level-two-options");
+const nineLevelTwoFeedback = document.querySelector("#nine-level-two-feedback");
+const nineFactPanel = document.querySelector("#nine-fact-panel");
+const nineFactText = document.querySelector("#nine-fact-text");
+const nineNextQuestionButton = document.querySelector("#nine-next-question-button");
+const ninePlayAgainButton = document.querySelector("#nine-play-again-button");
+const nineBackButton = document.querySelector("#nine-back-button");
 const modal = document.querySelector("#fact-modal");
 const factTitle = document.querySelector("#fact-title");
 const factYear = document.querySelector("#fact-year");
@@ -415,6 +561,15 @@ let fiddleOrder = factOrFiddleQuestions.map((_, index) => index);
 let fiddleQuestionIndex = 0;
 let fiddleScore = 0;
 let fiddleAnswered = false;
+let nineLevelOneOrder = nineFiveLevelOneQuestions.map((_, index) => index);
+let nineLevelOneIndex = 0;
+let nineBlankValues = [null, null];
+let nineActiveBlank = 0;
+let nineLevelOneDone = false;
+let nineLevelTwoOrder = nineFiveLevelTwoQuestions.map((_, index) => index);
+let nineLevelTwoIndex = 0;
+let nineLevelTwoAnswered = false;
+let nineLevelTwoWrongChoices = new Set();
 let lastFocus = null;
 let glitterPieces = [];
 let glitterFlashes = [];
@@ -501,6 +656,7 @@ function resetGame() {
   resetTimelineChallenge();
   resetWhichCameFirst();
   resetFactOrFiddle(false);
+  resetNineToFive();
   openFirstChallenge(false);
 }
 
@@ -732,6 +888,7 @@ function nextWhichRound() {
 function openFirstChallenge(shouldScroll = true) {
   factOrFiddle.hidden = false;
   dateChallenge.hidden = true;
+  nineToFive.hidden = true;
   timelineChallenge.hidden = true;
   if (shouldScroll) factOrFiddle.scrollIntoView({ behavior: "smooth", block: "start" });
 }
@@ -739,8 +896,230 @@ function openFirstChallenge(shouldScroll = true) {
 function openSecondChallenge() {
   factOrFiddle.hidden = true;
   dateChallenge.hidden = false;
+  nineToFive.hidden = true;
   timelineChallenge.hidden = true;
   dateChallenge.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function openThirdChallenge(shouldScroll = true) {
+  factOrFiddle.hidden = true;
+  dateChallenge.hidden = true;
+  nineToFive.hidden = false;
+  timelineChallenge.hidden = true;
+  if (shouldScroll) nineToFive.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function showNinePanel(panel) {
+  [nineIntro, nineLevelOne, nineLevelOneComplete, nineLevelTwo, nineFinal].forEach((section) => {
+    section.hidden = section !== panel;
+  });
+}
+
+function resetNineToFive() {
+  nineLevelOneOrder = nineFiveLevelOneQuestions.map((_, index) => index);
+  nineLevelOneIndex = 0;
+  nineBlankValues = [null, null];
+  nineActiveBlank = 0;
+  nineLevelOneDone = false;
+  nineLevelTwoOrder = nineFiveLevelTwoQuestions.map((_, index) => index);
+  nineLevelTwoIndex = 0;
+  nineLevelTwoAnswered = false;
+  nineLevelTwoWrongChoices = new Set();
+  startNineLevelTwoButton.disabled = true;
+  nineLevelOneFeedback.textContent = "";
+  nineLevelOneFeedback.className = "nine-feedback";
+  nineLevelTwoFeedback.textContent = "";
+  nineLevelTwoFeedback.className = "nine-feedback";
+  nineFactPanel.hidden = true;
+  showNinePanel(nineIntro);
+}
+
+function currentNineLevelOneQuestion() {
+  return nineFiveLevelOneQuestions[nineLevelOneOrder[nineLevelOneIndex]];
+}
+
+function currentNineLevelTwoQuestion() {
+  return nineFiveLevelTwoQuestions[nineLevelTwoOrder[nineLevelTwoIndex]];
+}
+
+function startNineLevelOne() {
+  nineLevelOneOrder = shuffle(nineFiveLevelOneQuestions.map((_, index) => index));
+  nineLevelOneIndex = 0;
+  nineLevelOneDone = false;
+  startNineLevelTwoButton.disabled = true;
+  renderNineLevelOne();
+  showNinePanel(nineLevelOne);
+}
+
+function renderNineLevelOne() {
+  const question = currentNineLevelOneQuestion();
+  nineLevelOneProgress.textContent = `Level 1 | ${nineLevelOneIndex + 1} of ${nineFiveLevelOneQuestions.length}`;
+  nineLevelOneTitle.textContent = question.title;
+  nineLevelOneStatement.innerHTML = "";
+
+  question.parts.forEach((part, index) => {
+    nineLevelOneStatement.append(document.createTextNode(part));
+    if (index < question.answers.length) {
+      const blank = document.createElement("button");
+      blank.className = "nine-blank";
+      if (nineBlankValues[index]) blank.classList.add("filled");
+      if (nineActiveBlank === index) blank.classList.add("active");
+      blank.type = "button";
+      blank.dataset.blankIndex = index;
+      blank.textContent = nineBlankValues[index] || `Blank ${index + 1}`;
+      blank.setAttribute("aria-label", `Blank ${index + 1}${nineBlankValues[index] ? ` filled with ${nineBlankValues[index]}` : ""}`);
+      nineLevelOneStatement.append(blank);
+    }
+  });
+
+  nineNumberChoices.hidden = nineActiveBlank === null;
+  nineCheckButton.disabled = false;
+}
+
+function chooseNineBlank(index) {
+  nineActiveBlank = index;
+  renderNineLevelOne();
+  const choice = nineNumberChoices.querySelector("[data-number-choice]");
+  if (choice) choice.focus();
+}
+
+function placeNineNumber(value) {
+  if (nineActiveBlank === null) return;
+  nineBlankValues[nineActiveBlank] = value;
+  const nextBlank = nineBlankValues.findIndex((item) => item === null);
+  nineActiveBlank = nextBlank === -1 ? null : nextBlank;
+  nineLevelOneFeedback.textContent = "";
+  nineLevelOneFeedback.className = "nine-feedback";
+  renderNineLevelOne();
+  if (nineActiveBlank === null) {
+    nineCheckButton.focus();
+  }
+}
+
+function checkNineLevelOne() {
+  const question = currentNineLevelOneQuestion();
+  const hasBothAnswers = nineBlankValues.every(Boolean);
+  if (!hasBothAnswers) {
+    nineLevelOneFeedback.textContent = "Choose a blank, then pick 9 or 5 for both spots.";
+    nineLevelOneFeedback.className = "nine-feedback notice";
+    return;
+  }
+
+  const isCorrect = nineBlankValues.every((answer, index) => answer === question.answers[index]);
+  if (!isCorrect) {
+    nineLevelOneFeedback.textContent = "Almost! Switch them around and try again.";
+    nineLevelOneFeedback.className = "nine-feedback incorrect";
+    return;
+  }
+
+  nineLevelOneFeedback.textContent = nineLevelOneIndex % 2 === 0 ? "You got it!" : "That adds up!";
+  nineLevelOneFeedback.className = "nine-feedback correct";
+
+  window.setTimeout(() => {
+    if (nineLevelOneIndex === nineFiveLevelOneQuestions.length - 1) {
+      nineLevelOneDone = true;
+      startNineLevelTwoButton.disabled = false;
+      showNinePanel(nineLevelOneComplete);
+      launchGentleSparkleBurst();
+      return;
+    }
+
+    nineLevelOneIndex += 1;
+    nineBlankValues = [null, null];
+    nineActiveBlank = 0;
+    nineLevelOneFeedback.textContent = "";
+    nineLevelOneFeedback.className = "nine-feedback";
+    renderNineLevelOne();
+  }, 650);
+}
+
+function unlockNineLevelTwo() {
+  nineLevelOneDone = true;
+  startNineLevelTwoButton.disabled = false;
+  startNineLevelTwo();
+}
+
+function startNineLevelTwo() {
+  if (!nineLevelOneDone) {
+    nineLevelOneFeedback.textContent = "Finish Level 1 first, then Level 2 will unlock.";
+    nineLevelOneFeedback.className = "nine-feedback notice";
+    return;
+  }
+  nineLevelTwoOrder = shuffle(nineFiveLevelTwoQuestions.map((_, index) => index));
+  nineLevelTwoIndex = 0;
+  nineLevelTwoAnswered = false;
+  nineLevelTwoWrongChoices = new Set();
+  renderNineLevelTwo();
+  showNinePanel(nineLevelTwo);
+}
+
+function renderNineLevelTwo() {
+  const question = currentNineLevelTwoQuestion();
+  nineLevelTwoProgress.textContent = `Level 2 | Question ${nineLevelTwoIndex + 1} of ${nineFiveLevelTwoQuestions.length}`;
+  nineLevelTwoQuestion.textContent = question.question;
+  nineLevelTwoOptions.innerHTML = "";
+  nineLevelTwoFeedback.className = "nine-feedback";
+  if (!nineLevelTwoAnswered && !nineLevelTwoWrongChoices.size) {
+    nineLevelTwoFeedback.textContent = "";
+  } else if (!nineLevelTwoAnswered) {
+    nineLevelTwoFeedback.className = "nine-feedback incorrect";
+  }
+
+  question.options.forEach((option) => {
+    const button = document.createElement("button");
+    button.className = "nine-option";
+    button.type = "button";
+    button.dataset.nineOption = option;
+    button.textContent = option;
+    if (nineLevelTwoWrongChoices.has(option)) button.classList.add("incorrect");
+    if (nineLevelTwoAnswered) {
+      button.disabled = true;
+      if (option === question.correct) button.classList.add("correct");
+    }
+    nineLevelTwoOptions.append(button);
+  });
+
+  nineFactPanel.hidden = !nineLevelTwoAnswered;
+  if (nineLevelTwoAnswered) {
+    nineLevelTwoFeedback.textContent = "Correct! You found the 95 connection.";
+    nineLevelTwoFeedback.className = "nine-feedback correct";
+    nineFactText.textContent = question.fact;
+    nineNextQuestionButton.textContent = nineLevelTwoIndex === nineFiveLevelTwoQuestions.length - 1 ? "Finish" : "Next Question";
+  }
+}
+
+function answerNineLevelTwo(option) {
+  if (nineLevelTwoAnswered) return;
+  const question = currentNineLevelTwoQuestion();
+  if (option !== question.correct) {
+    nineLevelTwoWrongChoices.add(option);
+    nineLevelTwoFeedback.textContent = "Not quite. Try another choice.";
+    nineLevelTwoFeedback.className = "nine-feedback incorrect";
+    renderNineLevelTwo();
+    return;
+  }
+
+  nineLevelTwoAnswered = true;
+  renderNineLevelTwo();
+  nineNextQuestionButton.focus();
+}
+
+function nextNineLevelTwoQuestion() {
+  if (!nineLevelTwoAnswered) return;
+  if (nineLevelTwoIndex === nineFiveLevelTwoQuestions.length - 1) {
+    showNineFinal();
+    return;
+  }
+
+  nineLevelTwoIndex += 1;
+  nineLevelTwoAnswered = false;
+  nineLevelTwoWrongChoices = new Set();
+  renderNineLevelTwo();
+}
+
+function showNineFinal() {
+  showNinePanel(nineFinal);
+  launchGentleSparkleBurst();
 }
 
 function resetFactOrFiddle(shouldShuffle) {
@@ -865,6 +1244,7 @@ function showFactOrFiddleResults() {
 function openTimelineChallenge() {
   factOrFiddle.hidden = true;
   dateChallenge.hidden = true;
+  nineToFive.hidden = true;
   timelineChallenge.hidden = false;
   timelineChallenge.scrollIntoView({ behavior: "smooth", block: "start" });
 }
@@ -889,6 +1269,36 @@ function launchPinkGlitterBursts(count) {
     if (bursts === Math.ceil(count / 2)) createSparkleShower();
     if (bursts >= count) window.clearInterval(interval);
   }, 300);
+}
+
+function launchGentleSparkleBurst() {
+  resizeCanvas();
+  const centerX = document.documentElement.clientWidth / 2;
+  const centerY = window.innerHeight / 2;
+  const colors = ["#ff63bc", "#ffd76a", "#18aeb3", "#ffffff", "#bfa8ff"];
+
+  for (let index = 0; index < 90; index += 1) {
+    const angle = Math.random() * Math.PI * 2;
+    const speed = 3.2 + Math.random() * 7.2;
+    glitterPieces.push({
+      x: centerX,
+      y: centerY,
+      size: 2 + Math.random() * 6,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed,
+      rotation: Math.random() * Math.PI,
+      spin: (Math.random() - 0.5) * 0.26,
+      life: 54 + Math.random() * 28,
+      maxLife: 82,
+      sparkle: Math.random() > 0.28,
+      shape: Math.random() > 0.78 ? "circle" : Math.random() > 0.46 ? "sparkle" : "rect",
+    });
+  }
+
+  if (!glitterAnimation) {
+    glitterAnimation = requestAnimationFrame(drawPinkGlitter);
+  }
 }
 
 function createSparkleShower() {
@@ -1120,13 +1530,14 @@ tryAgainButton.addEventListener("click", () => {
 resetButton.addEventListener("click", resetTimelineChallenge);
 firstChallengeShortcut.addEventListener("click", openFirstChallenge);
 secondChallengeShortcut.addEventListener("click", openSecondChallenge);
+thirdChallengeShortcut.addEventListener("click", openThirdChallenge);
 timelineChallengeShortcut.addEventListener("click", openTimelineChallenge);
 nextRoundButton.addEventListener("click", nextWhichRound);
 playAgainButton.addEventListener("click", () => {
   resetWhichCameFirst();
   dateChallenge.scrollIntoView({ behavior: "smooth", block: "start" });
 });
-continueButton.addEventListener("click", openTimelineChallenge);
+continueButton.addEventListener("click", openThirdChallenge);
 startFiddleButton.addEventListener("click", () => startFactOrFiddle(false));
 factChoiceButton.addEventListener("click", () => answerFactOrFiddle("FACT"));
 fiddleChoiceButton.addEventListener("click", () => answerFactOrFiddle("FIDDLE"));
@@ -1137,6 +1548,34 @@ fiddlePlayAgainButton.addEventListener("click", () => {
 });
 returnDollyButton.addEventListener("click", () => {
   openSecondChallenge();
+});
+nineLevelOneStatement.addEventListener("click", (event) => {
+  const blank = event.target.closest("[data-blank-index]");
+  if (!blank) return;
+  chooseNineBlank(Number(blank.dataset.blankIndex));
+});
+nineNumberChoices.addEventListener("click", (event) => {
+  const choice = event.target.closest("[data-number-choice]");
+  if (!choice) return;
+  placeNineNumber(choice.dataset.numberChoice);
+});
+startNineLevelOneButton.addEventListener("click", startNineLevelOne);
+startNineLevelTwoButton.addEventListener("click", startNineLevelTwo);
+nineCheckButton.addEventListener("click", checkNineLevelOne);
+unlockLevelTwoButton.addEventListener("click", unlockNineLevelTwo);
+nineLevelTwoOptions.addEventListener("click", (event) => {
+  const option = event.target.closest("[data-nine-option]");
+  if (!option) return;
+  answerNineLevelTwo(option.dataset.nineOption);
+});
+nineNextQuestionButton.addEventListener("click", nextNineLevelTwoQuestion);
+ninePlayAgainButton.addEventListener("click", () => {
+  resetNineToFive();
+  startNineLevelOne();
+});
+nineBackButton.addEventListener("click", () => {
+  resetNineToFive();
+  openFirstChallenge();
 });
 reduceMotionToggle.addEventListener("change", () => {
   document.body.classList.toggle("reduce-motion", reduceMotionToggle.checked);

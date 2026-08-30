@@ -103,6 +103,7 @@ button:disabled {
 .completion-panel,
 .date-challenge,
 .fact-or-fiddle,
+.nine-to-five,
 .fact-modal {
   background: rgba(255, 255, 255, 0.9);
   border: 1px solid rgba(234, 216, 200, 0.9);
@@ -219,6 +220,7 @@ h3 {
 .timeline-section,
 .date-challenge,
 .fact-or-fiddle,
+.nine-to-five,
 .completion-panel {
   border-radius: 8px;
   padding: clamp(18px, 4vw, 28px);
@@ -369,6 +371,7 @@ h3 {
 .completion-panel[hidden],
 .date-challenge[hidden],
 .fact-or-fiddle[hidden],
+.nine-to-five[hidden],
 .modal-backdrop[hidden] {
   display: none;
 }
@@ -1197,6 +1200,335 @@ h3 {
   border-color: var(--teal);
 }
 
+.nine-to-five {
+  margin-top: 22px;
+}
+
+.nine-intro {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 410px);
+  gap: 24px;
+  align-items: center;
+}
+
+.nine-title {
+  color: var(--pink-dark);
+  font-family: "Cooper Black", Georgia, serif;
+  font-size: clamp(2.4rem, 7vw, 5rem);
+}
+
+.nine-intro p:not(.eyebrow),
+.nine-card p,
+.nine-final-card p {
+  color: var(--muted);
+  font-size: 1.08rem;
+  line-height: 1.55;
+}
+
+.nine-number-hero {
+  position: relative;
+  display: grid;
+  min-height: 300px;
+  place-items: center;
+  overflow: hidden;
+  border: 2px solid rgba(234, 216, 200, 0.82);
+  border-radius: 8px;
+  background:
+    radial-gradient(circle at 26% 18%, rgba(246, 185, 57, 0.32), transparent 9rem),
+    radial-gradient(circle at 82% 78%, rgba(15, 141, 145, 0.18), transparent 9rem),
+    linear-gradient(135deg, #fffaf1, #ffffff);
+}
+
+.nine-number-hero::before {
+  position: absolute;
+  inset: 28px;
+  content: "";
+  border: 2px dotted rgba(246, 185, 57, 0.72);
+  border-radius: 999px;
+  transform: rotate(-12deg);
+}
+
+.number-orbit {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: clamp(90px, 19vw, 132px);
+  aspect-ratio: 1;
+  border: 4px solid #ffffff;
+  border-radius: 999px;
+  box-shadow:
+    0 18px 28px rgba(75, 44, 74, 0.14),
+    inset 0 -8px 0 rgba(31, 41, 69, 0.1);
+  color: #ffffff;
+  font-size: clamp(3.3rem, 8vw, 5.6rem);
+  font-weight: 950;
+  line-height: 1;
+}
+
+.number-orbit.nine {
+  top: 38px;
+  left: 42px;
+  background: var(--teal);
+}
+
+.number-orbit.five {
+  right: 42px;
+  bottom: 42px;
+  background: var(--pink);
+}
+
+.number-orbit.ninety-five {
+  z-index: 1;
+  width: clamp(122px, 24vw, 178px);
+  background: linear-gradient(135deg, var(--gold), #f08f2f);
+  color: var(--ink);
+  font-size: clamp(3.6rem, 8vw, 5rem);
+}
+
+.number-sparkle {
+  position: absolute;
+  color: var(--gold);
+  font-size: 1.8rem;
+  font-weight: 950;
+}
+
+.number-sparkle.one {
+  left: 18%;
+  bottom: 22%;
+}
+
+.number-sparkle.two {
+  right: 20%;
+  top: 20%;
+  color: var(--teal);
+}
+
+.number-sparkle.three {
+  left: 49%;
+  top: 10%;
+  color: var(--pink-dark);
+}
+
+.nine-level-one[hidden],
+.nine-level-one-complete[hidden],
+.nine-level-two[hidden],
+.nine-final[hidden],
+.nine-number-choices[hidden],
+.nine-fact-panel[hidden] {
+  display: none;
+}
+
+.nine-card,
+.nine-final-card {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(20px, 4vw, 34px);
+  border: 2px solid var(--line);
+  border-radius: 8px;
+  background:
+    radial-gradient(circle at 96% 0, rgba(246, 185, 57, 0.18), transparent 9rem),
+    #ffffff;
+  box-shadow: 0 12px 22px rgba(75, 44, 74, 0.1);
+}
+
+.nine-card h2,
+.nine-final-card h2 {
+  color: var(--ink);
+}
+
+.nine-status-pill,
+.number-kicker {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  margin: 0;
+  padding: 0 12px;
+  border-radius: 999px;
+  color: #ffffff;
+  background: var(--teal);
+  font-weight: 950;
+}
+
+.number-kicker {
+  width: max-content;
+  margin-bottom: 12px;
+  color: var(--ink);
+  background: rgba(246, 185, 57, 0.32);
+  border: 2px solid rgba(246, 185, 57, 0.72);
+  font-size: 1.35rem;
+}
+
+.nine-blank-statement {
+  margin: 12px 0 22px;
+  color: var(--ink);
+  font-size: clamp(1.45rem, 3vw, 2.35rem);
+  font-weight: 850;
+  line-height: 1.35;
+}
+
+.nine-blank {
+  display: inline-grid;
+  place-items: center;
+  min-width: 96px;
+  min-height: 58px;
+  margin: 4px 6px;
+  color: var(--ink);
+  background: #fff8ee;
+  border: 3px dashed rgba(15, 141, 145, 0.62);
+  border-radius: 8px;
+  vertical-align: middle;
+}
+
+.nine-blank.active {
+  border-style: solid;
+  background: rgba(15, 141, 145, 0.1);
+  box-shadow:
+    0 0 0 4px #ffffff,
+    0 0 0 8px rgba(15, 141, 145, 0.22);
+}
+
+.nine-blank.filled {
+  color: #ffffff;
+  background: var(--pink);
+  border-color: var(--pink);
+  border-style: solid;
+  font-size: 1.6rem;
+}
+
+.nine-number-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin: 0 0 18px;
+}
+
+.number-choice {
+  min-width: 118px;
+  min-height: 88px;
+  color: #ffffff;
+  border-width: 3px;
+  font-size: clamp(2.8rem, 8vw, 4.5rem);
+  font-weight: 950;
+  line-height: 1;
+  box-shadow: 0 12px 20px rgba(75, 44, 74, 0.12);
+}
+
+.number-choice:hover {
+  transform: translateY(-2px);
+}
+
+.nine-choice {
+  background: var(--teal);
+  border-color: var(--teal);
+}
+
+.five-choice {
+  background: var(--pink);
+  border-color: var(--pink);
+}
+
+.nine-feedback {
+  min-height: 32px;
+  margin: 14px 0 0;
+  color: var(--muted);
+  font-weight: 900;
+}
+
+.nine-feedback.correct {
+  color: var(--green);
+}
+
+.nine-feedback.incorrect {
+  color: var(--wrong);
+}
+
+.nine-feedback.notice {
+  color: var(--teal);
+}
+
+.level-complete-card,
+.nine-final-card {
+  text-align: center;
+}
+
+.nine-level-two h3 {
+  color: var(--ink);
+  font-size: clamp(1.45rem, 3vw, 2.15rem);
+  line-height: 1.16;
+}
+
+.nine-options {
+  display: grid;
+  gap: 12px;
+  margin: 18px 0 0;
+}
+
+.nine-option {
+  min-height: 64px;
+  color: var(--ink);
+  background: #ffffff;
+  text-align: left;
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    background 160ms ease;
+}
+
+.nine-option:hover {
+  transform: translateY(-2px);
+  border-color: var(--teal);
+}
+
+.nine-option.correct {
+  color: #ffffff;
+  background: var(--green);
+  border-color: var(--green);
+}
+
+.nine-option.incorrect {
+  color: #ffffff;
+  background: var(--wrong);
+  border-color: var(--wrong);
+}
+
+.nine-option.correct::before {
+  content: "✓ ";
+}
+
+.nine-option.incorrect::before {
+  content: "Try again: ";
+}
+
+.nine-fact-panel {
+  margin-top: 18px;
+  padding: clamp(16px, 3vw, 22px);
+  border: 2px solid rgba(15, 141, 145, 0.3);
+  border-radius: 8px;
+  background: #eefafa;
+}
+
+.nine-fact-panel p:last-of-type {
+  margin-bottom: 0;
+}
+
+.nine-final-card {
+  background:
+    repeating-conic-gradient(from -24deg at 50% 0, rgba(246, 185, 57, 0.13) 0 7deg, transparent 7deg 16deg),
+    linear-gradient(180deg, #fffaf1 0%, #ffffff 60%, #fff7ea 100%);
+  border-color: rgba(246, 185, 57, 0.48);
+}
+
+.nine-final-card h2 {
+  color: var(--pink-dark);
+  font-family: "Cooper Black", Georgia, serif;
+  font-size: clamp(2.2rem, 6vw, 4.5rem);
+}
+
+.nine-final-card .celebration-row {
+  max-width: 560px;
+}
+
 @keyframes strum {
   0%,
   100% {
@@ -1324,7 +1656,8 @@ body.reduce-motion *::after {
   }
 
   .fiddle-opening,
-  .fiddle-layout {
+  .fiddle-layout,
+  .nine-intro {
     grid-template-columns: 1fr;
   }
 
@@ -1363,6 +1696,32 @@ body.reduce-motion *::after {
   }
 
   .answer-buttons {
+    grid-template-columns: 1fr;
+  }
+
+  .nine-number-hero {
+    min-height: 240px;
+  }
+
+  .number-orbit.nine {
+    left: 24px;
+  }
+
+  .number-orbit.five {
+    right: 24px;
+  }
+
+  .nine-blank-statement {
+    font-size: 1.35rem;
+  }
+
+  .nine-blank,
+  .number-choice {
+    width: 100%;
+  }
+
+  .nine-number-choices {
+    display: grid;
     grid-template-columns: 1fr;
   }
 

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Celebrating Dolly</title>
     <link rel="icon" href="data:,">
-    <link rel="stylesheet" href="styles.css?v=spectacular-confetti-1">
+    <link rel="stylesheet" href="styles.css?v=nine-to-five-1">
   </head>
   <body>
     <canvas id="confetti-canvas" aria-hidden="true"></canvas>
@@ -15,7 +15,7 @@
         <div class="hero-copy">
           <p class="eyebrow">Dolly Through the Years</p>
           <h1 id="page-title">Celebrating Dolly</h1>
-          <p>Start with Fact or Fiddle, then play Which Came First, and finish with Timeline Scramble.</p>
+          <p>Start with Fact or Fiddle, compare Dolly moments in Which Came First, play 9 to 5, and finish with Timeline Scramble.</p>
         </div>
         <div class="hero-art">
           <img src="assets/dolly-title-art.png" alt="Colorful Dolly Parton title artwork with mountains and sparkles">
@@ -25,7 +25,8 @@
       <section class="toolbar activity-nav" aria-label="Activity navigation">
         <button id="first-challenge-shortcut" class="primary-button" type="button">First Challenge: Fact or Fiddle</button>
         <button id="second-challenge-shortcut" type="button">Second Challenge: Which Came First?</button>
-        <button id="timeline-challenge-shortcut" type="button">Final Challenge: Timeline Scramble</button>
+        <button id="third-challenge-shortcut" type="button">Third Challenge: 9 to 5</button>
+        <button id="timeline-challenge-shortcut" type="button">Fourth Challenge: Timeline Scramble</button>
       </section>
 
       <section id="date-challenge" class="date-challenge" aria-labelledby="date-title" hidden>
@@ -53,7 +54,7 @@
           <p>From the Grand Ole Opry to the Imagination Library, you just traveled through decades of Dolly history.</p>
           <div class="toolbar compact">
             <button id="play-again-button" class="primary-button" type="button">Play Again</button>
-            <button id="continue-button" type="button">Continue to Timeline Scramble</button>
+            <button id="continue-button" type="button">Continue to 9 to 5</button>
           </div>
         </div>
       </section>
@@ -131,6 +132,87 @@
         </div>
       </section>
 
+      <section id="nine-to-five" class="nine-to-five" aria-labelledby="nine-title" hidden>
+        <div id="nine-intro" class="nine-intro">
+          <div>
+            <p class="eyebrow">Third Challenge</p>
+            <h2 id="nine-title" class="nine-title">9 to 5</h2>
+            <p>Dolly made 9 to 5 famous. Let's see what else you know about 9, 5, and 95!</p>
+            <div class="toolbar compact">
+              <button id="start-nine-level-one" class="primary-button" type="button">Level 1 | Pick 9 or 5</button>
+              <button id="start-nine-level-two" type="button" disabled>Level 2 | Find the 95</button>
+            </div>
+          </div>
+          <div class="nine-number-hero" aria-hidden="true">
+            <span class="number-orbit nine">9</span>
+            <span class="number-orbit five">5</span>
+            <span class="number-orbit ninety-five">95</span>
+            <span class="number-sparkle one">✦</span>
+            <span class="number-sparkle two">♪</span>
+            <span class="number-sparkle three">✿</span>
+          </div>
+        </div>
+
+        <div id="nine-level-one" class="nine-level-one" hidden>
+          <div class="which-status">
+            <p id="nine-level-one-progress" class="round-label">Level 1 | 1 of 9</p>
+            <p class="nine-status-pill">Pick 9 or 5</p>
+          </div>
+          <article class="nine-card">
+            <p id="nine-level-one-title" class="eyebrow">Sports Plays</p>
+            <div id="nine-level-one-statement" class="nine-blank-statement"></div>
+            <div id="nine-number-choices" class="nine-number-choices" hidden>
+              <button class="number-choice nine-choice" type="button" data-number-choice="9">9</button>
+              <button class="number-choice five-choice" type="button" data-number-choice="5">5</button>
+            </div>
+            <div class="toolbar compact">
+              <button id="nine-check-button" class="primary-button" type="button">Check It!</button>
+            </div>
+            <p id="nine-level-one-feedback" class="nine-feedback" aria-live="polite"></p>
+          </article>
+        </div>
+
+        <div id="nine-level-one-complete" class="nine-level-one-complete" hidden>
+          <article class="nine-card level-complete-card">
+            <p class="eyebrow">Level 1 Complete!</p>
+            <h2>You know your 9s and 5s.</h2>
+            <p>Ready to put them together?</p>
+            <button id="unlock-level-two-button" class="primary-button" type="button">Unlock Level 2</button>
+          </article>
+        </div>
+
+        <div id="nine-level-two" class="nine-level-two" hidden>
+          <div class="which-status">
+            <p id="nine-level-two-progress" class="round-label">Level 2 | Question 1 of 10</p>
+            <p class="nine-status-pill">Find the 95</p>
+          </div>
+          <article class="nine-card">
+            <p class="number-kicker">95</p>
+            <h3 id="nine-level-two-question"></h3>
+            <div id="nine-level-two-options" class="nine-options"></div>
+            <p id="nine-level-two-feedback" class="nine-feedback" aria-live="polite"></p>
+            <div id="nine-fact-panel" class="nine-fact-panel" hidden>
+              <p class="fact-kicker">95 Fact</p>
+              <p id="nine-fact-text"></p>
+              <button id="nine-next-question-button" class="primary-button" type="button">Next Question</button>
+            </div>
+          </article>
+        </div>
+
+        <div id="nine-final" class="nine-final" hidden>
+          <article class="nine-final-card">
+            <p class="eyebrow">Complete</p>
+            <h2>You Crushed the 9 to 5!</h2>
+            <p>Dolly made "9 to 5" famous. You just proved there is a whole lot more you can do with 9, 5, and 95!</p>
+            <div class="celebration-row" aria-hidden="true">✦ ♪ 9 ✦ 5 ♪ 95 ✦</div>
+            <div class="toolbar compact completion-actions">
+              <button id="nine-play-again-button" class="primary-button" type="button">Play Again</button>
+              <button id="nine-back-button" type="button">Back to Celebrating Dolly</button>
+            </div>
+          </article>
+        </div>
+      </section>
+
       <section id="timeline-challenge" class="timeline-challenge" hidden>
         <section class="toolbar" aria-label="Timeline Scramble controls">
           <button id="check-button" class="primary-button" type="button">Check My Timeline</button>
@@ -148,7 +230,7 @@
 
         <section class="timeline-section" aria-labelledby="timeline-title">
           <div class="section-heading">
-            <p class="eyebrow">Final Challenge</p>
+            <p class="eyebrow">Fourth Challenge</p>
             <h2 id="timeline-title">Timeline Scramble</h2>
           </div>
           <ol id="timeline-list" class="timeline-list" aria-label="Scrambled Dolly Parton timeline cards"></ol>
@@ -177,6 +259,6 @@
       </article>
     </div>
 
-    <script src="script.js?v=spectacular-confetti-1"></script>
+    <script src="script.js?v=nine-to-five-1"></script>
   </body>
 </html>
