@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Peggy's GroupUp</title>
-    <link rel="stylesheet" href="styles.css?v=21" />
+    <link rel="stylesheet" href="styles.css?v=22" />
     <script src="teacher-auth.js?v=4"></script>
   </head>
   <body>
@@ -27,9 +27,12 @@
           <p class="resource-disclaimer" style="margin: 18px 0 0; color: inherit; opacity: .78; font-size: .86rem; line-height: 1.45; font-weight: 700;">A TCEA educator resource · CC BY-NC 4.0 · Free to use and adapt with credit · Not for commercial use · No logins · No data collected</p>
 
         <div class="chooser-row">
-          <label for="game-select">Choose a game</label>
+          <label for="game-select">
+            <span>Start here</span>
+            <small>Choose a game from the drop-down menu.</small>
+          </label>
           <select id="game-select">
-            <option value="">Select a GroupUp game</option>
+            <option value="">Select a GroupUp game to begin</option>
           </select>
           <button id="copy-link" type="button" disabled title="Copy student link">
             <span aria-hidden="true">&#128279;</span>
@@ -38,16 +41,26 @@
         </div>
 
         <div class="teacher-note">
-          <div>
-            <strong>How to Play</strong>
-            <p>Find groups of four items that share something in common.</p>
-            <p>Select four items and tap Submit to check your guess.</p>
-            <p>Try to find all the groups before making 4 mistakes!</p>
-          </div>
-          <div>
+          <div class="teacher-directions">
             <strong>Teacher Directions</strong>
-            <p>Pick a game, copy the link, and send it to your students.</p>
-            <p>You can also play the game on this site. Click Answers to see the answer key, including the 4 groups and the four items in each group.</p>
+            <ol>
+              <li><b>Choose a game from the drop-down menu.</b></li>
+              <li>Play it together as a class, or copy the game link and send it to your students.</li>
+              <li>Click <b>Answers</b> to see the answer key, including the four groups and the four items in each group.</li>
+            </ol>
+          </div>
+          <div class="teacher-only">
+            <strong>For Teachers Only</strong>
+            <p>This teacher tool and password are for your use only. Please do not share them with students. Students only need the link to the specific GroupUp activity you want them to play.</p>
+          </div>
+          <div class="student-rules">
+            <strong>Game Play</strong>
+            <p><b>Find groups of four items that share something in common.</b></p>
+            <ol>
+              <li>Select four items.</li>
+              <li>Tap <b>Submit</b> to check your guess.</li>
+              <li>Find all four groups before making <b>4 mistakes</b>.</li>
+            </ol>
           </div>
         </div>
 
@@ -60,7 +73,7 @@
     <template id="empty-template">
       <div class="empty-state">
         <h2>Pick a game to begin.</h2>
-        <p>Teachers can choose a GroupUp from the list, copy the link, and send that link to students.</p>
+        <p>Choose a game from the drop-down menu above. Then play it together as a class, or copy the game link and send it to your students.</p>
       </div>
     </template>
 

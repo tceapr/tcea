@@ -121,7 +121,7 @@ h1 {
 
 .chooser-row {
   display: grid;
-  grid-template-columns: auto minmax(220px, 1fr) auto;
+  grid-template-columns: minmax(150px, auto) minmax(220px, 1fr) auto;
   align-items: center;
   gap: 12px;
 }
@@ -131,9 +131,28 @@ h1 {
   font-weight: 700;
 }
 
+.chooser-row label span,
+.chooser-row label small {
+  display: block;
+}
+
+.chooser-row label span {
+  color: var(--brand-deep);
+  font-size: 1rem;
+}
+
+.chooser-row label small {
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 650;
+  line-height: 1.25;
+}
+
 .teacher-note {
   display: grid;
-  gap: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px 22px;
   margin: 14px 0 0;
   border-left: 5px solid var(--berry);
   border-radius: 6px;
@@ -145,11 +164,36 @@ h1 {
   line-height: 1.45;
 }
 
+.teacher-directions {
+  grid-column: 1 / -1;
+}
+
+.teacher-only,
+.student-rules {
+  border-top: 1px solid #cfe1e5;
+  padding-top: 12px;
+}
+
 .teacher-note strong {
   display: block;
   margin-bottom: 5px;
   color: var(--brand-deep);
   font-size: 1.02rem;
+}
+
+.teacher-note b {
+  font-weight: 850;
+}
+
+.teacher-note ol {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  padding-left: 1.3rem;
+}
+
+.teacher-note li {
+  padding-left: 2px;
 }
 
 .teacher-note p {
@@ -510,6 +554,14 @@ button:disabled {
 
   .chooser-row {
     grid-template-columns: 1fr;
+  }
+
+  .teacher-note {
+    grid-template-columns: 1fr;
+  }
+
+  .teacher-directions {
+    grid-column: auto;
   }
 
   .tile-grid {
