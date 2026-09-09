@@ -4,10 +4,17 @@ const gameArea = document.querySelector("#game-area");
 const message = document.querySelector("#message");
 const gameCount = document.querySelector("#game-count");
 const emptyTemplate = document.querySelector("#empty-template");
+const createCustomButton = document.querySelector("#create-custom");
+const customBuilder = document.querySelector("#custom-builder");
+const customForm = document.querySelector("#custom-game-form");
+const customBuilderMessage = document.querySelector("#custom-builder-message");
+const customStudentLink = document.querySelector("#custom-student-link");
+const customLinkOutputLabels = document.querySelectorAll(".custom-link-output");
 
 const urlParams = new URLSearchParams(window.location.search);
 const requestedSlug = urlParams.get("game");
-const isStudentMode = Boolean(requestedSlug);
+const requestedCustomGame = urlParams.get("custom");
+const isStudentMode = Boolean(requestedSlug || requestedCustomGame);
 
 if (isStudentMode) {
   document.body.classList.add("student-mode");
@@ -23,6 +30,7 @@ let isGameOver = false;
 let confettiTimeout = null;
 
 const maxMistakes = 4;
+const customGameParam = "custom";
 
 function makeSlug(title) {
   return title
@@ -144,6 +152,143 @@ function countValues(values) {
   }, {});
 }
 
+function trimValue(value) {
+  return value.trim().replace(/\s+/g, " ");
+}
+
+function encodeCustomGame(gameData) {
+  const json = JSON.stringify({
+    v: 1,
+    title: gameData.title,
+    groups: gameData.groups,
+  });
+  const bytes = new TextEncoder().encode(json);
+  let binary = "";
+
+  bytes.forEach((byte) => {
+    binary += String.fromCharCode(byte);
+  });
+
+  return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
+}
+
+function decodeCustomGame(encoded) {
+  try {
+    const base64 = encoded.replace(/-/g, "+").replace(/_/g, "/").padEnd(Math.ceil(encoded.length / 4) * 4, "=");
+    const binary = atob(base64);
+    const bytes = Uint8Array.from(binary, (character) => character.charCodeAt(0));
+    const data = JSON.parse(new TextDecoder().decode(bytes));
+    const validation = validateCustomGameData(data);
+
+    if (validation.messages.length) {
+      throw new Error(validation.messages[0]);
+    }
+
+    return makeCustomGame(validation.data, encoded);
+  } catch {
+    return null;
+  }
+}
+
+function validateCustomGameData(data) {
+  const messages = [];
+  const groups = [];
+
+  if (!data || !Array.isArray(data.groups) || data.groups.length !== 4) {
+    return {
+      data: null,
+      messages: ["A GroupUp needs exactly 4 groups with 4 items in each group."],
+    };
+  }
+
+  data.groups.forEach((group, groupIndex) => {
+    const groupNumber = groupIndex + 1;
+    const name = trimValue(String(group?.name || ""));
+    const words = Array.isArray(group?.words) ? group.words.map((word) => normalizeValue(String(word || ""))) : [];
+
+    if (!name) {
+      messages.push(`Group ${groupNumber} needs a category name.`);
+    }
+
+    if (words.length !== 4) {
+      messages.push(`Group ${groupNumber} needs exactly 4 items.`);
+    }
+
+    Array.from({ length: 4 }).forEach((_, wordIndex) => {
+      if (!words[wordIndex]) {
+        messages.push(`Group ${groupNumber}, item ${wordIndex + 1} is missing.`);
+      }
+    });
+
+    groups.push({
+      name,
+      words,
+    });
+  });
+
+  const allWords = groups.flatMap((group) => group.words).filter(Boolean);
+  const duplicateWords = Object.entries(countValues(allWords))
+    .filter(([, count]) => count > 1)
+    .map(([word]) => word);
+
+  if (allWords.length !== 16) {
+    messages.push("A GroupUp needs exactly 16 items.");
+  }
+
+  if (duplicateWords.length) {
+    messages.push(`Each item needs to be unique. Check: ${duplicateWords.join(", ")}.`);
+  }
+
+  return {
+    data: {
+      title: trimValue(String(data.title || "")) || "Custom GroupUp",
+      groups,
+    },
+    messages,
+  };
+}
+
+function makeCustomGame(gameData, encoded = "") {
+  return {
+    title: gameData.title,
+    displayTitle: gameData.title,
+    slug: "custom-groupup",
+    board: gameData.groups.flatMap((group) => group.words),
+    groups: gameData.groups,
+    issues: [],
+    isCustom: true,
+    customEncoded: encoded || encodeCustomGame(gameData),
+  };
+}
+
+function getCustomFormData() {
+  const formData = new FormData(customForm);
+
+  return {
+    title: trimValue(formData.get("title") || ""),
+    groups: Array.from({ length: 4 }).map((_, groupIndex) => {
+      const groupNumber = groupIndex + 1;
+
+      return {
+        name: formData.get(`group-${groupNumber}-name`) || "",
+        words: Array.from({ length: 4 }).map((__, wordIndex) => formData.get(`group-${groupNumber}-item-${wordIndex + 1}`) || ""),
+      };
+    }),
+  };
+}
+
+function getValidatedCustomGame() {
+  const validation = validateCustomGameData(getCustomFormData());
+
+  if (validation.messages.length) {
+    showCustomBuilderMessage(validation.messages[0], "error");
+    hideCustomLinkOutput();
+    return null;
+  }
+
+  return makeCustomGame(validation.data);
+}
+
 function hydrateChooser() {
   const fragment = document.createDocumentFragment();
 
@@ -157,6 +302,18 @@ function hydrateChooser() {
   gameSelect.append(fragment);
   gameCount.textContent = `${games.length} games ready`;
 
+  if (requestedCustomGame) {
+    const customGame = decodeCustomGame(requestedCustomGame);
+
+    if (customGame) {
+      startGame(customGame, { updateHistory: false });
+    } else {
+      renderStudentError("This custom GroupUp link could not be opened. Please ask your teacher for a new link.");
+    }
+
+    return;
+  }
+
   const requestedGame = games.find((game) => game.slug === requestedSlug);
 
   if (requestedGame) {
@@ -167,16 +324,21 @@ function hydrateChooser() {
   }
 }
 
-function startGame(game) {
+function startGame(game, options = {}) {
   clearConfetti();
   currentGame = game;
   selectedTileIds = new Set();
   solvedGroupIndexes = [];
   remainingTiles = game.board.map((word, index) => ({ id: `${word}-${index}`, word }));
+  if (game.isCustom) {
+    remainingTiles = [...remainingTiles].sort(() => Math.random() - 0.5);
+  }
   mistakes = 0;
   isGameOver = false;
   copyLinkButton.disabled = isStudentMode;
-  updateUrl(game.slug);
+  if (options.updateHistory !== false) {
+    updateUrl(game.slug);
+  }
   setMessage(game.issues.length ? game.issues[0] : "");
   renderGame();
 }
@@ -189,7 +351,20 @@ function updateUrl(slug) {
 
 function buildShareUrl() {
   const shareUrl = new URL(window.location.href);
-  shareUrl.searchParams.set("game", currentGame.slug);
+  if (currentGame.isCustom) {
+    shareUrl.search = "";
+    shareUrl.searchParams.set(customGameParam, currentGame.customEncoded);
+  } else {
+    shareUrl.searchParams.set("game", currentGame.slug);
+  }
+  return shareUrl.toString();
+}
+
+function buildCustomShareUrl(encoded) {
+  const shareUrl = new URL(window.location.href);
+  shareUrl.search = "";
+  shareUrl.hash = "";
+  shareUrl.searchParams.set(customGameParam, encoded);
   return shareUrl.toString();
 }
 
@@ -221,10 +396,102 @@ async function copyShareLink() {
   }
 }
 
+function toggleCustomBuilder() {
+  const shouldShow = customBuilder.hidden;
+  customBuilder.hidden = !shouldShow;
+
+  if (shouldShow) {
+    showCustomBuilderMessage("Enter four categories with four items each, then preview or create a student link.");
+    customBuilder.querySelector("input")?.focus();
+    customBuilder.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+}
+
+function previewCustomGame() {
+  const game = getValidatedCustomGame();
+
+  if (!game) {
+    return;
+  }
+
+  startGame(game, { updateHistory: false });
+  customStudentLink.value = buildCustomShareUrl(game.customEncoded);
+  showCustomLinkOutput();
+  showCustomBuilderMessage("Custom game preview ready. Use Answers here if you want to check the key.");
+  gameArea.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+async function createCustomStudentLink() {
+  const game = getValidatedCustomGame();
+
+  if (!game) {
+    return;
+  }
+
+  const url = buildCustomShareUrl(game.customEncoded);
+  customStudentLink.value = url;
+  showCustomLinkOutput();
+
+  try {
+    await navigator.clipboard.writeText(url);
+    showCustomBuilderMessage(isLocalShareUrl() ? "Local preview link created and copied. Use the published site before sharing with students." : "Student link created and copied.");
+  } catch {
+    showCustomBuilderMessage(isLocalShareUrl() ? "Local preview link created. Use the published site before sharing with students." : "Student link created.");
+  }
+}
+
+function clearCustomForm() {
+  customForm.reset();
+  hideCustomLinkOutput();
+  showCustomBuilderMessage("Form cleared.");
+  customForm.querySelector("input")?.focus();
+}
+
+function showCustomBuilderMessage(text, type = "") {
+  customBuilderMessage.textContent = text;
+  customBuilderMessage.className = `message ${type}`.trim();
+}
+
+function showCustomLinkOutput() {
+  customLinkOutputLabels.forEach((element) => {
+    element.hidden = false;
+  });
+}
+
+function hideCustomLinkOutput() {
+  customStudentLink.value = "";
+  customLinkOutputLabels.forEach((element) => {
+    element.hidden = true;
+  });
+}
+
+function openPopoutGame() {
+  if (!currentGame) {
+    return;
+  }
+
+  const popoutUrl = new URL(buildShareUrl());
+  popoutUrl.searchParams.set("popout", "1");
+  const opened = window.open(popoutUrl.toString(), "_blank", "noopener");
+
+  if (!opened) {
+    setMessage(`Pop-out link: ${popoutUrl.toString()}`);
+  }
+}
+
 function renderEmptyState() {
   currentGame = null;
   copyLinkButton.disabled = true;
   gameArea.replaceChildren(emptyTemplate.content.cloneNode(true));
+}
+
+function renderStudentError(text) {
+  gameArea.innerHTML = `
+    <div class="empty-state">
+      <h2>GroupUp link problem</h2>
+      <p>${escapeHtml(text)}</p>
+    </div>
+  `;
 }
 
 function renderGame() {
@@ -251,6 +518,7 @@ function renderGame() {
       <button type="button" id="clear-selection" class="secondary" ${!selectedTileIds.size || isGameOver ? "disabled" : ""}>Clear</button>
       <button type="button" id="shuffle-board" class="secondary" ${isGameOver ? "disabled" : ""}>Shuffle</button>
       <button type="button" id="restart-game" class="secondary">Restart</button>
+      ${isStudentMode ? "" : '<button type="button" id="pop-out-game" class="secondary">Pop-out</button>'}
       ${isStudentMode ? "" : '<button type="button" id="reveal-answers" class="secondary">Answers</button>'}
     </div>
   `;
@@ -276,6 +544,7 @@ function renderGame() {
   wrap.querySelector("#clear-selection").addEventListener("click", clearSelection);
   wrap.querySelector("#shuffle-board").addEventListener("click", shuffleRemainingTiles);
   wrap.querySelector("#restart-game").addEventListener("click", restartGame);
+  wrap.querySelector("#pop-out-game")?.addEventListener("click", openPopoutGame);
   wrap.querySelector("#reveal-answers")?.addEventListener("click", revealAnswers);
 
   if (isGameOver) {
@@ -463,6 +732,10 @@ gameSelect.addEventListener("change", () => {
 });
 
 copyLinkButton.addEventListener("click", copyShareLink);
+createCustomButton.addEventListener("click", toggleCustomBuilder);
+document.querySelector("#preview-custom").addEventListener("click", previewCustomGame);
+document.querySelector("#create-custom-link").addEventListener("click", createCustomStudentLink);
+document.querySelector("#clear-custom-form").addEventListener("click", clearCustomForm);
 
 function loadGameList() {
   return fetch("groupuplist", { cache: "no-store" })

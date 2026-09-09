@@ -1,7 +1,8 @@
 (function () {
   var PASSWORD_HASH = "b64ea722";
   var AUTH_KEY = "groupupTeacherUnlocked";
-  var isStudentLink = new URLSearchParams(window.location.search).has("game");
+  var params = new URLSearchParams(window.location.search);
+  var isStudentLink = params.has("game") || params.has("custom");
 
   if (isStudentLink) {
     return;

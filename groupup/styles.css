@@ -36,7 +36,8 @@ body {
 }
 
 button,
-select {
+select,
+input {
   font: inherit;
 }
 
@@ -149,6 +150,12 @@ h1 {
   line-height: 1.25;
 }
 
+.chooser-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .teacher-note {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -204,7 +211,8 @@ h1 {
   margin-bottom: 0;
 }
 
-select {
+select,
+input {
   min-width: 0;
   width: 100%;
   min-height: 44px;
@@ -214,6 +222,12 @@ select {
   background: #ffffff;
   color: var(--ink);
   padding: 0 12px;
+}
+
+input:focus,
+select:focus {
+  outline: 3px solid rgba(31, 111, 120, 0.2);
+  border-color: var(--brand);
 }
 
 button {
@@ -262,6 +276,95 @@ button:disabled {
 
 .game-area {
   margin-top: 22px;
+}
+
+.custom-builder {
+  margin-top: 22px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-top: 7px solid var(--berry);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  padding: 22px;
+}
+
+.custom-builder[hidden] {
+  display: none;
+}
+
+.custom-builder-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 16px;
+}
+
+.custom-builder h2 {
+  margin: 0;
+  color: var(--brand-deep);
+  font-size: clamp(1.65rem, 4vw, 2.4rem);
+  line-height: 1.05;
+}
+
+.custom-builder form {
+  display: grid;
+  gap: 14px;
+}
+
+.field-label,
+.custom-group label {
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.field-label span {
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-weight: 650;
+}
+
+.custom-groups {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.custom-group {
+  min-width: 0;
+  margin: 0;
+  border: 1px solid #cfe1e5;
+  border-radius: 7px;
+  background: #f8fbfb;
+  padding: 14px;
+}
+
+.custom-group legend {
+  color: var(--brand-deep);
+  font-weight: 850;
+  padding: 0 6px;
+}
+
+.custom-group > label,
+.custom-items label {
+  display: block;
+  margin: 8px 0 5px;
+  font-size: 0.88rem;
+}
+
+.custom-items {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 10px;
+}
+
+.custom-builder-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.custom-link-output[hidden] {
+  display: none;
 }
 
 .empty-state,
@@ -556,6 +659,12 @@ button:disabled {
     grid-template-columns: 1fr;
   }
 
+  .chooser-actions,
+  .custom-builder-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
   .teacher-note {
     grid-template-columns: 1fr;
   }
@@ -575,6 +684,15 @@ button:disabled {
   }
 
   .answer-list {
+    grid-template-columns: 1fr;
+  }
+
+  .custom-builder {
+    padding: 14px;
+  }
+
+  .custom-groups,
+  .custom-items {
     grid-template-columns: 1fr;
   }
 }
@@ -668,5 +786,9 @@ body.student-mode .student-brand {
 }
 
 body.student-mode .tool-panel {
+  display: none;
+}
+
+body.student-mode .custom-builder {
   display: none;
 }
