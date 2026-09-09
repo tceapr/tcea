@@ -4,8 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Peggy's GroupUp</title>
-    <link rel="stylesheet" href="styles.css?v=23" />
-    <script src="teacher-auth.js?v=5"></script>
+    <link rel="icon" href="favicon.ico" />
+    <link rel="stylesheet" href="styles.css?v=24" />
+    <script src="teacher-auth.js?v=6"></script>
   </head>
   <body>
     <main class="app-shell">
@@ -39,7 +40,6 @@
               <span aria-hidden="true">&#128279;</span>
               Copy link
             </button>
-            <button id="create-custom" class="secondary" type="button">Create Your Own GroupUp</button>
           </div>
         </div>
 
@@ -70,96 +70,6 @@
         <div id="message" class="message" role="status" aria-live="polite"></div>
       </section>
 
-      <section id="custom-builder" class="custom-builder" aria-labelledby="custom-builder-title" hidden>
-        <div class="custom-builder-heading">
-          <div>
-            <p class="eyebrow">Teacher Tool</p>
-            <h2 id="custom-builder-title">Create Your Own GroupUp</h2>
-          </div>
-        </div>
-
-        <form id="custom-game-form" novalidate>
-          <label class="field-label" for="custom-title">Game Title <span>Optional</span></label>
-          <input id="custom-title" name="title" type="text" autocomplete="off" placeholder="My Custom GroupUp" />
-
-          <div class="custom-groups">
-            <fieldset class="custom-group">
-              <legend>Group 1</legend>
-              <label for="group-1-name">Category Name</label>
-              <input id="group-1-name" name="group-1-name" type="text" autocomplete="off" />
-              <div class="custom-items">
-                <label for="group-1-item-1">Item 1</label>
-                <input id="group-1-item-1" name="group-1-item-1" type="text" autocomplete="off" />
-                <label for="group-1-item-2">Item 2</label>
-                <input id="group-1-item-2" name="group-1-item-2" type="text" autocomplete="off" />
-                <label for="group-1-item-3">Item 3</label>
-                <input id="group-1-item-3" name="group-1-item-3" type="text" autocomplete="off" />
-                <label for="group-1-item-4">Item 4</label>
-                <input id="group-1-item-4" name="group-1-item-4" type="text" autocomplete="off" />
-              </div>
-            </fieldset>
-
-            <fieldset class="custom-group">
-              <legend>Group 2</legend>
-              <label for="group-2-name">Category Name</label>
-              <input id="group-2-name" name="group-2-name" type="text" autocomplete="off" />
-              <div class="custom-items">
-                <label for="group-2-item-1">Item 1</label>
-                <input id="group-2-item-1" name="group-2-item-1" type="text" autocomplete="off" />
-                <label for="group-2-item-2">Item 2</label>
-                <input id="group-2-item-2" name="group-2-item-2" type="text" autocomplete="off" />
-                <label for="group-2-item-3">Item 3</label>
-                <input id="group-2-item-3" name="group-2-item-3" type="text" autocomplete="off" />
-                <label for="group-2-item-4">Item 4</label>
-                <input id="group-2-item-4" name="group-2-item-4" type="text" autocomplete="off" />
-              </div>
-            </fieldset>
-
-            <fieldset class="custom-group">
-              <legend>Group 3</legend>
-              <label for="group-3-name">Category Name</label>
-              <input id="group-3-name" name="group-3-name" type="text" autocomplete="off" />
-              <div class="custom-items">
-                <label for="group-3-item-1">Item 1</label>
-                <input id="group-3-item-1" name="group-3-item-1" type="text" autocomplete="off" />
-                <label for="group-3-item-2">Item 2</label>
-                <input id="group-3-item-2" name="group-3-item-2" type="text" autocomplete="off" />
-                <label for="group-3-item-3">Item 3</label>
-                <input id="group-3-item-3" name="group-3-item-3" type="text" autocomplete="off" />
-                <label for="group-3-item-4">Item 4</label>
-                <input id="group-3-item-4" name="group-3-item-4" type="text" autocomplete="off" />
-              </div>
-            </fieldset>
-
-            <fieldset class="custom-group">
-              <legend>Group 4</legend>
-              <label for="group-4-name">Category Name</label>
-              <input id="group-4-name" name="group-4-name" type="text" autocomplete="off" />
-              <div class="custom-items">
-                <label for="group-4-item-1">Item 1</label>
-                <input id="group-4-item-1" name="group-4-item-1" type="text" autocomplete="off" />
-                <label for="group-4-item-2">Item 2</label>
-                <input id="group-4-item-2" name="group-4-item-2" type="text" autocomplete="off" />
-                <label for="group-4-item-3">Item 3</label>
-                <input id="group-4-item-3" name="group-4-item-3" type="text" autocomplete="off" />
-                <label for="group-4-item-4">Item 4</label>
-                <input id="group-4-item-4" name="group-4-item-4" type="text" autocomplete="off" />
-              </div>
-            </fieldset>
-          </div>
-
-          <div class="custom-builder-actions">
-            <button id="preview-custom" type="button">Preview Game</button>
-            <button id="create-custom-link" type="button" class="secondary">Create Student Link</button>
-            <button id="clear-custom-form" type="button" class="secondary">Clear Form</button>
-          </div>
-
-          <div id="custom-builder-message" class="message" role="status" aria-live="polite"></div>
-          <label class="field-label custom-link-output" for="custom-student-link" hidden>Student Link</label>
-          <input id="custom-student-link" class="custom-link-output" type="text" readonly hidden />
-        </form>
-      </section>
-
       <section id="game-area" class="game-area" aria-live="polite"></section>
     </main>
 
@@ -171,6 +81,6 @@
     </template>
 
     <script src="games-data.js?v=7"></script>
-    <script src="app.js?v=23"></script>
+    <script src="app.js?v=24"></script>
   </body>
 </html>
