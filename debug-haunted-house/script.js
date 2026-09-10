@@ -1,5 +1,5 @@
 const STORAGE_KEY = 'debugHauntedHouseProgress';
-const TEACHER_GUIDE_PASSWORD = 'TCEA';
+const TEACHER_GUIDE_PASSWORD = 'FixTheVibe2026!';
 const DIRECTIONS = ['Up', 'Down', 'Left', 'Right'];
 const ARROWS = { Up: '^', Down: 'v', Left: '<', Right: '>' };
 const DELAY = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 30 : 420;
@@ -344,8 +344,8 @@ function toggleTeacherGuide() {
 }
 
 function unlockTeacherGuide() {
-  const normalizedPassword = teacherPassword.value.trim().toUpperCase();
-  if (normalizedPassword !== TEACHER_GUIDE_PASSWORD) {
+  const enteredPassword = teacherPassword.value.trim();
+  if (enteredPassword !== TEACHER_GUIDE_PASSWORD) {
     teacherAuthFeedback.textContent = 'That password did not work. Please ask your teacher.';
     teacherPassword.select();
     return;
