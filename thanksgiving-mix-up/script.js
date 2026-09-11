@@ -1,27 +1,27 @@
 const rounds = [
   {
-    title: 'Thanksgiving Convenience Foods',
-    instruction: 'Put These in Time Order',
+    title: 'Pumpkin Pie Shuffle',
+    instruction: 'Put These in the Right Order',
     cards: [
-      { id: 'cranberry-sauce', text: 'Canned cranberry sauce introduced' },
-      { id: 'tv-dinner', text: 'Swanson turkey TV dinner appears' },
-      { id: 'green-bean-casserole', text: 'Green bean casserole is created' },
-      { id: 'stove-top', text: 'Stove Top Stuffing arrives' }
+      { id: 'press-crust', text: 'Press the crust into the pie plate' },
+      { id: 'whisk-filling', text: 'Whisk together the pumpkin filling' },
+      { id: 'pour-filling', text: 'Pour the filling into the crust' },
+      { id: 'bake-pie', text: 'Bake until the filling is set' }
     ],
-    correctOrder: ['cranberry-sauce', 'tv-dinner', 'green-bean-casserole', 'stove-top'],
-    reveal: 'From canned cranberry sauce to boxed stuffing, some familiar Thanksgiving foods arrived decades apart.'
+    correctOrder: ['press-crust', 'whisk-filling', 'pour-filling', 'bake-pie'],
+    reveal: 'Crust. Filling. Oven. Pie! The hardest step comes next: waiting for it to cool before adding the whipped cream.'
   },
   {
-    title: 'Parade Progress',
-    instruction: 'Put These in Time Order',
+    title: 'Macy’s Parade Morning',
+    instruction: 'Put These in the Right Order',
     cards: [
-      { id: 'macys-first-parade', text: "Macy's first parade" },
-      { id: 'giant-balloons', text: 'Giant character balloons arrive' },
-      { id: 'mickey-balloon', text: 'Mickey Mouse appears as a parade balloon' },
-      { id: 'network-tv', text: 'The parade reaches network television' }
+      { id: 'balloons-prepared', text: 'Giant balloons are inflated and prepared' },
+      { id: 'line-up', text: 'Performers, floats, and balloons line up' },
+      { id: 'manhattan-route', text: 'The parade travels through Manhattan' },
+      { id: 'santa-finale', text: 'Santa Claus arrives at the grand finale' }
     ],
-    correctOrder: ['macys-first-parade', 'giant-balloons', 'mickey-balloon', 'network-tv'],
-    reveal: 'The parade came first. Those famous giant balloons joined the celebration a few years later.'
+    correctOrder: ['balloons-prepared', 'line-up', 'manhattan-route', 'santa-finale'],
+    reveal: 'Long before Santa closes the parade, hundreds of balloons, floats, performers, and handlers have already spent hours getting ready for the trip through New York City.'
   },
   {
     title: 'Turkey Transformation',
@@ -36,16 +36,16 @@ const rounds = [
     reveal: 'Dinner is served! The turkey has made it from preparation to the table.'
   },
   {
-    title: 'Cranberry Journey',
+    title: 'Cranberry Bog Shuffle',
     instruction: 'Put These in the Right Order',
     cards: [
-      { id: 'grow-vines', text: 'Cranberries grow on vines' },
-      { id: 'harvested', text: 'Cranberries are harvested' },
-      { id: 'store', text: 'Cranberries reach the store' },
-      { id: 'made-sauce', text: 'Cranberries are made into sauce' }
+      { id: 'bog-flooded', text: 'The cranberry bed is flooded' },
+      { id: 'berries-loose', text: 'A machine knocks the berries loose' },
+      { id: 'berries-float', text: 'The berries float to the surface' },
+      { id: 'berries-corralled', text: 'The floating berries are corralled together' }
     ],
-    correctOrder: ['grow-vines', 'harvested', 'store', 'made-sauce'],
-    reveal: 'Those little red berries take quite a trip before reaching the Thanksgiving table.'
+    correctOrder: ['bog-flooded', 'berries-loose', 'berries-float', 'berries-corralled'],
+    reveal: 'Cranberries do not grow underwater. During wet harvest, growers flood the beds, loosen the berries from the vines, and the berries float because they contain tiny air pockets. Then they are gathered together for collection.'
   },
   {
     title: 'Thanksgiving on Screen',
@@ -58,6 +58,130 @@ const rounds = [
     ],
     correctOrder: ['charlie-brown', 'planes-trains', 'simpsons', 'addams-family'],
     reveal: 'Thanksgiving has been showing up on television and movie screens for decades.'
+  },
+  {
+    title: 'Thanksgiving Becomes Official',
+    instruction: 'Put These in Time Order',
+    cards: [
+      { id: 'washington-proclamation', text: 'George Washington issues a Thanksgiving proclamation', answerText: 'George Washington issues a Thanksgiving proclamation, 1789' },
+      { id: 'lincoln-observance', text: 'Abraham Lincoln calls for a national Thanksgiving observance', answerText: 'Abraham Lincoln calls for a national Thanksgiving observance, 1863' },
+      { id: 'roosevelt-earlier', text: 'Franklin D. Roosevelt moves Thanksgiving earlier', answerText: 'Franklin D. Roosevelt moves Thanksgiving earlier, 1939' },
+      { id: 'congress-fourth-thursday', text: 'Congress establishes Thanksgiving on the fourth Thursday', answerText: 'Congress establishes Thanksgiving on the fourth Thursday, 1941' }
+    ],
+    correctOrder: ['washington-proclamation', 'lincoln-observance', 'roosevelt-earlier', 'congress-fourth-thursday'],
+    reveal: 'It took more than 150 years for Thanksgiving to move from presidential proclamations to the fourth-Thursday date we know today.'
+  },
+  {
+    title: 'Thanksgiving Convenience Foods',
+    instruction: 'Put These in Time Order',
+    cards: [
+      {
+        id: 'cranberry-sauce',
+        text: 'Canned cranberry sauce introduced',
+        clue: 'A shelf-stable holiday shortcut from the early days of canned foods',
+        answerText: 'Canned cranberry sauce introduced, 1912'
+      },
+      {
+        id: 'tv-dinner',
+        text: 'Swanson turkey TV dinner appears',
+        clue: 'A frozen meal created for the new age of eating dinner in front of the television',
+        answerText: 'Swanson turkey TV dinner appears, 1953'
+      },
+      {
+        id: 'green-bean-casserole',
+        text: 'Green bean casserole is created',
+        clue: 'A Campbell’s test-kitchen recipe built around canned soup',
+        answerText: 'Green bean casserole is created, 1955'
+      },
+      {
+        id: 'stove-top',
+        text: 'Stove Top Stuffing arrives',
+        clue: 'A boxed stuffing mix designed to make a holiday side dish much faster',
+        answerText: 'Stove Top Stuffing arrives, 1972'
+      }
+    ],
+    correctOrder: ['cranberry-sauce', 'tv-dinner', 'green-bean-casserole', 'stove-top'],
+    reveal: 'Thanksgiving convenience foods did not arrive all at once. Canned cranberry sauce came first, followed decades later by frozen dinners, green bean casserole, and boxed stuffing.'
+  },
+  {
+    title: 'Thanksgiving Football',
+    instruction: 'Put These in Time Order',
+    cards: [
+      {
+        id: 'princeton-yale',
+        text: 'Princeton and Yale play Thanksgiving football',
+        clue: 'College football was still a young sport, and the NFL did not even exist yet.',
+        answerText: 'Princeton and Yale play Thanksgiving football, 1876'
+      },
+      {
+        id: 'detroit-lions',
+        text: 'Detroit Lions begin playing on Thanksgiving',
+        clue: 'The tradition starts during the age of national radio broadcasts.',
+        answerText: 'Detroit Lions begin playing on Thanksgiving, 1934'
+      },
+      {
+        id: 'dallas-cowboys',
+        text: 'Dallas Cowboys begin their Thanksgiving tradition',
+        clue: 'The Cowboys were still one of the NFL’s newer teams.',
+        answerText: 'Dallas Cowboys begin their Thanksgiving tradition, 1966'
+      },
+      {
+        id: 'third-game',
+        text: 'The NFL adds a third Thanksgiving game',
+        clue: 'Thanksgiving football expands from an afternoon tradition to include a night game.',
+        answerText: 'The NFL adds a third Thanksgiving game, 2006'
+      }
+    ],
+    correctOrder: ['princeton-yale', 'detroit-lions', 'dallas-cowboys', 'third-game'],
+    reveal: 'Thanksgiving football started with college teams in the 1800s. Detroit made it an NFL tradition in 1934, Dallas joined in 1966, and a third Thanksgiving game was added in 2006.'
+  },
+  {
+    title: 'Ready, Set, Table',
+    instruction: 'Put These in the Right Order',
+    cards: [
+      { id: 'tablecloth', text: 'Cover the table with a tablecloth' },
+      { id: 'centerpiece', text: 'Add the centerpiece' },
+      { id: 'plates', text: 'Set a plate at each seat' },
+      { id: 'utensils', text: 'Arrange the utensils, napkins, and glasses' }
+    ],
+    correctOrder: ['tablecloth', 'centerpiece', 'plates', 'utensils'],
+    reveal: 'A Thanksgiving table comes together in layers, starting with the table itself and finishing with the details at each place setting.'
+  },
+  {
+    title: 'Mashed Potato Makeover',
+    instruction: 'Put These in the Right Order',
+    cards: [
+      { id: 'peel-potatoes', text: 'Peel and cut the potatoes' },
+      { id: 'boil-potatoes', text: 'Boil until tender' },
+      { id: 'mash-potatoes', text: 'Mash the potatoes' },
+      { id: 'butter-milk', text: 'Stir in butter and milk' }
+    ],
+    correctOrder: ['peel-potatoes', 'boil-potatoes', 'mash-potatoes', 'butter-milk'],
+    reveal: 'A few simple steps turn firm potatoes into one of Thanksgiving’s creamiest side dishes.'
+  },
+  {
+    title: 'The Leftover Remix',
+    instruction: 'Put These in the Right Order',
+    cards: [
+      { id: 'survey-leftovers', text: 'Open the refrigerator and survey the leftovers' },
+      { id: 'pick-dishes', text: 'Pick a few dishes that might work together' },
+      { id: 'combine-leftovers', text: 'Combine them into something new' },
+      { id: 'heat-creation', text: 'Heat it up and give your creation a try' }
+    ],
+    correctOrder: ['survey-leftovers', 'pick-dishes', 'combine-leftovers', 'heat-creation'],
+    reveal: 'Thanksgiving leftovers are a second chance to get creative. Yesterday’s turkey, stuffing, and sides can become an entirely new meal.'
+  },
+  {
+    title: 'Apple Pie Journey',
+    instruction: 'Put These in the Right Order',
+    cards: [
+      { id: 'pick-apples', text: 'Pick ripe apples from the orchard or grocery store' },
+      { id: 'slice-apples', text: 'Peel, core, and slice the apples' },
+      { id: 'sugar-spices', text: 'Toss the slices with sugar and spices' },
+      { id: 'bake-apple-pie', text: 'Fill the crust and bake the pie' }
+    ],
+    correctOrder: ['pick-apples', 'slice-apples', 'sugar-spices', 'bake-apple-pie'],
+    reveal: 'Apple pie starts with fresh fruit, then layers in sugar, spice, and a little patience before it reaches the table.'
   }
 ];
 
@@ -69,6 +193,7 @@ const checkButton = document.querySelector('#checkButton');
 const feedbackText = document.querySelector('#feedbackText');
 const revealBox = document.querySelector('#revealBox');
 const revealText = document.querySelector('#revealText');
+const answerList = document.querySelector('#answerList');
 const nextButton = document.querySelector('#nextButton');
 const moveUpButton = document.querySelector('#moveUpButton');
 const moveDownButton = document.querySelector('#moveDownButton');
@@ -109,6 +234,8 @@ function renderRound() {
   feedbackText.textContent = '';
   feedbackText.className = 'feedback';
   revealBox.hidden = true;
+  answerList.hidden = true;
+  answerList.replaceChildren();
   checkButton.disabled = false;
   renderCards();
 }
@@ -126,8 +253,28 @@ function renderCards(options = {}) {
     button.draggable = true;
     button.dataset.cardId = card.id;
     button.setAttribute('aria-pressed', selectedCardId === card.id ? 'true' : 'false');
-    button.setAttribute('aria-label', `${card.text}, position ${index + 1} of ${currentOrder.length}`);
-    button.innerHTML = `<span class="card-position">${index + 1}</span><span class="card-text">${card.text}</span>`;
+    button.setAttribute('aria-label', `${card.text}${card.clue ? `. ${card.clue}` : ''}, position ${index + 1} of ${currentOrder.length}`);
+
+    const position = document.createElement('span');
+    position.className = 'card-position';
+    position.textContent = index + 1;
+
+    const copy = document.createElement('span');
+    copy.className = 'card-copy';
+
+    const text = document.createElement('span');
+    text.className = 'card-text';
+    text.textContent = card.text;
+    copy.append(text);
+
+    if (card.clue) {
+      const clue = document.createElement('span');
+      clue.className = 'card-clue';
+      clue.textContent = card.clue;
+      copy.append(clue);
+    }
+
+    button.append(position, copy);
     button.addEventListener('click', () => selectCard(card.id));
     button.addEventListener('keydown', event => handleCardKeydown(event, card.id));
     button.addEventListener('dragstart', event => handleDragStart(event, card.id));
@@ -269,9 +416,25 @@ function checkMix() {
   feedbackText.textContent = 'You fixed the mix!';
   feedbackText.className = 'feedback success';
   revealText.textContent = round.reveal;
+  renderAnswerList(round);
   revealBox.hidden = false;
   checkButton.disabled = true;
   nextButton.textContent = currentRoundIndex === rounds.length - 1 ? 'See Celebration' : 'Next Round';
+}
+
+function renderAnswerList(round) {
+  const answersWithExtraText = round.correctOrder
+    .map(cardId => round.cards.find(card => card.id === cardId))
+    .filter(card => card?.answerText);
+
+  answerList.replaceChildren();
+  answerList.hidden = answersWithExtraText.length === 0;
+
+  answersWithExtraText.forEach(card => {
+    const item = document.createElement('li');
+    item.textContent = card.answerText;
+    answerList.append(item);
+  });
 }
 
 function showNextRound() {
