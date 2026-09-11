@@ -114,24 +114,20 @@ h1 {
   font-size: 1.12rem;
 }
 
-.image-placeholder {
-  display: grid;
-  min-height: 150px;
-  place-items: center;
-  padding: 18px;
-  color: #6d341f;
-  text-align: center;
-  font-weight: 900;
-  letter-spacing: 0.08em;
-  border: 3px dashed rgba(130, 70, 40, 0.42);
+.activity-graphic {
+  display: block;
+  width: 100%;
+  object-fit: cover;
+  border: 1px solid rgba(130, 70, 40, 0.2);
   border-radius: 8px;
-  background:
-    linear-gradient(135deg, rgba(243, 182, 66, 0.28), rgba(185, 51, 53, 0.08)),
-    #fff9e7;
+  box-shadow: 0 12px 24px rgba(86, 40, 18, 0.12);
 }
 
-.title-placeholder {
-  min-height: 210px;
+.title-graphic {
+  align-self: center;
+  aspect-ratio: 2 / 1;
+  object-fit: contain;
+  background: #fffdf6;
 }
 
 .round-card,
@@ -177,8 +173,10 @@ h1 {
   font-size: 1rem;
 }
 
-.round-placeholder {
-  min-height: 116px;
+.round-graphic {
+  aspect-ratio: 1;
+  max-height: 330px;
+  object-position: center;
 }
 
 .card-list {
@@ -327,9 +325,16 @@ h1 {
   text-align: center;
 }
 
-.final-placeholder {
-  min-height: 220px;
-  margin-bottom: 20px;
+.final-screen:focus {
+  outline: none;
+}
+
+.final-graphic {
+  max-width: 880px;
+  margin: 0 auto 20px;
+  aspect-ratio: 8 / 3;
+  object-fit: contain;
+  background: #fffdf6;
 }
 
 .final-screen h2 {
@@ -343,14 +348,49 @@ h1 {
   font-size: 1.12rem;
 }
 
+.confetti-stage {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.confetti-piece {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  font-size: clamp(1.35rem, 3vw, 2.5rem);
+  filter: drop-shadow(0 4px 5px rgba(53, 32, 21, 0.22));
+  transform: translate(-50%, -50%);
+  animation: center-burst 1.35s cubic-bezier(0.12, 0.78, 0.28, 1) forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes center-burst {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.2) rotate(0deg);
+  }
+
+  12% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(calc(-50% + var(--burst-x)), calc(-50% + var(--burst-y))) scale(1.05) rotate(var(--burst-rotation));
+  }
+}
+
 @media (max-width: 760px) {
   .top-grid,
   .round-heading {
     grid-template-columns: 1fr;
   }
 
-  .title-placeholder {
-    min-height: 150px;
+  .round-graphic {
+    max-height: none;
   }
 
   .mix-card {

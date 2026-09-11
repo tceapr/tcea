@@ -17,7 +17,7 @@
             <h1 id="activityTitle">The Great Thanksgiving Mix-Up</h1>
             <p class="directions">Arrange the four cards, then check your mix. Some rounds use time order, and some use a logical order.</p>
           </div>
-          <div class="image-placeholder title-placeholder" role="img" aria-label="Title graphic placeholder">TITLE GRAPHIC PLACEHOLDER</div>
+          <img class="activity-graphic title-graphic" src="assets/title-graphic.png" alt="The Great Thanksgiving Mix-Up title graphic">
         </div>
 
         <section class="round-card" id="playScreen" aria-live="polite">
@@ -31,7 +31,7 @@
               <h2 id="roundTitle">Round title</h2>
               <p class="round-help">Drag the cards, or select a card and use Move Up or Move Down.</p>
             </div>
-            <div class="image-placeholder round-placeholder" role="img" aria-label="Round graphic placeholder">ROUND GRAPHIC PLACEHOLDER</div>
+            <img class="activity-graphic round-graphic" id="roundGraphic" src="assets/round-1.png" alt="">
           </div>
 
           <ol class="card-list" id="cardList" aria-label="Scrambled cards"></ol>
@@ -54,13 +54,14 @@
         </section>
 
         <section class="final-screen" id="finalScreen" tabindex="-1" hidden>
-          <div class="image-placeholder final-placeholder" role="img" aria-label="Final screen graphic placeholder">FINAL SCREEN GRAPHIC PLACEHOLDER</div>
+          <img class="activity-graphic final-graphic" src="assets/final-graphic.png" alt="You solved the Thanksgiving Mix-Up">
           <h2>You fixed every mix!</h2>
           <p>The Thanksgiving timeline and table are back in order.</p>
           <button class="primary-button" type="button" id="playAgainButton">Play Again</button>
         </section>
       </section>
     </main>
+    <div class="confetti-stage" id="confettiStage" aria-hidden="true"></div>
     <script src="script.js"></script>
   </body>
 </html>

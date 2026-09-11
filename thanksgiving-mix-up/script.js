@@ -189,6 +189,7 @@ const cardList = document.querySelector('#cardList');
 const progressText = document.querySelector('#progressText');
 const instructionText = document.querySelector('#instructionText');
 const roundTitle = document.querySelector('#roundTitle');
+const roundGraphic = document.querySelector('#roundGraphic');
 const checkButton = document.querySelector('#checkButton');
 const feedbackText = document.querySelector('#feedbackText');
 const revealBox = document.querySelector('#revealBox');
@@ -200,12 +201,14 @@ const moveDownButton = document.querySelector('#moveDownButton');
 const playScreen = document.querySelector('#playScreen');
 const finalScreen = document.querySelector('#finalScreen');
 const playAgainButton = document.querySelector('#playAgainButton');
+const confettiStage = document.querySelector('#confettiStage');
 
 let currentRoundIndex = 0;
 let currentOrder = [];
 let selectedCardId = null;
 let dragCardId = null;
 let touchDrag = null;
+let confettiTimers = [];
 
 function startRound(index) {
   currentRoundIndex = index;
@@ -231,6 +234,8 @@ function renderRound() {
   progressText.textContent = `Round ${currentRoundIndex + 1} of ${rounds.length}`;
   instructionText.textContent = round.instruction;
   roundTitle.textContent = round.title;
+  roundGraphic.src = `assets/round-${currentRoundIndex + 1}.png`;
+  roundGraphic.alt = `${round.title} round graphic`;
   feedbackText.textContent = '';
   feedbackText.className = 'feedback';
   revealBox.hidden = true;
@@ -449,13 +454,56 @@ function showNextRound() {
 function showFinalScreen() {
   playScreen.hidden = true;
   finalScreen.hidden = false;
+  runFinalConfetti();
   finalScreen.focus?.();
 }
 
 function playAgain() {
+  clearConfetti();
   finalScreen.hidden = true;
   playScreen.hidden = false;
   startRound(0);
+}
+
+function runFinalConfetti() {
+  clearConfetti();
+
+  for (let burst = 0; burst < 8; burst += 1) {
+    const timer = window.setTimeout(() => createConfettiBurst(burst), burst * 320);
+    confettiTimers.push(timer);
+  }
+}
+
+function createConfettiBurst(burstIndex) {
+  const pieces = ['●', '🫛', '🥔', '🥧'];
+  const pieceCount = 30;
+
+  for (let index = 0; index < pieceCount; index += 1) {
+    const piece = document.createElement('span');
+    const angle = ((Math.PI * 2) / pieceCount) * index + burstIndex * 0.18;
+    const distance = 180 + Math.random() * 360;
+    const drift = (Math.random() - 0.5) * 130;
+    const symbol = pieces[(index + burstIndex) % pieces.length];
+
+    piece.className = 'confetti-piece';
+    piece.textContent = symbol;
+    piece.style.setProperty('--burst-x', `${Math.cos(angle) * distance + drift}px`);
+    piece.style.setProperty('--burst-y', `${Math.sin(angle) * distance + drift}px`);
+    piece.style.setProperty('--burst-rotation', `${Math.floor(Math.random() * 720 - 360)}deg`);
+
+    if (symbol === '●') {
+      piece.style.color = '#b93335';
+    }
+
+    piece.addEventListener('animationend', () => piece.remove(), { once: true });
+    confettiStage.append(piece);
+  }
+}
+
+function clearConfetti() {
+  confettiTimers.forEach(timer => window.clearTimeout(timer));
+  confettiTimers = [];
+  confettiStage.replaceChildren();
 }
 
 function arraysMatch(first, second) {
