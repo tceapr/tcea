@@ -113,7 +113,7 @@ function renderRound() {
   renderCards();
 }
 
-function renderCards() {
+function renderCards(options = {}) {
   const round = rounds[currentRoundIndex];
   const fragment = document.createDocumentFragment();
 
@@ -147,11 +147,15 @@ function renderCards() {
 
   cardList.replaceChildren(fragment);
   updateMoveButtons();
+
+  if (options.focusCardId) {
+    cardList.querySelector(`[data-card-id="${options.focusCardId}"]`)?.focus();
+  }
 }
 
 function selectCard(cardId) {
   selectedCardId = selectedCardId === cardId ? null : cardId;
-  renderCards();
+  renderCards({ focusCardId: cardId });
 }
 
 function handleCardKeydown(event, cardId) {
