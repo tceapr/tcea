@@ -590,7 +590,7 @@ function initSortable(kind, cards, hasUnused) {
         <ul>
           <li>The cauldron must be ready before anything goes into it.</li>
           <li>The potion needs one liquid step and two ingredient steps before it can be stirred.</li>
-          <li>The spider rings must go into the cauldron before the purple feather.</li>
+          <li>The eight-legged guests go in before the feathered one.</li>
           <li>Stir only after all needed ingredients are in the cauldron.</li>
           <li>The finished potion goes into the bottle after it has been stirred.</li>
         </ul>
