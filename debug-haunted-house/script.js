@@ -346,7 +346,7 @@ function toggleTeacherGuide() {
 function unlockTeacherGuide() {
   const enteredPassword = teacherPassword.value.trim();
   if (enteredPassword !== TEACHER_GUIDE_PASSWORD) {
-    teacherAuthFeedback.textContent = 'That password did not work. Please ask your teacher.';
+    teacherAuthFeedback.textContent = 'Oops! This area is just for teachers.';
     teacherPassword.select();
     return;
   }
@@ -590,6 +590,7 @@ function initSortable(kind, cards, hasUnused) {
         <ul>
           <li>The cauldron must be ready before anything goes into it.</li>
           <li>The potion needs one liquid step and two ingredient steps before it can be stirred.</li>
+          <li>The spider rings must go into the cauldron before the purple feather.</li>
           <li>Stir only after all needed ingredients are in the cauldron.</li>
           <li>The finished potion goes into the bottle after it has been stirred.</li>
         </ul>
