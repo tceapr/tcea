@@ -182,6 +182,7 @@ function updateProgress() {
   progressFill.style.width = `${(solved / locks.length) * 100}%`;
   if (solved === locks.length && !winDialog.open && !winQueued) {
     winQueued = true;
+    window.recordSuccessfulSolve?.('boo-breakout');
     startBooCelebration();
     winTimer = setTimeout(() => winDialog.showModal(), 1300);
   }

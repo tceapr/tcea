@@ -454,6 +454,7 @@ function showNextRound() {
 function showFinalScreen() {
   playScreen.hidden = true;
   finalScreen.hidden = false;
+  window.recordSuccessfulSolve?.('thanksgiving-mixup');
   runFinalConfetti();
   finalScreen.focus?.();
 }

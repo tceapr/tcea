@@ -1,0 +1,32 @@
+.solve-counter {
+  position: fixed;
+  right: 14px;
+  bottom: 14px;
+  z-index: 50;
+  max-width: min(260px, calc(100vw - 28px));
+  padding: 10px 14px;
+  color: #352015;
+  background: rgba(255, 253, 246, 0.94);
+  border: 1px solid rgba(91, 49, 27, 0.22);
+  border-radius: 999px;
+  box-shadow: 0 10px 24px rgba(53, 32, 21, 0.16);
+  font: 800 0.95rem/1.25 Arial, Helvetica, sans-serif;
+  text-align: center;
+}
+
+.solve-counter[hidden] {
+  display: none !important;
+}
+
+.solve-counter.is-muted {
+  opacity: 0.72;
+}
+
+@media (max-width: 520px) {
+  .solve-counter {
+    right: 10px;
+    bottom: 10px;
+    padding: 9px 12px;
+    font-size: 0.86rem;
+  }
+}

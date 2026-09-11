@@ -907,6 +907,7 @@ function unlockFinalDoor() {
   finalFeedback.className = 'feedback-box success';
   finalFeedback.innerHTML = '<strong>You debugged the haunted house!</strong><br>The friendly ghost says, "Thank you for fixing all the bugs. The Halloween treats are hidden behind the purple bookcase."';
   playAgainButton.hidden = false;
+  window.recordSuccessfulSolve?.('debug-haunted-house');
   startCelebration();
   setTimeout(showFinalCelebrationPopup, 520);
 }

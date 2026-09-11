@@ -1,0 +1,12 @@
+name = "tcea-solve-counter"
+main = "worker.js"
+compatibility_date = "2026-09-11"
+
+[observability]
+enabled = false
+head_sampling_rate = 0
+
+[[d1_databases]]
+binding = "DB"
+database_name = "tcea-solve-counter"
+database_id = "PASTE_D1_DATABASE_ID_HERE"

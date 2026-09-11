@@ -235,6 +235,7 @@ function updateProgress() {
   progressFill.style.width = `${(solved / locks.length) * 100}%`;
   if (solved === locks.length && !winDialog.open && !winQueued) {
     winQueued = true;
+    window.recordSuccessfulSolve?.('backtoschool-breakout');
     startSchoolCelebration();
     winTimer = setTimeout(() => winDialog.showModal(), 1300);
   }
