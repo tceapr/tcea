@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>The Great Thanksgiving Mix-Up</title>
+    <meta name="description" content="A Thanksgiving sequencing activity for students.">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23fff2c8'/%3E%3Cpath d='M16 42h32v7H16z' fill='%23824628'/%3E%3Cpath d='M19 25c4-11 22-11 26 0 5 2 7 8 3 13-4 5-28 5-32 0-4-5-1-11 3-13z' fill='%23c74735'/%3E%3Ccircle cx='25' cy='30' r='4' fill='%23f6b13d'/%3E%3Ccircle cx='33' cy='27' r='4' fill='%238a3f24'/%3E%3Ccircle cx='40' cy='31' r='4' fill='%23f6b13d'/%3E%3C/svg%3E">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="activity-shell">
+      <section class="game-panel" aria-labelledby="activityTitle">
+        <div class="top-grid">
+          <div>
+            <p class="eyebrow">Thanksgiving sequencing game</p>
+            <h1 id="activityTitle">The Great Thanksgiving Mix-Up</h1>
+            <p class="directions">Arrange the four cards, then check your mix. Some rounds use time order, and some use a logical order.</p>
+          </div>
+          <div class="image-placeholder title-placeholder" role="img" aria-label="Title graphic placeholder">TITLE GRAPHIC PLACEHOLDER</div>
+        </div>
+
+        <section class="round-card" id="playScreen" aria-live="polite">
+          <div class="round-topline">
+            <p class="progress" id="progressText">Round 1 of 5</p>
+            <p class="instruction" id="instructionText">Put These in Time Order</p>
+          </div>
+
+          <div class="round-heading">
+            <div>
+              <h2 id="roundTitle">Round title</h2>
+              <p class="round-help">Drag the cards, tap a card and move it, or use the keyboard controls.</p>
+            </div>
+            <div class="image-placeholder round-placeholder" role="img" aria-label="Round graphic placeholder">ROUND GRAPHIC PLACEHOLDER</div>
+          </div>
+
+          <ol class="card-list" id="cardList" aria-label="Scrambled cards"></ol>
+
+          <div class="move-controls" aria-label="Selected card controls">
+            <button type="button" id="moveUpButton">Move Up</button>
+            <button type="button" id="moveDownButton">Move Down</button>
+          </div>
+
+          <div class="action-row">
+            <button class="primary-button" type="button" id="checkButton">Check My Mix</button>
+            <p class="feedback" id="feedbackText" role="status" aria-live="polite"></p>
+          </div>
+
+          <div class="reveal" id="revealBox" hidden>
+            <p id="revealText"></p>
+            <button class="secondary-button" type="button" id="nextButton">Next Round</button>
+          </div>
+        </section>
+
+        <section class="final-screen" id="finalScreen" tabindex="-1" hidden>
+          <div class="image-placeholder final-placeholder" role="img" aria-label="Final screen graphic placeholder">FINAL SCREEN GRAPHIC PLACEHOLDER</div>
+          <h2>You fixed every mix!</h2>
+          <p>The Thanksgiving timeline and table are back in order.</p>
+          <button class="primary-button" type="button" id="playAgainButton">Play Again</button>
+        </section>
+      </section>
+    </main>
+    <script src="script.js"></script>
+  </body>
+</html>
