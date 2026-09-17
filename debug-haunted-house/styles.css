@@ -20,6 +20,10 @@
   box-sizing: border-box;
 }
 
+[hidden] {
+  display: none !important;
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -897,12 +901,14 @@ input[type="text"] {
   background: rgba(15, 20, 52, 0.96);
   box-shadow: 0 26px 70px rgba(9, 8, 26, 0.45);
   opacity: 0;
+  pointer-events: none;
   transform: translate(-50%, -46%) scale(0.94);
   transition: opacity 320ms ease, transform 320ms ease;
 }
 
 .final-celebration-popup.is-visible {
   opacity: 1;
+  pointer-events: auto;
   transform: translate(-50%, -50%) scale(1);
 }
 
