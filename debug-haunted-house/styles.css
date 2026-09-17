@@ -849,6 +849,14 @@ input[type="text"] {
   text-transform: uppercase;
 }
 
+.final-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 18px;
+}
+
 .front-door {
   position: relative;
   width: 170px;

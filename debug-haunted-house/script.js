@@ -74,6 +74,7 @@ let room5Pattern = ['Bat', 'Pumpkin', 'Ghost', 'Bat', 'Pumpkin', 'Cat', 'Bat', '
 let room6Choice = '';
 let sortableStores = {};
 let draggedCard = null;
+let finalPopupHideTimer = null;
 
 const homeScreen = document.getElementById('homeScreen');
 const roomScreen = document.getElementById('roomScreen');
@@ -96,6 +97,7 @@ const finalFeedback = document.getElementById('finalFeedback');
 const secretInput = document.getElementById('secretInput');
 const frontDoor = document.getElementById('frontDoor');
 const playAgainButton = document.getElementById('playAgainButton');
+const repeatCelebrationButton = document.getElementById('repeatCelebrationButton');
 const celebration = document.getElementById('celebration');
 const finalCelebrationPopup = document.getElementById('finalCelebrationPopup');
 const closeCelebrationButton = document.getElementById('closeCelebrationButton');
@@ -123,6 +125,7 @@ document.getElementById('checkButton').addEventListener('click', checkCurrentRoo
 nextRoomButton.addEventListener('click', goToNextRoom);
 document.getElementById('unlockButton').addEventListener('click', checkFinalWord);
 document.getElementById('playAgainButton').addEventListener('click', () => resetActivity(false));
+repeatCelebrationButton.addEventListener('click', replayFinalCelebration);
 closeCelebrationButton.addEventListener('click', hideFinalCelebrationPopup);
 document.getElementById('teacherToggle').addEventListener('click', toggleTeacherGuide);
 teacherUnlockButton.addEventListener('click', unlockTeacherGuide);
@@ -908,21 +911,41 @@ function unlockFinalDoor() {
   finalFeedback.className = 'feedback-box success';
   finalFeedback.innerHTML = '<strong>You debugged the haunted house!</strong><br>The friendly ghost says, "Thank you for fixing all the bugs. The Halloween treats are hidden behind the purple bookcase."';
   playAgainButton.hidden = false;
+  repeatCelebrationButton.hidden = false;
   window.recordSuccessfulSolve?.('debug-haunted-house');
   startCelebration();
   setTimeout(showFinalCelebrationPopup, 520);
 }
 
+function replayFinalCelebration() {
+  if (!appState.finalUnlocked) return;
+  clearFinalPopupHideTimer();
+  finalCelebrationPopup.classList.remove('is-visible');
+  finalCelebrationPopup.hidden = true;
+  celebration.innerHTML = '';
+  startCelebration();
+  setTimeout(showFinalCelebrationPopup, 180);
+}
+
 function showFinalCelebrationPopup() {
+  clearFinalPopupHideTimer();
   finalCelebrationPopup.hidden = false;
   requestAnimationFrame(() => finalCelebrationPopup.classList.add('is-visible'));
 }
 
 function hideFinalCelebrationPopup() {
   finalCelebrationPopup.classList.remove('is-visible');
-  setTimeout(() => {
+  clearFinalPopupHideTimer();
+  finalPopupHideTimer = setTimeout(() => {
     finalCelebrationPopup.hidden = true;
+    finalPopupHideTimer = null;
   }, 320);
+}
+
+function clearFinalPopupHideTimer() {
+  if (!finalPopupHideTimer) return;
+  clearTimeout(finalPopupHideTimer);
+  finalPopupHideTimer = null;
 }
 
 function resetActivity(ask = true) {
@@ -937,6 +960,7 @@ function resetActivity(ask = true) {
   frontDoor.classList.remove('open');
   hideFinalCelebrationPopup();
   playAgainButton.hidden = true;
+  repeatCelebrationButton.hidden = true;
   celebration.innerHTML = '';
   showHome();
 }
