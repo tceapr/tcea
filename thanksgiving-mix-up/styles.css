@@ -138,10 +138,18 @@ h1 {
   border-radius: 8px;
 }
 
+.round-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 330px);
+  column-gap: 22px;
+  align-items: start;
+}
+
 .round-topline {
   display: flex;
   flex-wrap: wrap;
   gap: 10px 14px;
+  grid-column: 1 / -1;
   justify-content: space-between;
   margin-bottom: 18px;
 }
@@ -155,10 +163,11 @@ h1 {
 }
 
 .round-heading {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(220px, 330px);
-  gap: 18px;
-  align-items: stretch;
+  display: contents;
+}
+
+.round-heading > div {
+  grid-column: 1;
 }
 
 .round-heading h2 {
@@ -174,6 +183,9 @@ h1 {
 }
 
 .round-graphic {
+  grid-column: 2;
+  grid-row: 2 / span 4;
+  align-self: start;
   aspect-ratio: 1;
   max-height: 330px;
   object-position: center;
@@ -182,8 +194,9 @@ h1 {
 .card-list {
   display: grid;
   gap: 12px;
+  grid-column: 1;
   padding: 0;
-  margin: 22px 0 16px;
+  margin: 16px 0;
   list-style: none;
   touch-action: none;
 }
@@ -250,6 +263,7 @@ h1 {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
+  grid-column: 1;
   align-items: center;
 }
 
@@ -300,6 +314,7 @@ h1 {
 .reveal {
   display: grid;
   gap: 16px;
+  grid-column: 1 / -1;
   margin-top: 18px;
   padding: 18px;
   background: #fff2c8;
@@ -384,8 +399,13 @@ h1 {
 }
 
 @media (max-width: 760px) {
+  .round-card {
+    display: block;
+  }
+
   .top-grid,
   .round-heading {
+    display: grid;
     grid-template-columns: 1fr;
   }
 
