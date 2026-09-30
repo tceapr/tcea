@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Snowed In!</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="storm-shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Winter Mystery Challenge</p>
+        <h1>Snowed In!</h1>
+      </div>
+      <button id="restartButton" class="ghost-button" type="button">Restart Game</button>
+    </header>
+
+    <main class="game-layout">
+      <aside class="clue-panel" aria-label="Collected clues">
+        <div class="clue-panel-header">
+          <span class="status-dot" aria-hidden="true"></span>
+          <h2>Collected Clues</h2>
+        </div>
+        <div id="clueList" class="clue-list"></div>
+      </aside>
+
+      <section id="gameScreen" class="game-card" aria-live="polite"></section>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

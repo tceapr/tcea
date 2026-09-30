@@ -548,6 +548,27 @@
         background: #0f3155;
       }
 
+      .snowed-in-media {
+        padding: 0;
+        background: #dff4ff;
+      }
+
+      .snowed-in-media img {
+        width: 100%;
+        height: 100%;
+        max-height: none;
+        object-fit: cover;
+      }
+
+      .snowed-in-card .open-link {
+        background: #174778;
+      }
+
+      .snowed-in-card:hover .open-link,
+      .snowed-in-card:focus-visible .open-link {
+        background: #0f3155;
+      }
+
       .dolly-timeline-media {
         position: relative;
         padding: 0;
@@ -610,6 +631,19 @@
       </section>
 
       <nav class="menu" aria-label="Activity menu">
+        <a class="activity-card snowed-in-card" href="snowed-in/">
+          <span class="activity-media snowed-in-media">
+            <img src="snowed-in/images/snowedin.png" alt="Snowed In winter school mystery activity graphic">
+          </span>
+          <span class="activity-copy">
+            <span>
+              <h2>Snowed In!</h2>
+              <p>Solve ten quick winter mystery challenges, collect clues, and unlock the school gates.</p>
+            </span>
+            <span class="open-link">Open Snowed In</span>
+          </span>
+        </a>
+
         <a class="activity-card dolly-timeline-card" href="dolly-timeline-scramble/">
           <span class="activity-media dolly-timeline-media">
             <img src="dolly-timeline-scramble/assets/celebratingdolly.png?v=celebrating-dolly-1" alt="Celebrating Dolly title artwork with a guitar, butterfly, stars, and boots">
