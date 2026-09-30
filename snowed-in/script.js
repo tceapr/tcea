@@ -561,12 +561,24 @@ function renderMatchingChallenge(challenge, space) {
     const correct = challenge.containers.every((container) => assignments[container.id] === challenge.answer[container.id]);
     if (complete && correct) solveChallenge(challenge.success);
     else if (!complete) setFeedback("Every container needs one snack.", "error");
-    else setFeedback("One container is mixed up. Use the clues and try again.", "error");
+    else setFeedback("One or more matches are mixed up. Change a match or select Reset Matches to try again.", "error");
+  });
+
+  const resetButton = makeButton("Reset Matches", "secondary-button", () => {
+    Object.keys(assignments).forEach((containerId) => delete assignments[containerId]);
+    selectedItem = null;
+    renderItems();
+    renderContainers();
+
+    const feedback = document.querySelector("#feedback");
+    feedback.hidden = true;
+    feedback.className = "feedback";
+    feedback.textContent = "";
   });
 
   renderItems();
   renderContainers();
-  document.querySelector("#navRow").append(checkButton);
+  document.querySelector("#navRow").append(checkButton, resetButton);
 }
 
 // Challenge 3 interaction: clickable search objects
