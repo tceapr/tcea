@@ -8,7 +8,7 @@ const locks = [
   {
     id: 'date',
     title: 'Date Lock',
-    label: 'Use MM/DD/YYYY. Example: 01/31/2026',
+    label: 'Use MM/DD/YYYY. Example: MM/DD',
     answerHash: '939f386c'
   },
   {
