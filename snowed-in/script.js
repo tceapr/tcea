@@ -8,10 +8,10 @@
 const SNOWED_IN_GAME = {
   openingImage: "snowedin.png",
   clues: {
-    mitten: { label: "Mitten", value: "3" },
-    thermometer: { label: "Thermometer", value: "7" },
-    flashlight: { label: "Flashlight", value: "2" },
-    boot: { label: "Boot", value: "5" }
+    mitten: { label: "Mitten", symbol: "🧤", value: "3" },
+    thermometer: { label: "Thermometer", symbol: "🌡️", value: "7" },
+    flashlight: { label: "Flashlight", symbol: "🔦", value: "2" },
+    boot: { label: "Boot", symbol: "🥾", value: "5" }
   },
   // These four clues are shuffled when a new game starts.
   finalOrder: ["flashlight", "mitten", "boot", "thermometer"],
@@ -207,7 +207,7 @@ const SNOWED_IN_GAME = {
       id: "final",
       title: "The Final Plow Code",
       image: "challenge10-final-plow-code.png",
-      directions: "Use your collected clues. Enter the code for the clue words in this order.",
+      directions: "Use your collected clues. Enter the code for the icons in this order.",
       type: "final-code",
       success: "The school gates unlock."
     }
@@ -876,7 +876,7 @@ function renderFinalCodeChallenge(challenge, space) {
     <div class="final-icons">
       ${state.finalOrder.map((clueId) => {
         const clue = SNOWED_IN_GAME.clues[clueId];
-        return `<div class="final-icon-card">${clue.label}</div>`;
+        return `<div class="final-icon-card" role="img" aria-label="${clue.label}"><span class="clue-symbol" aria-hidden="true">${clue.symbol}</span></div>`;
       }).join("")}
     </div>
     <div class="code-display" id="finalCodeDisplay" aria-label="Entered final code">----</div>
