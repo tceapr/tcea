@@ -207,7 +207,7 @@ const SNOWED_IN_GAME = {
       id: "final",
       title: "The Final Plow Code",
       image: "challenge10-final-plow-code.png",
-      directions: "Use your collected clues. Enter the code for the icons in this order.",
+      directions: "Use your collected clues. Enter the code for the clue words in this order.",
       type: "final-code",
       success: "The school gates unlock."
     }
