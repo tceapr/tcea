@@ -1,0 +1,28 @@
+// Add expressions using the same fields. `quick` marks the beginner-friendly pool.
+window.QUESTIONS = [
+['Seeing red','red','Feeling very angry.','Feeling embarrassed in front of others.','When the rules changed again, Sam was seeing red.',1],
+['Caught red-handed','red','Caught doing something wrong.','Caught arriving late to an event.','The puppy was caught red-handed stealing a sock.',1],
+['Once in a blue moon','blue','Something that rarely happens.','Something that happens on a regular schedule.','We eat breakfast for dinner once in a blue moon.',1],
+['Feeling blue','blue','Feeling sad.','Feeling cold after swimming.','A kind note helped Maya when she was feeling blue.',1],
+['The grass is always greener on the other side','green',"Thinking someone else’s situation is better.",'Grass grows faster in your neighbor’s yard.','Ben thought the other class had it easier, but the grass is always greener on the other side.',1],
+['Green with envy','green','Feeling very jealous.','Feeling proud of someone else’s success.','I was green with envy when Jo met my favorite author.',1],
+['Yellow-bellied','yellow','Cowardly or easily frightened.','Being eager to take a big risk.','The character was called yellow-bellied because he ran from every challenge.',0],
+['Have a yellow streak','yellow','Having a tendency to be afraid.','Having a habit of showing off.','The villain teased the hero for having a yellow streak.',0],
+['Born to the purple','purple','Born into royalty or privilege.','Born with a special talent for art.','The prince was born to the purple and grew up in a palace.',0],
+['Purple prose','purple','Writing that is overly fancy or elaborate.','Writing that is very short and simple.','Her purple prose used five flowery sentences to describe one flower.',0],
+['Black sheep of the family','black','Someone who is different from the rest of the family.','A dark-colored sheep that belongs to a family.','As the only musician in a family of athletes, Lee felt like the black sheep.',1],
+['In the black','black','Having more money coming in than going out.','Spending more money than you earn.','After selling enough tickets to cover costs, the club was in the black.',0],
+['White lie','white','A small lie often told to avoid hurting someone’s feelings.','A story that is completely true.','Telling a white lie about liking a gift may spare someone’s feelings.',1],
+['Wave the white flag','white','Give up or surrender.','Challenge someone to a rematch.','After a long game, the team refused to wave the white flag.',1],
+['Brown-noser','brown','Someone who flatters others to gain favor.','Someone with a sunburned nose.','The brown-noser praised the coach just to get a special favor.',0],
+['Browned off','brown','Feeling annoyed or fed up.','Getting a little too much sun.','After waiting an hour, the passengers were browned off.',0],
+['Comparing apples and oranges','orange','Comparing two things that are very different.','Deciding which fruit tastes sweeter.','Comparing a bicycle to a boat is like comparing apples and oranges.',1],
+['Squeezed like an orange','orange','Being used until nothing more can be gained.','Being hugged very tightly.','The workers felt squeezed like an orange when asked to do more without support.',0],
+['Gray area','gray','A situation that is not clearly defined or easily judged.','A problem with an obvious answer.','Whether the rule applied to the new game was a gray area.',1],
+['Gray matter','gray','Brainpower or intelligence.','A person’s physical strength.','Use your gray matter to solve the puzzle!',1],
+['Heart of gold','gold','Being very kind and caring.','Having a heart made of shiny metal.','Ari has a heart of gold and always helps new classmates.',1],
+['Worth its weight in gold','gold','Being extremely valuable.','Weighing exactly as much as a gold bar.','A reliable flashlight is worth its weight in gold on a camping trip.',1],
+['Every cloud has a silver lining','silver','Something good can come from a difficult situation.','A difficult situation will always get worse.','The picnic was rained out, but its silver lining was a cozy game day indoors.',1],
+['Born with a silver spoon in your mouth','silver','Born into wealth or privilege.','Born holding a shiny spoon.','The story’s princess was born with a silver spoon in her mouth.',1],
+['Tickled pink','pink','Feeling very pleased or delighted.','Feeling nervous about an upcoming event.','Nia was tickled pink when her poem was chosen for the display.',1]
+].map(([expression,color,meaning,wrong,example,quick]) => ({expression,color,meaning,wrong,example,quick:!!quick}));
