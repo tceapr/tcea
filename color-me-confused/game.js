@@ -78,11 +78,12 @@
       const piece = document.createElement('span');
       piece.className = 'confetti-piece' + (i % 3 === 0 ? ' ribbon' : '');
       piece.style.setProperty('--color', palette[i % palette.length]);
-      piece.style.setProperty('--side', i % 2 ? '100%' : '0%');
-      piece.style.setProperty('--travel', `${(i % 2 ? -1 : 1) * (35 + Math.random() * 45)}vw`);
-      piece.style.setProperty('--rise', `${80 + Math.random() * 180}px`);
-      piece.style.setProperty('--turn', `${(Math.random() * 5 + 2) * (i % 2 ? -1 : 1)}turn`);
-      piece.style.setProperty('--duration', `${2 + Math.random() * .3}s`);
+      const angle = (i / 56) * Math.PI * 2 + (Math.random() - .5) * .12;
+      const distance = .8 + Math.random() * .35;
+      piece.style.setProperty('--x', `${Math.cos(angle) * distance * 58}vw`);
+      piece.style.setProperty('--y', `${Math.sin(angle) * distance * 58}vh`);
+      piece.style.setProperty('--turn', `${(Math.random() * 3 + 1) * (i % 2 ? -1 : 1)}turn`);
+      piece.style.setProperty('--duration', `${2.1 + Math.random() * .3}s`);
       container.append(piece); pieces.push(piece);
     }
     celebrationTimers.push(setTimeout(() => pieces.forEach(piece => piece.remove()), 2500));
